@@ -26,6 +26,8 @@
     "@angular-devkit/build-angular": "^19.0.0",
     "@angular/cli": "^19.0.0",
     "@angular/compiler-cli": "^19.0.0",
+    "@netlify/blobs": "^8.1.0",
+    "@netlify/functions": "^2.8.2",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.22",
     "jasmine-core": "~5.1.0",
