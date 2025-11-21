@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Episode {
   id: string;
@@ -55,12 +56,22 @@ interface SocialLink {
               <!-- Navigation Links -->
               <div class="hidden md:flex items-center gap-6">
                 @for (link of navLinks(); track link.id) {
-                  <a
-                    [href]="link.url"
-                    class="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900"
-                    [attr.aria-label]="link.label">
-                    {{ link.label }}
-                  </a>
+                  @if (link.isRoute) {
+                    <button
+                      type="button"
+                      (click)="navigateTo(link.url)"
+                      class="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900"
+                      [attr.aria-label]="link.label">
+                      {{ link.label }}
+                    </button>
+                  } @else {
+                    <a
+                      [href]="link.url"
+                      class="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900"
+                      [attr.aria-label]="link.label">
+                      {{ link.label }}
+                    </a>
+                  }
                 }
               </div>
 
@@ -278,6 +289,8 @@ interface SocialLink {
   `]
 })
 export class LandingComponent {
+  constructor(private router: Router) {}
+
   // State
   protected liveBadge = signal('🔴 Live Podcast');
   protected mainTitle = signal('SCHNITTSTELLENPASS');
@@ -285,9 +298,9 @@ export class LandingComponent {
 
   // Navigation
   protected navLinks = signal([
-    { id: '1', label: 'Episoden', url: '#episodes' },
-    { id: '2', label: 'Über uns', url: '#about' },
-    { id: '3', label: 'Kontakt', url: '#contact' }
+    { id: '1', label: 'Episoden', url: '#episodes', isRoute: false },
+    { id: '2', label: 'Über uns', url: '/about', isRoute: true },
+    { id: '3', label: 'Kontakt', url: '#contact', isRoute: false }
   ]);
 
   // Stats
@@ -355,10 +368,14 @@ export class LandingComponent {
   }
 
   protected onShowMore(): void {
-    console.log('Show more clicked');
+    this.router.navigate(['/about']);
   }
 
   protected onPlayLatest(): void {
     console.log('Play latest episode clicked');
+  }
+
+  protected navigateTo(url: string): void {
+    this.router.navigate([url]);
   }
 }
