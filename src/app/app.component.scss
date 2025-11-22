@@ -1,0 +1,216 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+// ===== ANIMIERTER TITEL =====
+.animated-title {
+  margin-bottom: 4rem;
+  perspective: 1000px;
+}
+
+.title-line {
+  font-size: 5rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+// Line 1: Fliegt von RECHTS ein
+.line-1 {
+  animation: slideInFromRight 1s ease-out 0.3s forwards;
+}
+
+// Line 2: Fliegt von LINKS ein
+.line-2 {
+  animation: slideInFromLeft 1s ease-out 0.6s forwards;
+}
+
+// Line 3: Fliegt von RECHTS ein
+.line-3 {
+  animation: slideInFromRight 1s ease-out 0.9s forwards;
+}
+
+// Animation: Von rechts einfliegen
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(200px) rotateY(90deg) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-20px) rotateY(-10deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+// Animation: Von links einfliegen
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-200px) rotateY(-90deg) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(20px) rotateY(10deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+// ===== BUTTON STYLING =====
+.button-container {
+  position: relative;
+  z-index: 10;
+}
+
+.hover-button {
+  padding: 1.5rem 3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+// ===== FUSSBALL ANIMATION =====
+.football {
+  position: absolute;
+  font-size: 4rem;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
+
+.hover-button:hover ~ .football {
+  animation: footballFly 2s ease-in-out forwards;
+}
+
+@keyframes footballFly {
+  0% {
+    left: -10%;
+    top: 80%;
+    opacity: 0;
+    transform: rotate(0deg) scale(0.5);
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    left: 20%;
+    top: 20%;
+    transform: rotate(360deg) scale(1.2);
+  }
+  50% {
+    left: 50%;
+    top: 10%;
+    transform: rotate(720deg) scale(1.5);
+  }
+  75% {
+    left: 80%;
+    top: 30%;
+    transform: rotate(1080deg) scale(1.2);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    top: 70%;
+    opacity: 0;
+    transform: rotate(1440deg) scale(0.5);
+  }
+}
+
+// ===== ZUSÄTZLICHE HOVER-EFFEKTE =====
+.container:has(.hover-button:hover) {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.1) 0%,
+                transparent 50%);
+    pointer-events: none;
+    animation: pulse 0.5s ease-out;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+// ===== RESPONSIVE ANPASSUNGEN =====
+@media (max-width: 768px) {
+  .football {
+    font-size: 3rem;
+  }
+
+  .hover-button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+}
