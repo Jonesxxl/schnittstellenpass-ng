@@ -6,15 +6,6 @@
   # Directory where the build output is located (Angular 19 uses browser subdirectory)
   publish = "dist/schnittstellenpass/browser"
 
-# NOTE: This project is a standard Angular SPA, not Angular Universal (SSR).
-# The @netlify/plugin-angular-universal plugin is NOT needed.
-# If you added this plugin in the Netlify UI, please remove it.
-# This configuration is only here to prevent the error if the plugin is configured externally.
-[[plugins]]
-  package = "@netlify/plugin-angular-universal"
-  [plugins.inputs]
-    projectName = "schnittstellenpass"
-
 # Redirect all requests to index.html for Angular routing
 [[redirects]]
   from = "/*"
