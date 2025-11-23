@@ -1,0 +1,205 @@
+// ===== ANIMIERTER TITEL (KOMPAKT FÜR HEADER) =====
+.animated-title-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  perspective: 1000px;
+}
+
+.title-line-compact {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #1f2937;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
+}
+
+// Line 1: Fliegt von RECHTS ein
+.line-1 {
+  animation: slideInFromRight 0.8s ease-out 0.3s forwards;
+}
+
+// Line 2: Fliegt von LINKS ein
+.line-2 {
+  animation: slideInFromLeft 0.8s ease-out 0.5s forwards;
+}
+
+// Line 3: Fliegt von RECHTS ein
+.line-3 {
+  animation: slideInFromRight 0.8s ease-out 0.7s forwards;
+}
+
+// Animation: Von rechts einfliegen
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100px) rotateY(90deg) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px) rotateY(-10deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+// Animation: Von links einfliegen
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100px) rotateY(-90deg) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(10px) rotateY(10deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+// ===== FUSSBALL ANIMATION =====
+.football {
+  position: fixed;
+  font-size: 4rem;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+  transition: opacity 0.3s ease;
+}
+
+// Trigger die Animation wenn über einen .hover-button gehovered wird
+:host ::ng-deep .hover-button:hover ~ .football,
+.hover-button:hover ~ .football {
+  animation: footballFly 2s ease-in-out forwards;
+}
+
+// Alternative: Direktes Hovern auf Buttons mit Klasse
+:has(.hover-button:hover) .football {
+  animation: footballFly 2s ease-in-out forwards;
+}
+
+@keyframes footballFly {
+  0% {
+    left: -10%;
+    top: 80%;
+    opacity: 0;
+    transform: rotate(0deg) scale(0.5);
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    left: 20%;
+    top: 20%;
+    transform: rotate(360deg) scale(1.2);
+  }
+  50% {
+    left: 50%;
+    top: 10%;
+    transform: rotate(720deg) scale(1.5);
+  }
+  75% {
+    left: 80%;
+    top: 30%;
+    transform: rotate(1080deg) scale(1.2);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    top: 70%;
+    opacity: 0;
+    transform: rotate(1440deg) scale(0.5);
+  }
+}
+
+// ===== BUTTON HOVER-EFFEKTE =====
+.hover-button {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// ===== ZUSÄTZLICHE UTILITY CLASSES =====
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ===== RESPONSIVE ANPASSUNGEN =====
+@media (max-width: 768px) {
+  .football {
+    font-size: 3rem;
+  }
+
+  @keyframes footballFly {
+    0% {
+      left: -15%;
+      top: 85%;
+      opacity: 0;
+      transform: rotate(0deg) scale(0.4);
+    }
+    10% {
+      opacity: 1;
+    }
+    50% {
+      left: 50%;
+      top: 15%;
+      transform: rotate(720deg) scale(1.2);
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      left: 115%;
+      top: 75%;
+      opacity: 0;
+      transform: rotate(1440deg) scale(0.4);
+    }
+  }
+}
+
+// ===== PERFORMANCE OPTIMIERUNGEN =====
+.animated-title-compact,
+.title-line-compact,
+.football,
+.hover-button {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
