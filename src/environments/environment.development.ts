@@ -1,12 +1,17 @@
+/**
+ * Development environment configuration
+ */
 export const environment = {
   production: false,
 
   // Spotify API Credentials
-  // Get these from: <a href ="https://developer.spotify.com/dashboard">
+  // Get these from: https://developer.spotify.com/dashboard
   spotify: {
     clientId: 'YOUR_SPOTIFY_CLIENT_ID',
     clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET',
-    showId: 'YOUR_PODCAST_SHOW_ID' // Extract from your podcast URL
+    showId: 'YOUR_PODCAST_SHOW_ID', // Extract from your podcast URL
+    // Note: For client-side apps, use PKCE flow instead of client credentials
+    redirectUri: 'http://localhost:4200/callback'
   },
 
   // YouTube API Credentials

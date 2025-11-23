@@ -1,3 +1,6 @@
+/**
+ * Production environment configuration
+ */
 export const environment = {
   production: true,
 
@@ -11,7 +14,9 @@ export const environment = {
   spotify: {
     clientId: '', // Set via build environment variable
     clientSecret: '', // Set via build environment variable
-    showId: '' // Set via build environment variable
+    showId: '', // Set via build environment variable
+    // Note: For client-side apps, use PKCE flow instead of client credentials
+    redirectUri: 'https://your-domain.com/callback'
   },
 
   youtube: {
