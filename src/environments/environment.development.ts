@@ -2,11 +2,11 @@ export const environment = {
   production: false,
 
   // Spotify API Credentials
-  // Get these from: <a href ="https://developer.spotify.com/dashboard">
+  // Get these from: https://developer.spotify.com/dashboard
   spotify: {
-    clientId: 'YOUR_SPOTIFY_CLIENT_ID',
-    clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET',
-    showId: 'YOUR_PODCAST_SHOW_ID' // Extract from your podcast URL
+    clientId: 'YOUR_SPOTIFY_CLIENT_ID', // Get from Spotify Developer Dashboard
+    clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET', // Get from Spotify Developer Dashboard
+    showId: '4gpxvhJ8WyrGAnba5A6LQc' // Schnittstellenpass podcast show ID
   },
 
   // YouTube API Credentials
