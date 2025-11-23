@@ -94,11 +94,7 @@ interface SocialLink {
 
           <!-- Left Column - Text Content -->
           <div class="space-y-8 lg:pr-8">
-            <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm border border-white/40 rounded-full shadow-lg">
-              <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse" aria-hidden="true"></span>
-              <span class="text-sm font-bold text-gray-800">{{ liveBadge() }}</span>
-            </div>
+
 
             <!-- Main Title -->
             <div class="space-y-4">
@@ -123,43 +119,19 @@ interface SocialLink {
               }
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-4 pt-4">
-              <button
-                type="button"
-                (click)="onListenNow()"
-                class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
-                aria-label="Jetzt anhören">
-                <span class="relative z-10 flex items-center gap-2">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
-                  </svg>
-                  Jetzt anhören
-                </span>
-                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
 
-              <button
-                type="button"
-                (click)="onShowMore()"
-                class="px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300"
-                aria-label="Mehr erfahren">
-                Mehr erfahren
-              </button>
-            </div>
 
-            <!-- Social Links -->
-            <div class="flex items-center gap-4 pt-4">
-              <span class="text-sm font-semibold text-gray-600">Folge uns:</span>
-              @for (social of socialLinks(); track social.id) {
+            <!-- Platform Badges -->
+            <div class="mt-6 flex flex-wrap gap-5">
+              @for (platform of platforms(); track platform.id) {
                 <a
-                  [href]="social.url"
+                  [href]="platform.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  [attr.aria-label]="social.name"
-                  class="w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
-                  [style.background-color]="social.color">
-                  {{ social.icon }}
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  [attr.aria-label]="'Auf ' + platform.name + ' anhören'">
+                  <span class="text-lg">{{ platform.icon }}</span>
+                  {{ platform.name }}
                 </a>
               }
             </div>
@@ -177,7 +149,7 @@ interface SocialLink {
               <div class="relative">
                 <div class="mb-4">
                   <span class="inline-flex items-center px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg">
-                    ⚡ NEUE EPISODE
+                    ⚡ NEUESTE FOLGE
                   </span>
                 </div>
 
@@ -221,19 +193,29 @@ interface SocialLink {
               </div>
             </div>
 
-            <!-- Platform Badges -->
-            <div class="mt-6 flex flex-wrap gap-3">
-              @for (platform of platforms(); track platform.id) {
-                <a
-                  [href]="platform.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                  [attr.aria-label]="'Auf ' + platform.name + ' anhören'">
-                  <span class="text-lg">{{ platform.icon }}</span>
-                  {{ platform.name }}
-                </a>
-              }
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4 pt-4">
+              <button
+                type="button"
+                (click)="onListenNow()"
+                class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
+                aria-label="Jetzt anhören">
+                <span class="relative z-10 flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                  </svg>
+                  Jetzt anhören
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
+
+              <button
+                type="button"
+                (click)="onShowMore()"
+                class="px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300"
+                aria-label="Mehr erfahren">
+                Mehr erfahren
+              </button>
             </div>
           </div>
         </div>
