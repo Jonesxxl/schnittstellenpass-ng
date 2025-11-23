@@ -36,58 +36,6 @@ interface SocialLink {
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full"></div>
       </div>
 
-      <!-- Header Navigation -->
-      <header class="relative z-10 pt-8 px-4 md:px-8">
-        <nav class="container mx-auto max-w-7xl">
-          <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl px-6 py-4 shadow-xl">
-            <div class="flex items-center justify-between">
-              <!-- Logo -->
-              <div class="flex items-center gap-3">
-                <div class="relative w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 flex items-center justify-center overflow-hidden">
-                  <div class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20"></div>
-                  <span class="relative text-2xl font-black text-white drop-shadow-lg">SP</span>
-                </div>
-                <div>
-                  <h1 class="text-xl font-black text-gray-800 tracking-tight">SCHNITTSTELLENPASS</h1>
-                  <p class="text-xs text-gray-600 font-medium">Zwischen Profis & Amateur</p>
-                </div>
-              </div>
-
-              <!-- Navigation Links -->
-              <div class="hidden md:flex items-center gap-6">
-                @for (link of navLinks(); track link.id) {
-                  @if (link.isRoute) {
-                    <button
-                      type="button"
-                      (click)="navigateTo(link.url)"
-                      class="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900"
-                      [attr.aria-label]="link.label">
-                      {{ link.label }}
-                    </button>
-                  } @else {
-                    <a
-                      [href]="link.url"
-                      class="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900"
-                      [attr.aria-label]="link.label">
-                      {{ link.label }}
-                    </a>
-                  }
-                }
-              </div>
-
-              <!-- CTA Button -->
-              <button
-                type="button"
-                (click)="onSubscribe()"
-                class="px-6 py-2.5 bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-400"
-                aria-label="Jetzt abonnieren">
-                Abonnieren
-              </button>
-            </div>
-          </div>
-        </nav>
-      </header>
-
       <!-- Main Hero Content -->
       <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-16 md:py-24">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start lg:items-center">
@@ -278,13 +226,6 @@ export class LandingComponent {
   protected mainTitle = signal('SCHNITTSTELLENPASS');
   protected subtitle = signal('Der Fußball-Podcast zwischen Profis und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
 
-  // Navigation
-  protected navLinks = signal([
-    { id: '1', label: 'Episoden', url: '#episodes', isRoute: false },
-    { id: '2', label: 'Über uns', url: '/about', isRoute: true },
-    { id: '3', label: 'Kontakt', url: '#contact', isRoute: false }
-  ]);
-
   // Stats
   protected stats = signal([
     { id: '1', value: '50+', label: 'Episoden' },
@@ -341,10 +282,6 @@ export class LandingComponent {
   protected gridLines = computed(() => Array.from({ length: 36 }, (_, i) => i));
 
   // Actions
-  protected onSubscribe(): void {
-    console.log('Subscribe clicked');
-  }
-
   protected onListenNow(): void {
     console.log('Listen now clicked');
   }
@@ -355,9 +292,5 @@ export class LandingComponent {
 
   protected onPlayLatest(): void {
     console.log('Play latest episode clicked');
-  }
-
-  protected navigateTo(url: string): void {
-    this.router.navigate([url]);
   }
 }
