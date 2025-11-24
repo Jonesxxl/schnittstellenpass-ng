@@ -1,13 +1,8 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-interface Episode {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-}
+import { SpotifyService } from '../services/spotify.service';
+import { Episode } from '../models/spotify.models';
 
 interface SocialLink {
   id: string;
@@ -154,10 +149,12 @@ interface SocialLink {
                 </div>
 
                 <!-- Episode Cover -->
-                <div class="relative aspect-square mb-6 rounded-2xl overflow-hidden shadow-2xl group">
+                <div
+                  class="relative aspect-square mb-6 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
+                  (click)="onPlayLatest()">
                   <img
-                    src="/assets/cover.jpg"
-                    alt="Schnittstellenpass Podcast Cover"
+                    [src]="latestEpisode()?.imageUrl || '/assets/cover.jpg'"
+                    [alt]="latestEpisode()?.title || 'Schnittstellenpass Podcast Cover'"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 400%22%3E%3Crect fill=%22%23cbd5e1%22 width=%22400%22 height=%22400%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2280%22 fill=%22%231e293b%22 font-weight=%22bold%22%3ESP%3C/text%3E%3C/svg%3E'">
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
@@ -165,7 +162,7 @@ interface SocialLink {
                   <!-- Play Button Overlay -->
                   <button
                     type="button"
-                    (click)="onPlayLatest()"
+                    (click)="onPlayLatest(); $event.stopPropagation()"
                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 shadow-2xl focus:outline-none focus:ring-4 focus:ring-white"
                     aria-label="Episode abspielen">
                     <svg class="w-10 h-10 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -183,7 +180,7 @@ interface SocialLink {
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                         </svg>
-                        45 Min
+                        {{ episode.duration }}
                       </span>
                       <span>•</span>
                       <time [attr.datetime]="episode.date">{{ episode.date }}</time>
@@ -270,13 +267,16 @@ interface SocialLink {
     }
   `]
 })
-export class LandingComponent {
-  constructor(private router: Router) {}
+export class LandingComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly spotifyService = inject(SpotifyService);
 
   // State
   protected liveBadge = signal('🔴 Live Podcast');
   protected mainTitle = signal('SCHNITTSTELLENPASS');
   protected subtitle = signal('Der Fußball-Podcast zwischen Profis und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
+  protected isLoading = signal(false);
+  protected showSpotifyUrl = signal('');
 
   // Navigation
   protected navLinks = signal([
@@ -308,12 +308,7 @@ export class LandingComponent {
   ]);
 
   // Latest Episode
-  protected latestEpisode = signal<Episode>({
-    id: '1',
-    title: 'Taktische Meisterwerke: Die besten Spielzüge der Saison',
-    description: 'Eine tiefgehende Analyse der genialsten taktischen Schachzüge und was wir daraus für Amateur und Profi lernen können.',
-    date: '20.11.2025'
-  });
+  protected latestEpisode = signal<Episode | null>(null);
 
   // Features
   protected features = signal([
@@ -340,13 +335,82 @@ export class LandingComponent {
   // Grid für Fußballfeld
   protected gridLines = computed(() => Array.from({ length: 36 }, (_, i) => i));
 
+  ngOnInit(): void {
+    this.loadSpotifyData();
+  }
+
+  /**
+   * Load data from Spotify API
+   */
+  private loadSpotifyData(): void {
+    this.isLoading.set(true);
+
+    // Fetch latest episode
+    this.spotifyService.getLatestEpisode().subscribe({
+      next: (episode) => {
+        if (episode) {
+          this.latestEpisode.set(episode);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to fetch latest episode:', error);
+        // Keep default placeholder if fetch fails
+        this.latestEpisode.set({
+          id: '1',
+          title: 'Taktische Meisterwerke: Die besten Spielzüge der Saison',
+          description: 'Eine tiefgehende Analyse der genialsten taktischen Schachzüge und was wir daraus für Amateur und Profi lernen können.',
+          date: '20.11.2025',
+          duration: '45:00',
+          spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+          imageUrl: '/assets/cover.jpg',
+          audioPreviewUrl: null
+        });
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      }
+    });
+
+    // Fetch show stats
+    this.spotifyService.getShowStats().subscribe({
+      next: (stats) => {
+        this.stats.set([
+          { id: '1', value: `${stats.totalEpisodes}+`, label: 'Episoden' },
+          { id: '2', value: stats.listeners, label: 'Hörer' },
+          { id: '3', value: `${stats.rating}★`, label: 'Bewertung' }
+        ]);
+      },
+      error: (error) => {
+        console.error('Failed to fetch show stats:', error);
+      }
+    });
+
+    // Fetch show URL
+    this.spotifyService.getShowUrl().subscribe({
+      next: (url) => {
+        this.showSpotifyUrl.set(url);
+      },
+      error: (error) => {
+        console.error('Failed to fetch show URL:', error);
+        this.showSpotifyUrl.set('https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc');
+      }
+    });
+  }
+
   // Actions
   protected onSubscribe(): void {
-    console.log('Subscribe clicked');
+    const url = this.showSpotifyUrl() || 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc';
+    this.spotifyService.openSpotify(url);
   }
 
   protected onListenNow(): void {
-    console.log('Listen now clicked');
+    const episode = this.latestEpisode();
+    if (episode?.spotifyUrl) {
+      this.spotifyService.openSpotify(episode.spotifyUrl);
+    } else {
+      const url = this.showSpotifyUrl() || 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc';
+      this.spotifyService.openSpotify(url);
+    }
   }
 
   protected onShowMore(): void {
@@ -354,7 +418,13 @@ export class LandingComponent {
   }
 
   protected onPlayLatest(): void {
-    console.log('Play latest episode clicked');
+    const episode = this.latestEpisode();
+    if (episode?.spotifyUrl) {
+      this.spotifyService.openSpotify(episode.spotifyUrl);
+    } else {
+      const url = this.showSpotifyUrl() || 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc';
+      this.spotifyService.openSpotify(url);
+    }
   }
 
   protected navigateTo(url: string): void {

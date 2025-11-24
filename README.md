@@ -2,6 +2,41 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
 
+## Spotify API Configuration
+
+This application integrates with the Spotify Web API to fetch podcast episode data and show information.
+
+### Setup Instructions
+
+1. **Create a Spotify Developer Account**
+   - Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+   - Log in with your Spotify account
+   - Click "Create app"
+
+2. **Configure Your App**
+   - App name: `Schnittstellenpass` (or your preferred name)
+   - App description: `Podcast website integration`
+   - Redirect URI: `http://localhost:4200` (for development)
+   - Which API/SDKs are you planning to use?: Select "Web API"
+   - Accept the terms and click "Save"
+
+3. **Get Your Credentials**
+   - After creating the app, you'll see your **Client ID**
+   - Click "Show client secret" to reveal your **Client Secret**
+   - Copy both values
+
+4. **Update Environment File**
+   - Open `src/environments/environment.development.ts`
+   - Replace `YOUR_SPOTIFY_CLIENT_ID` with your actual Client ID
+   - Replace `YOUR_SPOTIFY_CLIENT_SECRET` with your actual Client Secret
+   - The `showId` is already configured for the Schnittstellenpass podcast
+
+### Important Notes
+
+- **Never commit your actual credentials to Git!** The development environment file should only contain real credentials locally.
+- For production deployments (Netlify, Vercel, etc.), set these as environment variables in your hosting platform.
+- The Spotify API uses Client Credentials flow, which is suitable for server-side or public data access.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
