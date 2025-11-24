@@ -31,39 +31,6 @@ interface HighlightSection {
         <div class="absolute top-1/2 right-0 -translate-y-1/2 w-32 h-48 border-4 border-white/30"></div>
       </div>
 
-      <!-- Header Navigation -->
-      <header class="relative z-10 pt-8 px-4 md:px-8">
-        <nav class="container mx-auto max-w-7xl">
-          <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl px-6 py-4 shadow-xl">
-            <div class="flex items-center justify-between">
-              <!-- Logo -->
-              <button
-                type="button"
-                (click)="navigateToHome()"
-                class="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-lg">
-                <div class="relative w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 flex items-center justify-center overflow-hidden">
-                  <div class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20"></div>
-                  <span class="relative text-2xl font-black text-white drop-shadow-lg">SP</span>
-                </div>
-                <div>
-                  <h1 class="text-xl font-black text-gray-800 tracking-tight">SCHNITTSTELLENPASS</h1>
-                  <p class="text-xs text-gray-600 font-medium">Zwischen Profis & Amateur</p>
-                </div>
-              </button>
-
-              <!-- Back Button -->
-              <button
-                type="button"
-                (click)="navigateToHome()"
-                class="px-6 py-2.5 bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-400"
-                aria-label="Zurück zur Startseite">
-                Zurück
-              </button>
-            </div>
-          </div>
-        </nav>
-      </header>
-
       <!-- Main Content -->
       <main class="relative z-10 container mx-auto max-w-5xl px-4 md:px-8 py-16 md:py-24">
 
