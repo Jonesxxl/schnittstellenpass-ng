@@ -41,8 +41,10 @@ interface SocialLink {
 
             <!-- Main Title -->
             <div class="space-y-4">
-              <h2 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 leading-tight break-words">
-                {{ mainTitle() }}
+              <h2 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 leading-tight flex flex-col">
+                <span class="animate-fly-in-right">SCHNITT</span>
+                <span class="animate-fly-in-left animation-delay-200">STELLEN</span>
+                <span class="animate-fly-in-right animation-delay-400">PASS</span>
               </h2>
               <div class="h-2 w-24 md:w-32 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
             </div>
@@ -212,6 +214,46 @@ interface SocialLink {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    @keyframes flyInRight {
+      0% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes flyInLeft {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-fly-in-right {
+      animation: flyInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animate-fly-in-left {
+      animation: flyInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animation-delay-200 {
+      animation-delay: 0.2s;
+      opacity: 0;
+    }
+
+    .animation-delay-400 {
+      animation-delay: 0.4s;
+      opacity: 0;
     }
   `]
 })
