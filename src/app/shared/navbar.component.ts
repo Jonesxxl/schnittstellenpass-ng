@@ -29,8 +29,12 @@ interface NavLink {
                 type="button"
                 (click)="navigateTo('/')"
                 class="focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-lg">
-                <h1 class="text-xl font-black text-gray-800 tracking-tight">SCHNITTSTELLENPASS</h1>
-                <p class="text-xs text-gray-600 font-medium">Zwischen Profis & Amateur</p>
+                <h1 class="flex flex-col text-left leading-none">
+                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-right">SCHNITT</span>
+                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-left animation-delay-200">STELLEN</span>
+                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-right animation-delay-400">PASS</span>
+                </h1>
+                <p class="text-xs text-gray-600 font-medium mt-1">Zwischen Profis & Amateur</p>
               </button>
             </div>
 
@@ -69,7 +73,47 @@ interface NavLink {
       </nav>
     </header>
   `,
-  styles: []
+  styles: [`
+    @keyframes flyInRight {
+      0% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes flyInLeft {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-fly-in-right {
+      animation: flyInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animate-fly-in-left {
+      animation: flyInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animation-delay-200 {
+      animation-delay: 0.2s;
+      opacity: 0;
+    }
+
+    .animation-delay-400 {
+      animation-delay: 0.4s;
+      opacity: 0;
+    }
+  `]
 })
 export class NavbarComponent {
   constructor(private router: Router) {}
