@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 
 interface Episode {
   id: string;
-  platform: 'Spotify' | 'YouTube' | 'Apple Podcasts';
   title: string;
   date: string;
   duration: string;
   episodeNumber: number;
   thumbnail?: string;
-  url: string;
+  spotifyUrl: string;
+  youtubeUrl: string;
+  appleMusicUrl: string;
+  description?: string;
 }
 
 @Component({
@@ -17,156 +19,188 @@ interface Episode {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- Episodes Section mit Fußballfeld-Ästhetik -->
-    <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-hidden">
+    <!-- Fußball Podcast Design - Stadium Theme -->
+    <div class="relative min-h-screen bg-gradient-to-br from-green-600 via-green-500 to-green-700 overflow-hidden">
 
-      <!-- Fußballfeld-Grid Overlay -->
-      <div class="absolute inset-0 opacity-20">
-        <div class="absolute inset-0 grid grid-cols-6 grid-rows-6">
-          @for (i of gridLines(); track i) {
-            <div class="border border-white/30"></div>
-          }
-        </div>
-        <!-- Mittelkreis -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full"></div>
+      <!-- Rasen-Textur Overlay -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.1) 40px, rgba(255,255,255,0.1) 80px);"></div>
+        <div class="absolute inset-0" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.05) 60px, rgba(255,255,255,0.05) 120px);"></div>
       </div>
 
-      <!-- Main Content -->
-      <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-16 md:py-24">
+      <!-- Stadion Lichter Effect -->
+      <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/30 to-transparent"></div>
 
-        <!-- Page Header -->
-        <div class="backdrop-blur-xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="text-5xl" aria-hidden="true">📻</div>
-            <div>
-              <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">EPISODEN LOG</h1>
-              <p class="text-lg text-gray-700 font-medium mt-2">Die letzten 5 Folgen von allen Plattformen</p>
+      <!-- Mittelkreis Dekoration -->
+      <div class="absolute top-20 right-10 w-48 h-48 border-8 border-white/20 rounded-full"></div>
+      <div class="absolute bottom-20 left-10 w-32 h-32 border-8 border-white/20 rounded-full"></div>
+
+      <!-- Main Content -->
+      <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-12 md:py-20">
+
+        <!-- Page Header - Stadium Banner Style -->
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl mb-12 border-4 border-green-600">
+          <div class="flex items-center justify-center gap-4 mb-6">
+            <div class="text-6xl" aria-hidden="true">⚽</div>
+            <div class="text-center">
+              <h1 class="text-4xl md:text-6xl font-black text-green-700 tracking-tight uppercase">
+                Episoden
+              </h1>
+              <p class="text-xl md:text-2xl text-gray-700 font-bold mt-2">
+                Die letzten 5 Folgen 🎙️
+              </p>
             </div>
+            <div class="text-6xl" aria-hidden="true">⚽</div>
           </div>
 
-          <!-- Platform Filter Badges -->
-          <div class="flex flex-wrap gap-3 mt-6">
-            @for (platform of platforms(); track platform.id) {
-              <button
-                type="button"
-                (click)="filterByPlatform(platform.name)"
-                [class]="selectedPlatform() === platform.name ?
-                  'px-4 py-2 backdrop-blur-md bg-white/40 border-2 border-white/60 rounded-xl font-bold text-gray-900 transition-all shadow-lg' :
-                  'px-4 py-2 backdrop-blur-md bg-white/10 border border-white/30 rounded-xl font-semibold text-gray-700 hover:bg-white/20 transition-all'"
-                [attr.aria-label]="'Filter nach ' + platform.name">
-                {{ platform.icon }} {{ platform.name }}
-              </button>
-            }
+          <div class="text-center text-gray-600 font-semibold">
+            Zwischen Profis & Amateur - Dein Fußball-Podcast
           </div>
         </div>
 
-        <!-- Episodes Retro Log -->
-        <div class="space-y-6">
-          @for (episode of filteredEpisodes(); track episode.id; let i = $index) {
-            <div
-              class="backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-6 md:p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] group"
-              [class.animation-delay-1000]="i % 2 === 1">
+        <!-- Episodes Grid - Spielerkarten-Style -->
+        <div class="grid grid-cols-1 gap-8">
+          @for (episode of episodes(); track episode.id; let i = $index) {
+            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl overflow-hidden border-4 border-green-600 hover:border-yellow-400 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
 
-              <!-- Episode Header -->
-              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                <!-- Platform Badge & Episode Number -->
-                <div class="flex items-center gap-3">
-                  <div class="px-4 py-2 rounded-xl font-black text-sm shadow-md text-white"
-                    [ngClass]="{
-                      'bg-green-500/80': episode.platform === 'Spotify',
-                      'bg-red-500/80': episode.platform === 'YouTube',
-                      'bg-purple-500/80': episode.platform === 'Apple Podcasts'
-                    }">
-                    {{ getPlatformIcon(episode.platform) }} {{ episode.platform }}
-                  </div>
-                  <div class="backdrop-blur-sm bg-white/30 border border-white/40 px-3 py-1.5 rounded-lg">
-                    <span class="text-xs font-black text-gray-800">#{{ episode.episodeNumber }}</span>
-                  </div>
+              <!-- Episode Card Header - Jersey Style -->
+              <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 text-9xl font-black text-white/10">
+                  #{{ episode.episodeNumber }}
                 </div>
-
-                <!-- Date & Duration -->
-                <div class="flex items-center gap-4 text-sm text-gray-700">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-lg">📅</span>
-                    <span class="font-semibold">{{ episode.date }}</span>
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-white/40">
+                      <span class="text-white font-black text-lg">#{{ episode.episodeNumber }}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-white text-sm">
+                      <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        <span class="text-xl">📅</span>
+                        <span class="font-bold">{{ episode.date }}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        <span class="text-xl">⏱️</span>
+                        <span class="font-bold">{{ episode.duration }}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-lg">⏱️</span>
-                    <span class="font-semibold">{{ episode.duration }}</span>
-                  </div>
+                  <h2 class="text-2xl md:text-3xl font-black text-white drop-shadow-lg mt-4">
+                    {{ episode.title }}
+                  </h2>
                 </div>
               </div>
 
-              <!-- Episode Title -->
-              <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
-                {{ episode.title }}
-              </h2>
+              <!-- Episode Card Body -->
+              <div class="p-6 md:p-8">
 
-              <!-- Retro Terminal-Style Log Entry -->
-              <div class="backdrop-blur-sm bg-gray-900/80 border border-white/20 rounded-xl p-4 font-mono text-sm mb-4">
-                <div class="text-green-400 space-y-1">
-                  <div><span class="text-gray-500">$</span> schnittstellenpass --episode {{ episode.episodeNumber }}</div>
-                  <div><span class="text-blue-400">[INFO]</span> Loading episode: "{{ episode.title }}"</div>
-                  <div><span class="text-yellow-400">[LOG]</span> Platform: {{ episode.platform }}</div>
-                  <div><span class="text-yellow-400">[LOG]</span> Published: {{ episode.date }}</div>
-                  <div><span class="text-yellow-400">[LOG]</span> Duration: {{ episode.duration }}</div>
-                  <div><span class="text-green-400">[SUCCESS]</span> Episode ready to play! 🎧</div>
+                <!-- Platform Links Section -->
+                <div class="mb-6">
+                  <h3 class="text-lg font-black text-gray-700 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🎧</span>
+                    Jetzt anhören auf:
+                  </h3>
+
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Spotify Link -->
+                    <a
+                      [href]="episode.spotifyUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                      </svg>
+                      <div class="flex-1 text-left">
+                        <div class="text-xs opacity-90">Spotify</div>
+                        <div class="text-sm font-black">Jetzt hören</div>
+                      </div>
+                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+
+                    <!-- YouTube Link -->
+                    <a
+                      [href]="episode.youtubeUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group flex items-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      <div class="flex-1 text-left">
+                        <div class="text-xs opacity-90">YouTube</div>
+                        <div class="text-sm font-black">Video ansehen</div>
+                      </div>
+                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+
+                    <!-- Apple Music Link -->
+                    <a
+                      [href]="episode.appleMusicUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group flex items-center gap-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.54.605-2.5 1.68-2.986 3.21-.192.604-.293 1.23-.351 1.862-.026.29-.051.58-.051.87v11.28c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 0 0 1.57-.1c.822-.106 1.596-.35 2.296-.81a5.046 5.046 0 0 0 1.88-2.207c.186-.42.293-.87.353-1.333.047-.353.07-.71.073-1.067v-11.3c0-.14-.01-.28-.014-.418zM14.55 14.615c-.788.326-1.585.614-2.395.837-.592.163-1.194.283-1.803.344-.193.02-.387.037-.58.04-.115.002-.922-.009-1.036-.02-.49-.048-.978-.124-1.46-.24-.735-.178-1.462-.4-2.114-.81-.465-.294-.875-.65-1.122-1.146-.137-.275-.203-.57-.2-.878.003-.318.11-.61.297-.87.305-.424.696-.682 1.17-.86.51-.193 1.04-.306 1.576-.36.246-.024.494-.035.742-.027.36.01.717.05 1.072.107 1.03.164 2.028.476 3.01.816.036.013.072.024.11.035v-7.89c0-.085.01-.17.024-.25.034-.195.132-.36.293-.49.184-.15.397-.197.618-.197.036 0 .072.003.108.008.16.022.32.047.48.08 1.21.244 2.412.52 3.598.877.222.067.444.14.664.22.126.045.24.111.335.212.17.18.253.395.253.64v8.338c0 .58-.004 1.16-.01 1.74 0 .02-.005.04-.008.06z"/>
+                      </svg>
+                      <div class="flex-1 text-left">
+                        <div class="text-xs opacity-90">Apple Music</div>
+                        <div class="text-sm font-black">Podcast öffnen</div>
+                      </div>
+                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Action Buttons -->
-              <div class="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  (click)="playEpisode(episode.url)"
-                  class="group/btn relative px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-purple-300"
-                  aria-label="Episode abspielen">
-                  <span class="relative z-10 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                <!-- Share Button -->
+                <div class="pt-4 border-t-2 border-gray-200">
+                  <button
+                    type="button"
+                    (click)="shareEpisode(episode)"
+                    class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                     </svg>
-                    Jetzt anhören
-                  </span>
-                  <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                </button>
-
-                <button
-                  type="button"
-                  (click)="shareEpisode(episode)"
-                  class="px-6 py-3 backdrop-blur-md bg-white/30 border border-white/40 text-gray-900 font-bold rounded-xl hover:bg-white/50 transition-all duration-300 hover:scale-105 shadow-md focus:outline-none focus:ring-4 focus:ring-gray-300"
-                  aria-label="Episode teilen">
-                  🔗 Teilen
-                </button>
+                    <span>Episode teilen</span>
+                  </button>
+                </div>
               </div>
             </div>
           }
         </div>
 
         <!-- Load More Section -->
-        <div class="mt-12 text-center">
-          <div class="backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-8 shadow-xl">
-            <p class="text-gray-700 font-semibold mb-4">Mehr Episoden entdecken?</p>
+        <div class="mt-16 text-center">
+          <div class="bg-white rounded-2xl p-8 shadow-2xl border-4 border-green-600">
+            <div class="text-5xl mb-4">🏟️</div>
+            <p class="text-xl text-gray-700 font-bold mb-6">Noch mehr Episoden entdecken?</p>
             <button
               type="button"
               (click)="loadMoreEpisodes()"
-              class="px-8 py-4 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-400">
-              Weitere Episoden laden
+              class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+              ⚽ Weitere Episoden laden
             </button>
           </div>
         </div>
       </main>
 
       <!-- Footer -->
-      <footer class="relative z-10 backdrop-blur-md bg-white/10 border-t border-white/20 py-8">
+      <footer class="relative z-10 bg-gradient-to-r from-green-800 to-green-900 border-t-4 border-yellow-400 py-8 mt-16">
         <div class="container mx-auto max-w-7xl px-4 md:px-8">
           <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p class="text-sm text-gray-700 font-medium">
+            <p class="text-sm text-white font-bold flex items-center gap-2">
+              <span class="text-xl">⚽</span>
               © 2025 Schnittstellenpass | Zwischen Profis & Amateur
             </p>
-            <div class="flex items-center gap-6 text-sm text-gray-600">
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
+            <div class="flex items-center gap-6 text-sm text-green-200">
+              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Datenschutz</a>
+              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Impressum</a>
+              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Kontakt</a>
             </div>
           </div>
         </div>
@@ -191,119 +225,86 @@ interface Episode {
   `]
 })
 export class EpisodesComponent {
-  // Grid lines for football field
-  protected gridLines = signal(Array.from({ length: 36 }, (_, i) => i));
-
-  // Selected platform filter
-  protected selectedPlatform = signal<string | null>(null);
-
-  // Platforms
-  protected platforms = signal([
-    { id: '1', name: 'Alle', icon: '📻' },
-    { id: '2', name: 'Spotify', icon: '🎵' },
-    { id: '3', name: 'YouTube', icon: '▶️' },
-    { id: '4', name: 'Apple Podcasts', icon: '🎧' }
-  ]);
-
   // Mock Episodes Data (letzte 5 Folgen)
   protected episodes = signal<Episode[]>([
     {
       id: '1',
-      platform: 'Spotify',
       title: 'Taktikanalyse: Die Evolution des Gegenpressings im modernen Fußball',
       date: '15.11.2025',
       duration: '52:34',
       episodeNumber: 47,
-      url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc'
+      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
+      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
     },
     {
       id: '2',
-      platform: 'YouTube',
       title: 'Interview Special: Von der Kreisliga zur Regionalliga - Eine Reise',
       date: '08.11.2025',
       duration: '1:15:22',
       episodeNumber: 46,
-      url: 'https://www.youtube.com/@schnittstellenpass1105'
+      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
+      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
     },
     {
       id: '3',
-      platform: 'Apple Podcasts',
       title: 'Trainerwechsel: Wann ist der richtige Zeitpunkt?',
       date: '01.11.2025',
       duration: '48:19',
       episodeNumber: 45,
-      url: 'https://podcasts.apple.com/us/search?term=schnittstellenpass'
+      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
+      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
     },
     {
       id: '4',
-      platform: 'Spotify',
       title: 'Spieleranalyse: Die besten Mittelfeldspieler der Bundesliga',
       date: '25.10.2025',
       duration: '56:41',
       episodeNumber: 44,
-      url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc'
+      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
+      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
     },
     {
       id: '5',
-      platform: 'YouTube',
       title: 'Amateur vs. Profi: Unterschiede in der Saisonvorbereitung',
       date: '18.10.2025',
       duration: '1:02:15',
       episodeNumber: 43,
-      url: 'https://www.youtube.com/@schnittstellenpass1105'
+      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
+      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
+      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
     }
   ]);
 
-  // Filtered episodes based on platform selection
-  protected filteredEpisodes = signal<Episode[]>(this.episodes());
-
-  // Filter by platform
-  protected filterByPlatform(platform: string): void {
-    this.selectedPlatform.set(platform);
-
-    if (platform === 'Alle' || platform === null) {
-      this.filteredEpisodes.set(this.episodes());
-    } else {
-      const filtered = this.episodes().filter(ep => ep.platform === platform);
-      this.filteredEpisodes.set(filtered);
-    }
-  }
-
-  // Get platform icon
-  protected getPlatformIcon(platform: string): string {
-    switch (platform) {
-      case 'Spotify': return '🎵';
-      case 'YouTube': return '▶️';
-      case 'Apple Podcasts': return '🎧';
-      default: return '📻';
-    }
-  }
-
-  // Play episode
-  protected playEpisode(url: string): void {
-    window.open(url, '_blank');
-  }
-
   // Share episode
   protected shareEpisode(episode: Episode): void {
+    const shareText = `🎙️ Hör dir diese Episode von Schnittstellenpass an: ${episode.title}\n\n` +
+                     `⚽ Zwischen Profis & Amateur\n\n` +
+                     `🎵 Spotify: ${episode.spotifyUrl}\n` +
+                     `▶️ YouTube: ${episode.youtubeUrl}\n` +
+                     `🎧 Apple Music: ${episode.appleMusicUrl}`;
+
     if (navigator.share) {
       navigator.share({
         title: episode.title,
-        text: `Hör dir diese Episode von Schnittstellenpass an: ${episode.title}`,
-        url: episode.url
+        text: shareText,
+        url: episode.spotifyUrl
       }).catch(() => {
         // Fallback: Copy to clipboard
-        this.copyToClipboard(episode.url);
+        this.copyToClipboard(shareText);
       });
     } else {
-      this.copyToClipboard(episode.url);
+      this.copyToClipboard(shareText);
     }
   }
 
   // Copy to clipboard helper
   private copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Link kopiert! 🎉');
+      alert('Links kopiert! 🎉');
     });
   }
 
