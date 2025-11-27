@@ -10,7 +10,7 @@ import {
   Episode,
   ShowStats
 } from '../models/spotify.models';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
