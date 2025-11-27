@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SpotifyService } from '../services/spotify.service';
+import { SpotifyEpisode } from '../models/spotify.models';
 
 interface Episode {
   id: string;
@@ -57,6 +59,23 @@ interface Episode {
             Zwischen Profis & Amateur - Dein Fußball-Podcast
           </div>
         </div>
+
+        <!-- Loading Indicator -->
+        @if (isLoading()) {
+          <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-r-4 border-green-600 border-b-4 border-transparent mb-6"></div>
+            <p class="text-xl text-gray-700 font-bold">Episoden werden geladen...</p>
+          </div>
+        }
+
+        <!-- No Episodes Message -->
+        @if (!isLoading() && episodes().length === 0) {
+          <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
+            <div class="text-5xl mb-4">😢</div>
+            <p class="text-xl text-gray-700 font-bold">Keine Episoden gefunden.</p>
+            <p class="text-gray-600 mt-2">Bitte versuche es später noch einmal.</p>
+          </div>
+        }
 
         <!-- Episodes Grid - Spielerkarten-Style -->
         <div class="grid grid-cols-1 gap-8">
@@ -175,18 +194,24 @@ interface Episode {
         </div>
 
         <!-- Load More Section -->
-        <div class="mt-16 text-center">
-          <div class="bg-white rounded-2xl p-8 shadow-2xl border-4 border-green-600">
-            <div class="text-5xl mb-4">🏟️</div>
-            <p class="text-xl text-gray-700 font-bold mb-6">Noch mehr Episoden entdecken?</p>
-            <button
-              type="button"
-              (click)="loadMoreEpisodes()"
-              class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
-              ⚽ Weitere Episoden laden
-            </button>
+        @if (episodes().length > 0 && hasMoreEpisodes()) {
+          <div class="mt-16 text-center">
+            <div class="bg-white rounded-2xl p-8 shadow-2xl border-4 border-green-600">
+              <div class="text-5xl mb-4">🏟️</div>
+              <p class="text-xl text-gray-700 font-bold mb-6">Noch mehr Episoden entdecken?</p>
+              <button
+                type="button"
+                [disabled]="isLoading()"
+                (click)="loadMoreEpisodes()"
+                class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                @if (isLoading()) {
+                  <span class="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-white border-r-2 border-white border-b-2 border-transparent mr-2"></span>
+                }
+                ⚽ Weitere Episoden laden
+              </button>
+            </div>
           </div>
-        </div>
+        }
       </main>
 
       <!-- Footer -->
@@ -224,65 +249,23 @@ interface Episode {
     }
   `]
 })
-export class EpisodesComponent {
-  // Mock Episodes Data (letzte 5 Folgen)
-  protected episodes = signal<Episode[]>([
-    {
-      id: '1',
-      title: 'Taktikanalyse: Die Evolution des Gegenpressings im modernen Fußball',
-      date: '15.11.2025',
-      duration: '52:34',
-      episodeNumber: 47,
-      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
-      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
-      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
-    },
-    {
-      id: '2',
-      title: 'Interview Special: Von der Kreisliga zur Regionalliga - Eine Reise',
-      date: '08.11.2025',
-      duration: '1:15:22',
-      episodeNumber: 46,
-      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
-      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
-      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
-    },
-    {
-      id: '3',
-      title: 'Trainerwechsel: Wann ist der richtige Zeitpunkt?',
-      date: '01.11.2025',
-      duration: '48:19',
-      episodeNumber: 45,
-      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
-      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
-      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
-    },
-    {
-      id: '4',
-      title: 'Spieleranalyse: Die besten Mittelfeldspieler der Bundesliga',
-      date: '25.10.2025',
-      duration: '56:41',
-      episodeNumber: 44,
-      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
-      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
-      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
-    },
-    {
-      id: '5',
-      title: 'Amateur vs. Profi: Unterschiede in der Saisonvorbereitung',
-      date: '18.10.2025',
-      duration: '1:02:15',
-      episodeNumber: 43,
-      spotifyUrl: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc',
-      youtubeUrl: 'https://www.youtube.com/@schnittstellenpass1105',
-      appleMusicUrl: 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890'
-    }
-  ]);
+export class EpisodesComponent implements OnInit {
+  private readonly spotifyService = inject(SpotifyService);
+
+  // Episodes data
+  protected episodes = signal<Episode[]>([]);
+  protected isLoading = signal<boolean>(false);
+  protected currentOffset = signal<number>(0);
+  protected hasMoreEpisodes = signal<boolean>(true);
+
+  ngOnInit(): void {
+    this.loadEpisodes();
+  }
 
   // Share episode
   protected shareEpisode(episode: Episode): void {
     const shareText = `🎙️ Hör dir diese Episode von Schnittstellenpass an: ${episode.title}\n\n` +
-                     `⚽ Zwischen Profis & Amateur\n\n` +
+                     `⚽ Zwischen Profi & Amateur\n\n` +
                      `🎵 Spotify: ${episode.spotifyUrl}\n` +
                      `▶️ YouTube: ${episode.youtubeUrl}\n` +
                      `🎧 Apple Music: ${episode.appleMusicUrl}`;
@@ -308,9 +291,100 @@ export class EpisodesComponent {
     });
   }
 
-  // Load more episodes
+  /**
+   * Load episodes from Spotify API
+   */
+  protected loadEpisodes(offset: number = 0): void {
+    this.isLoading.set(true);
+
+    // Fetch 5 episodes from Spotify
+    this.spotifyService.getEpisodes(undefined, 5, offset).subscribe({
+      next: (response) => {
+        const newEpisodes = response.items.map((spotifyEpisode, index) => this.transformToEpisode(spotifyEpisode, offset + index + 1));
+
+        if (offset === 0) {
+          // First load - replace all episodes
+          this.episodes.set(newEpisodes);
+        } else {
+          // Load more - append to existing episodes
+          this.episodes.update(current => [...current, ...newEpisodes]);
+        }
+
+        // Update pagination state
+        this.currentOffset.set(offset + response.items.length);
+        this.hasMoreEpisodes.set(response.next !== null);
+      },
+      error: (error) => {
+        console.error('Failed to fetch episodes:', error);
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  /**
+   * Transform Spotify episode to component Episode model
+   */
+  private transformToEpisode(spotifyEpisode: SpotifyEpisode, episodeNumber: number): Episode {
+    // YouTube and Apple Music URLs are not available from Spotify API
+    // Using channel/podcast URLs as fallbacks
+    const youtubeUrl = 'https://www.youtube.com/@schnittstellenpass1105';
+    const appleMusicUrl = 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890';
+
+    // Format date from YYYY-MM-DD to DD.MM.YYYY
+    const formatDate = (dateString: string): string => {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    };
+
+    // Format duration from milliseconds to MM:SS or HH:MM:SS
+    const formatDuration = (ms: number): string => {
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+
+      if (hours > 0) {
+        const remainingMinutes = minutes % 60;
+        const remainingSeconds = seconds % 60;
+        return `${hours}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      } else {
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+      }
+    };
+
+    // Strip HTML from description
+    const stripHtml = (html: string): string => {
+      const tmp = document.createElement('DIV');
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || '';
+    };
+
+    return {
+      id: spotifyEpisode.id,
+      title: spotifyEpisode.name,
+      date: formatDate(spotifyEpisode.release_date),
+      duration: formatDuration(spotifyEpisode.duration_ms),
+      episodeNumber: episodeNumber,
+      thumbnail: spotifyEpisode.images?.[0]?.url,
+      spotifyUrl: spotifyEpisode.external_urls?.spotify,
+      youtubeUrl: youtubeUrl,
+      appleMusicUrl: appleMusicUrl,
+      description: stripHtml(spotifyEpisode.description)
+    };
+  }
+
+  /**
+   * Load more episodes
+   */
   protected loadMoreEpisodes(): void {
-    alert('Weitere Episoden werden geladen... 🎧');
-    // Here you would typically load more episodes from an API
+    if (this.hasMoreEpisodes() && !this.isLoading()) {
+      this.loadEpisodes(this.currentOffset());
+    }
   }
 }

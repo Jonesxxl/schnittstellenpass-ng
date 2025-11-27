@@ -192,7 +192,7 @@ interface SocialLink {
         <div class="container mx-auto max-w-7xl px-4 md:px-8">
           <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-gray-700 font-medium">
-              © 2025 Schnittstellenpass | Zwischen Profis & Amateur
+              © 2025 Schnittstellenpass | Zwischen Profi & Amateur
             </p>
             <div class="flex items-center gap-6 text-sm text-gray-600">
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
@@ -263,7 +263,7 @@ export class LandingComponent implements OnInit {
 
   // State
   protected mainTitle = signal('SCHNITTSTELLENPASS');
-  protected subtitle = signal('Der Fußball-Podcast zwischen Profis und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
+  protected subtitle = signal('Der Fußball-Podcast zwischen Profi und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
   protected isLoading = signal(false);
   protected showSpotifyUrl = signal('');
 

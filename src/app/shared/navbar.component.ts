@@ -29,12 +29,7 @@ interface NavLink {
                 type="button"
                 (click)="navigateTo('/')"
                 class="focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-lg">
-                <h1 class="flex flex-col text-left leading-none">
-                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-right">SCHNITT</span>
-                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-left animation-delay-200">STELLEN</span>
-                  <span class="text-xl font-black text-gray-800 tracking-tight animate-fly-in-right animation-delay-400">PASS</span>
-                </h1>
-                <p class="text-xs text-gray-600 font-medium mt-1">Zwischen Profis & Amateur</p>
+                <p class="text-xs text-gray-600 font-medium mt-1">LOGO</p>
               </button>
             </div>
 
@@ -118,6 +113,9 @@ interface NavLink {
 export class NavbarComponent {
   constructor(private router: Router) {}
 
+  // Mobile menu state
+  protected isMobileMenuOpen = signal<boolean>(false);
+
   // Navigation Links
   protected navLinks = signal<NavLink[]>([
     { id: '1', label: 'Home', url: '/design', isRoute: true },
@@ -129,10 +127,19 @@ export class NavbarComponent {
   // Navigation method
   protected navigateTo(url: string): void {
     this.router.navigate([url]);
+    // Close mobile menu after navigation
+    this.isMobileMenuOpen.set(false);
   }
 
   // Subscribe action
   protected onSubscribe(): void {
     window.open('https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc', '_blank');
+    // Close mobile menu after action
+    this.isMobileMenuOpen.set(false);
+  }
+
+  // Toggle mobile menu
+  protected toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update(current => !current);
   }
 }
