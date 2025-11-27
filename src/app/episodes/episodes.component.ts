@@ -55,16 +55,13 @@ interface Episode {
             <div class="text-6xl" aria-hidden="true">⚽</div>
           </div>
 
-          <div class="text-center text-gray-600 font-semibold">
-            Zwischen Profis & Amateur - Dein Fußball-Podcast
-          </div>
         </div>
 
         <!-- Loading Indicator -->
         @if (isLoading()) {
           <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
             <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-r-4 border-green-600 border-b-4 border-transparent mb-6"></div>
-            <p class="text-xl text-gray-700 font-bold">Episoden werden geladen...</p>
+            <p class="text-xl text-gray-700 font-bold">⚽...</p>
           </div>
         }
 

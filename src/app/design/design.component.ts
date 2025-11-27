@@ -275,7 +275,7 @@ export class LandingComponent implements OnInit {
   ]);
 
   // Social Links
-  protected socialLinks = signal<SocialLink[]>([
+  protected platforms = signal<SocialLink[]>([
     { id: '1', name: 'Spotify', icon: '🎵', url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc', color: '#1DB954' },
     { id: '2', name: 'YouTube', icon: '▶️', url: 'https://www.youtube.com/@schnittstellenpass1105', color: '#FF0000' },
     { id: '3', name: 'Apple Podcasts', icon: '🎧', url: 'https://podcasts.apple.com/us/search?term=schnittstellenpass%20-%20zwischen%20profi%20und%20amateur', color: '#9333EA' },
@@ -283,7 +283,7 @@ export class LandingComponent implements OnInit {
   ]);
 
   // Platforms
-  protected platforms = signal([
+  protected xx = signal([
     { id: '1', name: 'Spotify', icon: '🎵', url: 'https://spotify.com' },
     { id: '2', name: 'Apple', icon: '🎧', url: 'https://podcasts.apple.com' },
     { id: '3', name: 'YouTube', icon: '▶️', url: 'https://youtube.com' }
