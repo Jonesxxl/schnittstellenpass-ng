@@ -9,9 +9,9 @@ export const environment = {
   // For custom server: Use process.env
 
   spotify: {
-    clientId: '', // Set via build environment variable
-    clientSecret: '', // Set via build environment variable
-    showId: '' // Set via build environment variable
+    clientId: 'SPOTIFY_CLIENT_ID', // Set via build environment variable
+    clientSecret: 'SPOTIFY_CLIENT_SECRET', // Set via build environment variable
+    showId: '4gpxvhJ8WyrGAnba5A6LQc' // Set via build environment variable
   },
 
   youtube: {

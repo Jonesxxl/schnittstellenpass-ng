@@ -262,7 +262,6 @@ export class LandingComponent implements OnInit {
   private readonly spotifyService = inject(SpotifyService);
 
   // State
-  protected liveBadge = signal('🔴 Live Podcast');
   protected mainTitle = signal('SCHNITTSTELLENPASS');
   protected subtitle = signal('Der Fußball-Podcast zwischen Profis und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
   protected isLoading = signal(false);
