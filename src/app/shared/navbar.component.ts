@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 
 interface NavLink {
@@ -12,7 +12,7 @@ interface NavLink {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Header Navigation -->
     <header class="absolute z-50 top-4 left-0 right-0 px-4 md:px-8">

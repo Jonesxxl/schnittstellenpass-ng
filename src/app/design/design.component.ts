@@ -1,5 +1,5 @@
 import { Component, computed, signal, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { Episode } from '../models/spotify.models';
@@ -15,7 +15,7 @@ interface SocialLink {
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Hero Section mit Fußballfeld-Ästhetik -->
     <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-hidden">

@@ -1,5 +1,5 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { SpotifyService } from '../services/spotify.service';
 import { SpotifyEpisode } from '../models/spotify.models';
 
@@ -19,7 +19,7 @@ interface Episode {
 @Component({
   selector: 'app-episodes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Fußball Podcast Design - Stadium Theme -->
     <div class="relative min-h-screen bg-gradient-to-br from-green-600 via-green-500 to-green-700 overflow-hidden">
