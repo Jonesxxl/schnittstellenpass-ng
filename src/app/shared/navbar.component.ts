@@ -15,7 +15,7 @@ interface NavLink {
   imports: [CommonModule],
   template: `
     <!-- Header Navigation -->
-    <header class="relative z-50 pt-8 px-4 md:px-8">
+    <header class="absolute z-50 top-4 left-0 right-0 px-4 md:px-8">
       <nav class="container mx-auto max-w-7xl animate-fade-in">
         <div class="backdrop-blur-md bg-gradient-to-r from-green-600/10 to-blue-500/10 border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
           <div class="flex items-center justify-between">

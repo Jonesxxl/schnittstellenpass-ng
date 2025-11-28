@@ -32,7 +32,7 @@ interface SocialLink {
       </div>
 
       <!-- Main Hero Content -->
-      <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-16 md:py-24">
+      <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 pt-24 pb-16 md:pt-32 md:pb-24">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start lg:items-center">
 
           <!-- Left Column - Text Content -->

@@ -10,7 +10,7 @@
 **Testing:** Karma + Jasmine  
 **Language:** TypeScript 5.4.2
 
-This is a modern Angular 17 web application using the new standalone component architecture, avoiding traditional NgModule patterns. The project is in its initial state with a basic setup and placeholder content.
+This is a modern Angular 21 web application using the new standalone component architecture, avoiding traditional NgModule patterns. The project is in its initial state with a basic setup and placeholder content.
 
 ## Project Structure
 
