@@ -34,8 +34,8 @@ interface Episode {
       <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/30 to-transparent"></div>
 
       <!-- Mittelkreis Dekoration -->
-      <div class="absolute top-20 right-10 w-48 h-48 border-8 border-white/20 rounded-full"></div>
-      <div class="absolute bottom-20 left-10 w-32 h-32 border-8 border-white/20 rounded-full"></div>
+      <div class="hidden md:block absolute top-20 right-10 w-48 h-48 border-8 border-white/20 rounded-full pointer-events-none"></div>
+      <div class="hidden md:block absolute bottom-20 left-10 w-32 h-32 border-8 border-white/20 rounded-full pointer-events-none"></div>
 
       <!-- Main Content -->
       <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-12 md:py-20">

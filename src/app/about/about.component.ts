@@ -24,11 +24,11 @@ interface HighlightSection {
           }
         </div>
         <!-- Mittelkreis -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full pointer-events-none"></div>
         <!-- Strafraum Links -->
-        <div class="absolute top-1/2 left-0 -translate-y-1/2 w-32 h-48 border-4 border-white/30"></div>
+        <div class="hidden md:block absolute top-1/2 left-0 -translate-y-1/2 w-32 h-48 border-4 border-white/30 pointer-events-none"></div>
         <!-- Strafraum Rechts -->
-        <div class="absolute top-1/2 right-0 -translate-y-1/2 w-32 h-48 border-4 border-white/30"></div>
+        <div class="hidden md:block absolute top-1/2 right-0 -translate-y-1/2 w-32 h-48 border-4 border-white/30 pointer-events-none"></div>
       </div>
 
       <!-- Main Content -->
@@ -52,9 +52,9 @@ interface HighlightSection {
         </div>
 
         <!-- Main Description Card -->
-        <div class="backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
+        <div class="relative backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12 overflow-hidden">
           <!-- Decorative Elements -->
-          <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl opacity-60 animate-pulse"></div>
+          <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl opacity-60 animate-pulse pointer-events-none"></div>
 
           <div class="space-y-8">
             <!-- Kurzbeschreibung -->

@@ -15,7 +15,7 @@ interface NavLink {
   imports: [],
   template: `
     <!-- Header Navigation -->
-    <header class="absolute z-50 top-4 left-0 right-0 px-4 md:px-8">
+    <header class="fixed z-50 top-4 left-0 right-0 px-4 md:px-8">
       <nav class="container mx-auto max-w-7xl animate-fade-in">
         <div class="backdrop-blur-md bg-transparent border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
           <div class="flex items-center justify-between">
@@ -36,11 +36,17 @@ interface NavLink {
             <button
               type="button"
               (click)="toggleMobileMenu()"
-              class="md:hidden flex flex-col space-y-1.5 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 z-50"
-              aria-label="Toggle menu">
-              <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300" [class.rotate-45]="isMobileMenuOpen()" [class.translate-y-2]="isMobileMenuOpen()"></span>
-              <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300" [class.opacity-0]="isMobileMenuOpen()"></span>
-              <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300" [class.-rotate-45]="isMobileMenuOpen()" [class.-translate-y-2]="isMobileMenuOpen()"></span>
+              class="md:hidden flex flex-col justify-center items-center space-y-1.5 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 relative z-[60] w-10 h-10"
+              aria-label="Toggle menu"
+              [attr.aria-expanded]="isMobileMenuOpen()">
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
+                    [class.rotate-45]="isMobileMenuOpen()"
+                    [class.translate-y-2]="isMobileMenuOpen()"></span>
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300"
+                    [class.opacity-0]="isMobileMenuOpen()"></span>
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
+                    [class.-rotate-45]="isMobileMenuOpen()"
+                    [class.-translate-y-2]="isMobileMenuOpen()"></span>
             </button>
 
             <!-- Desktop Navigation Links -->
@@ -82,69 +88,68 @@ interface NavLink {
           </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div
-          class="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
-          [class.opacity-100]="isMobileMenuOpen()"
-          [class.opacity-0]="!isMobileMenuOpen()"
-          [class.pointer-events-auto]="isMobileMenuOpen()"
-          [class.pointer-events-none]="!isMobileMenuOpen()">
+        <!-- Mobile Menu Backdrop -->
+        @if (isMobileMenuOpen()) {
           <div
-            class="absolute right-0 top-0 h-full w-4/5 max-w-sm bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 shadow-2xl transition-transform duration-300 ease-in-out transform overflow-y-auto"
-            [class.translate-x-0]="isMobileMenuOpen()"
-            [class.translate-x-full]="!isMobileMenuOpen()">
-            <div class="p-6 flex flex-col h-full">
-              <div class="flex justify-between items-center mb-8">
-                <div class="flex items-center">
-                  <div class="relative w-10 h-10 bg-gradient-to-br from-green-600 to-green-700 rounded-lg border border-white/30 flex items-center justify-center overflow-hidden shadow-md">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
-                    <span class="relative text-lg font-black text-white drop-shadow-md">SP</span>
-                  </div>
+            class="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[45] transition-opacity duration-300"
+            (click)="toggleMobileMenu()">
+          </div>
+        }
+
+        <!-- Mobile Menu Panel -->
+        <div
+          class="md:hidden fixed right-0 top-0 h-full w-4/5 max-w-sm bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 shadow-2xl transition-transform duration-300 ease-in-out z-[55] overflow-y-auto"
+          [class.translate-x-0]="isMobileMenuOpen()"
+          [class.translate-x-full]="!isMobileMenuOpen()">
+          <div class="p-6 flex flex-col min-h-full">
+            <div class="flex justify-between items-center mb-8">
+              <div class="flex items-center">
+                <div class="relative w-10 h-10 bg-gradient-to-br from-green-600 to-green-700 rounded-lg border border-white/30 flex items-center justify-center overflow-hidden shadow-md">
+                  <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
+                  <span class="relative text-lg font-black text-white drop-shadow-md">SP</span>
                 </div>
-                <button
-                  type="button"
-                  (click)="toggleMobileMenu()"
-                  class="p-2 rounded-full bg-gray-300/50 hover:bg-gray-400/50 transition-colors"
-                  aria-label="Close menu">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
+              <button
+                type="button"
+                (click)="toggleMobileMenu()"
+                class="p-2 rounded-full bg-gray-300/50 hover:bg-gray-400/50 transition-colors"
+                aria-label="Close menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-              <div class="flex flex-col space-y-4">
-                @for (link of navLinks(); track link.id; let i = $index) {
-                  @if (link.isRoute) {
-                    <button
-                      type="button"
-                      (click)="navigateTo(link.url)"
-                      class="py-3 px-4 text-left text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600 animate-fly-in-right"
-                      [style.animation-delay.ms]="100 * i"
-                      [attr.aria-label]="link.label">
-                      {{ link.label }}
-                    </button>
-                  } @else {
-                    <a
-                      [href]="link.url"
-                      class="py-3 px-4 text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600 animate-fly-in-right"
-                      [style.animation-delay.ms]="100 * i"
-                      [attr.aria-label]="link.label">
-                      {{ link.label }}
-                    </a>
-                  }
+            <div class="flex flex-col space-y-4">
+              @for (link of navLinks(); track link.id; let i = $index) {
+                @if (link.isRoute) {
+                  <button
+                    type="button"
+                    (click)="navigateTo(link.url)"
+                    class="py-3 px-4 text-left text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600"
+                    [attr.aria-label]="link.label">
+                    {{ link.label }}
+                  </button>
+                } @else {
+                  <a
+                    [href]="link.url"
+                    (click)="toggleMobileMenu()"
+                    class="py-3 px-4 text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600"
+                    [attr.aria-label]="link.label">
+                    {{ link.label }}
+                  </a>
                 }
-              </div>
+              }
+            </div>
 
-              <div class="mt-auto pt-6 border-t border-gray-200">
-                <button
-                  type="button"
-                  (click)="onSubscribe()"
-                  class="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-base font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50 animate-fly-in-right"
-                  [style.animation-delay.ms]="navLinks().length * 100 + 100"
-                  aria-label="Jetzt abonnieren">
-                  Abonnieren
-                </button>
-              </div>
+            <div class="mt-auto pt-6 border-t border-gray-200">
+              <button
+                type="button"
+                (click)="onSubscribe()"
+                class="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-base font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50"
+                aria-label="Jetzt abonnieren">
+                Abonnieren
+              </button>
             </div>
           </div>
         </div>

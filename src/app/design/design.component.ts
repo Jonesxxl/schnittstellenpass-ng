@@ -28,7 +28,7 @@ interface SocialLink {
           }
         </div>
         <!-- Mittelkreis -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-white/30 rounded-full pointer-events-none"></div>
       </div>
 
       <!-- Main Hero Content -->
@@ -85,10 +85,10 @@ interface SocialLink {
           <!-- Right Column - Hero Image/Card -->
           <div class="relative lg:sticky lg:top-24">
             <!-- Main Card mit Glassmorphism -->
-            <div class="relative backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div class="relative backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden">
               <!-- Decorative Elements -->
-              <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl opacity-60 animate-pulse"></div>
-              <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full blur-2xl opacity-60 animate-pulse animation-delay-1000"></div>
+              <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl opacity-60 animate-pulse pointer-events-none"></div>
+              <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full blur-2xl opacity-60 animate-pulse animation-delay-1000 pointer-events-none"></div>
 
               <!-- Latest Episode -->
               <div class="relative">
