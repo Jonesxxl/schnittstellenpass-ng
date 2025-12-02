@@ -75,7 +75,7 @@ interface SocialLink {
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                   [attr.aria-label]="'Auf ' + platform.name + ' anhören'">
-                  <span class="text-lg">{{ platform.icon }}</span>
+                  <img [src]="platform.icon" [alt]="platform.name + ' logo'" class="w-5 h-5">
                   {{ platform.name }}
                 </a>
               }
@@ -276,10 +276,10 @@ export class LandingComponent implements OnInit {
 
   // Social Links
   protected platforms = signal<SocialLink[]>([
-    { id: '1', name: 'Spotify', icon: '🎵', url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc', color: '#1DB954' },
-    { id: '2', name: 'YouTube', icon: '▶️', url: 'https://www.youtube.com/@schnittstellenpass1105', color: '#FF0000' },
-    { id: '3', name: 'Apple Podcasts', icon: '🎧', url: 'https://podcasts.apple.com/us/search?term=schnittstellenpass%20-%20zwischen%20profi%20und%20amateur', color: '#9333EA' },
-    { id: '4', name: 'Instagram', icon: '📸', url: 'https://www.instagram.com/schnittstellenpass/', color: '#E4405F' }
+    { id: '1', name: 'Spotify', icon: '/assets/icons/spotify-logo.svg', url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc', color: '#1DB954' },
+    { id: '2', name: 'YouTube', icon: '/assets/icons/youtube-logo.svg', url: 'https://www.youtube.com/@schnittstellenpass1105', color: '#FF0000' },
+    { id: '3', name: 'Apple Podcasts', icon: '/assets/icons/apple-logo.svg', url: 'https://podcasts.apple.com/us/search?term=schnittstellenpass%20-%20zwischen%20profi%20und%20amateur', color: '#9333EA' },
+    { id: '4', name: 'Instagram', icon: '/assets/icons/instagram-logo.svg', url: 'https://www.instagram.com/schnittstellenpass/', color: '#E4405F' }
   ]);
 
   // Platforms
