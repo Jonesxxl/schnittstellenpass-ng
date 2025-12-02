@@ -1,5 +1,4 @@
-import { Component, signal } from '@angular/core';
-
+import { Component, signal, effect, Renderer2, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 interface NavLink {
@@ -15,15 +14,15 @@ interface NavLink {
   imports: [],
   template: `
     <!-- Header Navigation -->
-    <header class="fixed z-50 top-4 left-0 right-0 px-4 md:px-8">
+    <header class="fixed z-[90] top-0 left-0 right-0 px-4 md:px-8 pt-4">
       <nav class="container mx-auto max-w-7xl animate-fade-in">
-        <div class="backdrop-blur-md bg-transparent border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
-          <div class="flex items-center justify-between">
-            <!-- Logo -->
-            <div class="flex items-center">
+        <div class="backdrop-blur-md bg-white/90 md:bg-white/80 border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
+          <div class="flex items-center relative min-h-[56px] w-full">
+            <!-- Logo - Centered on mobile, left on desktop -->
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0">
               <button
                 type="button"
-                (click)="navigateTo('/')"
+                (click)="navigateTo('/home')"
                 class="relative group focus:outline-none focus:ring-2 focus:ring-green-400 rounded-xl">
                 <div class="relative w-14 h-14 bg-gradient-to-br from-green-600 to-green-700 rounded-xl border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-green-400/30 animate-pulse-slow">
                   <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
@@ -32,25 +31,8 @@ interface NavLink {
               </button>
             </div>
 
-            <!-- Mobile Menu Toggle -->
-            <button
-              type="button"
-              (click)="toggleMobileMenu()"
-              class="md:hidden flex flex-col justify-center items-center space-y-1.5 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 relative z-[60] w-10 h-10"
-              aria-label="Toggle menu"
-              [attr.aria-expanded]="isMobileMenuOpen()">
-              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
-                    [class.rotate-45]="isMobileMenuOpen()"
-                    [class.translate-y-2]="isMobileMenuOpen()"></span>
-              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300"
-                    [class.opacity-0]="isMobileMenuOpen()"></span>
-              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
-                    [class.-rotate-45]="isMobileMenuOpen()"
-                    [class.-translate-y-2]="isMobileMenuOpen()"></span>
-            </button>
-
             <!-- Desktop Navigation Links -->
-            <div class="hidden md:flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-8 ml-12">
               @for (link of navLinks(); track link.id; let i = $index) {
                 @if (link.isRoute) {
                   <button
@@ -77,30 +59,49 @@ interface NavLink {
               }
             </div>
 
-            <!-- CTA Button -->
+            <!-- CTA Button - Right side -->
             <button
               type="button"
               (click)="onSubscribe()"
-              class="hidden md:block px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50 animate-fade-in animation-delay-400"
+              class="hidden md:block ml-auto px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50 animate-fade-in animation-delay-400"
               aria-label="Jetzt abonnieren">
               Abonnieren
+            </button>
+
+            <!-- Mobile Menu Toggle -->
+            <button
+              type="button"
+              (click)="toggleMobileMenu()"
+              class="md:hidden flex flex-col justify-center items-center space-y-1.5 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 relative z-[120] w-10 h-10 ml-auto"
+              aria-label="Toggle menu"
+              [attr.aria-expanded]="isMobileMenuOpen()">
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
+                    [class.rotate-45]="isMobileMenuOpen()"
+                    [class.translate-y-2]="isMobileMenuOpen()"></span>
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300"
+                    [class.opacity-0]="isMobileMenuOpen()"></span>
+              <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
+                    [class.-rotate-45]="isMobileMenuOpen()"
+                    [class.-translate-y-2]="isMobileMenuOpen()"></span>
             </button>
           </div>
         </div>
 
-        <!-- Mobile Menu Backdrop -->
-        @if (isMobileMenuOpen()) {
-          <div
-            class="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[45] transition-opacity duration-300"
-            (click)="toggleMobileMenu()">
-          </div>
-        }
+      </nav>
 
-        <!-- Mobile Menu Panel -->
+      <!-- Mobile Menu Backdrop -->
+      @if (isMobileMenuOpen()) {
         <div
-          class="md:hidden fixed right-0 top-0 h-full w-4/5 max-w-sm bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 shadow-2xl transition-transform duration-300 ease-in-out z-[55] overflow-y-auto"
-          [class.translate-x-0]="isMobileMenuOpen()"
-          [class.translate-x-full]="!isMobileMenuOpen()">
+          class="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-300"
+          (click)="toggleMobileMenu()">
+        </div>
+      }
+
+      <!-- Mobile Menu Panel -->
+      <div
+        class="md:hidden fixed right-0 top-0 h-full w-4/5 max-w-sm bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 shadow-2xl transition-transform duration-300 ease-in-out z-[110] overflow-y-auto"
+        [class.translate-x-0]="isMobileMenuOpen()"
+        [class.translate-x-full]="!isMobileMenuOpen()">
           <div class="p-6 flex flex-col min-h-full">
             <div class="flex justify-between items-center mb-8">
               <div class="flex items-center">
@@ -153,7 +154,6 @@ interface NavLink {
             </div>
           </div>
         </div>
-      </nav>
     </header>
   `,
   styles: [`
@@ -246,14 +246,26 @@ interface NavLink {
   `]
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  private router = inject(Router);
+  private renderer = inject(Renderer2);
 
   // Mobile menu state
   protected isMobileMenuOpen = signal<boolean>(false);
 
+  constructor() {
+    // Lock body scroll when mobile menu is open
+    effect(() => {
+      if (this.isMobileMenuOpen()) {
+        this.renderer.addClass(document.body, 'overflow-hidden');
+      } else {
+        this.renderer.removeClass(document.body, 'overflow-hidden');
+      }
+    });
+  }
+
   // Navigation Links
   protected navLinks = signal<NavLink[]>([
-    { id: '1', label: 'Home', url: '/design', isRoute: true },
+    { id: '1', label: 'Home', url: '/home', isRoute: true },
     { id: '2', label: 'Episoden', url: '/episodes', isRoute: true },
     { id: '3', label: 'Über uns', url: '/about', isRoute: true },
     { id: '4', label: 'Kontakt', url: '#contact', isRoute: false }
@@ -261,7 +273,10 @@ export class NavbarComponent {
 
   // Navigation method
   protected navigateTo(url: string): void {
-    this.router.navigate([url]);
+    this.router.navigate([url]).then(() => {
+      // Scroll to top after navigation
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
     // Close mobile menu after navigation
     this.isMobileMenuOpen.set(false);
   }
