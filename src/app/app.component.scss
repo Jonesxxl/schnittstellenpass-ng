@@ -1,0 +1,12 @@
+/* Add padding to the top of the app to account for the navbar */
+:host {
+  display: block;
+  padding-top: 5rem; /* Adjust this value based on the navbar height */
+}
+
+/* For larger screens, increase the padding to account for the larger navbar */
+@media (min-width: 768px) {
+  :host {
+    padding-top: 6rem;
+  }
+}

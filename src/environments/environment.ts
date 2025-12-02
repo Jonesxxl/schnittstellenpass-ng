@@ -3,9 +3,14 @@ export const environment = {
 
   // Spotify API Credentials
   // Get these from: https://developer.spotify.com/dashboard
+  // Follow the instructions in API_SETUP.md to create a Spotify app and get your credentials
   spotify: {
-    clientId: 'YOUR_SPOTIFY_CLIENT_ID', // Get from Spotify Developer Dashboard
-    clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET', // Get from Spotify Developer Dashboard
+    // Replace these with your actual Spotify credentials for local development
+    // 1. Go to https://developer.spotify.com/dashboard
+    // 2. Log in and create a new app
+    // 3. Copy the Client ID and Client Secret
+    clientId: 'YOUR_SPOTIFY_CLIENT_ID', // Replace with your actual Client ID
+    clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET', // Replace with your actual Client Secret
     showId: '4gpxvhJ8WyrGAnba5A6LQc' // Schnittstellenpass podcast show ID
   },
 

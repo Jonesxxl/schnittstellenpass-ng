@@ -17,7 +17,7 @@ interface NavLink {
     <!-- Header Navigation -->
     <header class="absolute z-50 top-4 left-0 right-0 px-4 md:px-8">
       <nav class="container mx-auto max-w-7xl animate-fade-in">
-        <div class="backdrop-blur-md bg-gradient-to-r from-green-600/10 to-blue-500/10 border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
+        <div class="backdrop-blur-md bg-transparent border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
           <div class="flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center">
@@ -90,7 +90,7 @@ interface NavLink {
           [class.pointer-events-auto]="isMobileMenuOpen()"
           [class.pointer-events-none]="!isMobileMenuOpen()">
           <div
-            class="absolute right-0 top-0 h-full w-4/5 max-w-sm bg-white shadow-2xl transition-transform duration-300 ease-in-out transform overflow-y-auto"
+            class="absolute right-0 top-0 h-full w-4/5 max-w-sm bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 shadow-2xl transition-transform duration-300 ease-in-out transform overflow-y-auto"
             [class.translate-x-0]="isMobileMenuOpen()"
             [class.translate-x-full]="!isMobileMenuOpen()">
             <div class="p-6 flex flex-col h-full">
@@ -104,7 +104,7 @@ interface NavLink {
                 <button
                   type="button"
                   (click)="toggleMobileMenu()"
-                  class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  class="p-2 rounded-full bg-gray-300/50 hover:bg-gray-400/50 transition-colors"
                   aria-label="Close menu">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -118,7 +118,7 @@ interface NavLink {
                     <button
                       type="button"
                       (click)="navigateTo(link.url)"
-                      class="py-3 px-4 text-left text-lg font-semibold text-gray-800 hover:bg-green-50 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-green-50 focus:text-green-600 animate-fly-in-right"
+                      class="py-3 px-4 text-left text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600 animate-fly-in-right"
                       [style.animation-delay.ms]="100 * i"
                       [attr.aria-label]="link.label">
                       {{ link.label }}
@@ -126,7 +126,7 @@ interface NavLink {
                   } @else {
                     <a
                       [href]="link.url"
-                      class="py-3 px-4 text-lg font-semibold text-gray-800 hover:bg-green-50 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-green-50 focus:text-green-600 animate-fly-in-right"
+                      class="py-3 px-4 text-lg font-semibold text-gray-800 hover:bg-white/20 hover:text-green-600 rounded-xl transition-colors focus:outline-none focus:bg-white/20 focus:text-green-600 animate-fly-in-right"
                       [style.animation-delay.ms]="100 * i"
                       [attr.aria-label]="link.label">
                       {{ link.label }}

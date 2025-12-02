@@ -3,7 +3,7 @@ export const environment = {
   spotify: {
     clientId: '',
     clientSecret: '',
-    showId: '4gpxvhJ8WyrGAnba5A6LQc'
+    showId: ''
   },
   youtube: {
     apiKey: '',
