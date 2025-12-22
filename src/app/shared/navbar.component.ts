@@ -14,10 +14,10 @@ interface NavLink {
   imports: [],
   template: `
     <!-- Header Navigation -->
-    <header class="fixed z-[90] top-0 left-0 right-0 px-4 md:px-8 pt-4">
-      <nav class="container mx-auto max-w-7xl animate-fade-in">
-        <div class="backdrop-blur-md bg-white/90 md:bg-white/80 border border-white/30 rounded-2xl px-6 py-4 shadow-xl">
-          <div class="flex items-center relative min-h-[56px] w-full">
+    <header class="fixed z-[90] top-0 left-0 right-0 px-4 md:px-8 pt-4 max-w-full overflow-x-hidden">
+      <nav class="container mx-auto max-w-7xl animate-fade-in w-full">
+        <div class="backdrop-blur-md bg-white/90 md:bg-white/80 border border-white/30 rounded-2xl px-6 py-4 shadow-xl max-w-full">
+          <div class="flex items-center relative min-h-[56px] w-full max-w-full">
             <!-- Logo - Centered on mobile, left on desktop -->
             <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0">
               <button

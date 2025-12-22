@@ -22,7 +22,7 @@ interface Episode {
   imports: [],
   template: `
     <!-- Fußball Podcast Design - Stadium Theme -->
-    <div class="relative min-h-screen bg-gradient-to-br from-green-600 via-green-500 to-green-700 overflow-hidden">
+    <div class="relative min-h-screen bg-gradient-to-br from-green-600 via-green-500 to-green-700 overflow-x-hidden overflow-y-auto">
 
       <!-- Rasen-Textur Overlay -->
       <div class="absolute inset-0 opacity-10">
@@ -81,7 +81,7 @@ interface Episode {
 
               <!-- Episode Card Header - Jersey Style -->
               <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 text-9xl font-black text-white/10">
+                <div class="absolute top-0 right-0 text-6xl md:text-9xl font-black text-white/10 pointer-events-none">
                   #{{ episode.episodeNumber }}
                 </div>
                 <div class="relative z-10">

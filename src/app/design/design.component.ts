@@ -18,7 +18,7 @@ interface SocialLink {
   imports: [],
   template: `
     <!-- Hero Section mit Fußballfeld-Ästhetik -->
-    <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-hidden">
+    <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-x-hidden overflow-y-auto">
 
       <!-- Fußballfeld-Grid Overlay -->
       <div class="absolute inset-0 opacity-20">
@@ -40,7 +40,7 @@ interface SocialLink {
 
 
             <!-- Main Title -->
-            <div class="space-y-4">
+            <div class="space-y-4 overflow-x-hidden">
               <h2 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 leading-tight flex flex-col">
                 <span class="animate-fly-in-right">SCHNITT</span>
                 <span class="animate-fly-in-left animation-delay-200">STELLEN</span>
