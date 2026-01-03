@@ -16,6 +16,17 @@ body {
   padding: 0;
 }
 
+/* Ensure all containers respect viewport width */
+* {
+  box-sizing: border-box;
+}
+
+/* Prevent text overflow */
+body {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Custom responsive styles for mobile optimization */
 @layer utilities {
   /* Responsive text sizing */
@@ -89,6 +100,15 @@ body {
   /* Responsive containers */
   .responsive-container {
     @apply px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12;
+  }
+
+  /* Prevent overflow utilities */
+  .no-overflow-x {
+    @apply overflow-x-hidden max-w-full;
+  }
+
+  .safe-width {
+    @apply w-full max-w-full;
   }
 }
 

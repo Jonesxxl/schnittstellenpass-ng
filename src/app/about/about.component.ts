@@ -14,7 +14,7 @@ interface HighlightSection {
   imports: [],
   template: `
     <!-- About Page mit Fußballfeld-Ästhetik -->
-    <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-hidden">
+    <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-x-hidden overflow-y-auto">
 
       <!-- Fußballfeld-Grid Overlay -->
       <div class="absolute inset-0 opacity-20">
