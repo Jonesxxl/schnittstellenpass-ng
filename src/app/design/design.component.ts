@@ -1,5 +1,4 @@
 import { Component, computed, signal, inject, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { Episode } from '../models/spotify.models';
@@ -73,7 +72,7 @@ interface SocialLink {
                   [href]="platform.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 md:hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                   [attr.aria-label]="'Auf ' + platform.name + ' anhören'">
                   <img [src]="platform.icon" [alt]="platform.name + ' logo'" class="w-5 h-5">
                   {{ platform.name }}
@@ -83,9 +82,9 @@ interface SocialLink {
           </div>
 
           <!-- Right Column - Hero Image/Card -->
-          <div class="relative lg:sticky lg:top-24">
+          <div class="relative lg:sticky lg:top-24 min-w-0 w-full">
             <!-- Main Card mit Glassmorphism -->
-            <div class="relative backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden">
+            <div class="relative backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden w-full min-w-0">
               <!-- Decorative Elements -->
               <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl opacity-60 animate-pulse pointer-events-none"></div>
               <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full blur-2xl opacity-60 animate-pulse animation-delay-1000 pointer-events-none"></div>
@@ -105,7 +104,7 @@ interface SocialLink {
                   <img
                     [src]="latestEpisode()?.imageUrl || '/assets/cover.jpg'"
                     [alt]="latestEpisode()?.title || 'Schnittstellenpass Podcast Cover'"
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    class="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 400%22%3E%3Crect fill=%22%23cbd5e1%22 width=%22400%22 height=%22400%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2280%22 fill=%22%231e293b%22 font-weight=%22bold%22%3ESP%3C/text%3E%3C/svg%3E'">
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
 
@@ -113,7 +112,7 @@ interface SocialLink {
                   <button
                     type="button"
                     (click)="onPlayLatest(); $event.stopPropagation()"
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 shadow-2xl focus:outline-none focus:ring-4 focus:ring-white"
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 md:hover:scale-110 shadow-2xl focus:outline-none focus:ring-4 focus:ring-white"
                     aria-label="Episode abspielen">
                     <svg class="w-10 h-10 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
@@ -122,9 +121,9 @@ interface SocialLink {
                 </div>
 
                 @if (latestEpisode(); as episode) {
-                  <div class="space-y-3">
-                    <h3 class="text-2xl font-bold text-gray-900 line-clamp-2">{{ episode.title }}</h3>
-                    <p class="text-gray-700 line-clamp-2">{{ episode.description }}</p>
+                  <div class="space-y-3 min-w-0">
+                    <h3 class="text-2xl font-bold text-gray-900 line-clamp-2 break-words">{{ episode.title }}</h3>
+                    <p class="text-gray-700 line-clamp-2 break-words break-all">{{ episode.description }}</p>
                     <div class="flex items-center gap-3 text-sm text-gray-600">
                       <span class="flex items-center gap-1">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -141,11 +140,11 @@ interface SocialLink {
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-4 pt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 w-full">
               <button
                 type="button"
                 (click)="onListenNow()"
-                class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
+                class="group relative w-full inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 md:hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
                 aria-label="Jetzt anhören">
                 <span class="relative z-10 flex items-center gap-2">
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -159,7 +158,7 @@ interface SocialLink {
               <button
                 type="button"
                 (click)="onShowMore()"
-                class="px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300"
+                class="w-full inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 md:hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300"
                 aria-label="Mehr erfahren">
                 Mehr erfahren
               </button>
@@ -194,7 +193,7 @@ interface SocialLink {
             <p class="text-sm text-gray-700 font-medium">
               © 2025 Schnittstellenpass | Zwischen Profi & Amateur
             </p>
-            <div class="flex items-center gap-6 text-sm text-gray-600">
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
@@ -282,12 +281,6 @@ export class LandingComponent implements OnInit {
     { id: '4', name: 'Instagram', icon: '/assets/icons/instagram-logo.svg', url: 'https://www.instagram.com/schnittstellenpass/', color: '#E4405F' }
   ]);
 
-  // Platforms
-  protected xx = signal([
-    { id: '1', name: 'Spotify', icon: '🎵', url: 'https://spotify.com' },
-    { id: '2', name: 'Apple', icon: '🎧', url: 'https://podcasts.apple.com' },
-    { id: '3', name: 'YouTube', icon: '▶️', url: 'https://youtube.com' }
-  ]);
 
   // Latest Episode
   protected latestEpisode = signal<Episode | null>(null);

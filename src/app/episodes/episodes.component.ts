@@ -42,8 +42,8 @@ interface Episode {
 
         <!-- Page Header - Stadium Banner Style -->
         <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl mb-12 border-4 border-green-600">
-          <div class="flex items-center justify-center gap-4 mb-6">
-            <div class="text-6xl" aria-hidden="true">⚽</div>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 text-center">
+            <div class="text-5xl sm:text-6xl" aria-hidden="true">⚽</div>
             <div class="text-center">
               <h1 class="text-4xl md:text-6xl font-black text-green-700 tracking-tight uppercase">
                 Episoden
@@ -52,7 +52,7 @@ interface Episode {
                 Die letzten 5 Folgen 🎙️
               </p>
             </div>
-            <div class="text-6xl" aria-hidden="true">⚽</div>
+            <div class="text-5xl sm:text-6xl" aria-hidden="true">⚽</div>
           </div>
 
         </div>
@@ -77,7 +77,7 @@ interface Episode {
         <!-- Episodes Grid - Spielerkarten-Style -->
         <div class="grid grid-cols-1 gap-8">
           @for (episode of episodes(); track episode.id; let i = $index) {
-            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl overflow-hidden border-4 border-green-600 hover:border-yellow-400 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
+            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl overflow-hidden border-4 border-green-600 hover:border-yellow-400 transition-all duration-300 md:hover:scale-[1.02] hover:shadow-3xl">
 
               <!-- Episode Card Header - Jersey Style -->
               <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 relative overflow-hidden">
@@ -85,22 +85,22 @@ interface Episode {
                   #{{ episode.episodeNumber }}
                 </div>
                 <div class="relative z-10">
-                  <div class="flex items-center justify-between mb-2">
-                    <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-white/40">
-                      <span class="text-white font-black text-lg">#{{ episode.episodeNumber }}</span>
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+                    <div class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 border-white/40 w-fit">
+                      <span class="text-white font-black text-sm sm:text-lg">#{{ episode.episodeNumber }}</span>
                     </div>
-                    <div class="flex items-center gap-3 text-white text-sm">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-white text-xs sm:text-sm w-full sm:w-auto">
                       <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="text-xl">📅</span>
+                        <span class="text-lg sm:text-xl">📅</span>
                         <span class="font-bold">{{ episode.date }}</span>
                       </div>
                       <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="text-xl">⏱️</span>
+                        <span class="text-lg sm:text-xl">⏱️</span>
                         <span class="font-bold">{{ episode.duration }}</span>
                       </div>
                     </div>
                   </div>
-                  <h2 class="text-2xl md:text-3xl font-black text-white drop-shadow-lg mt-4">
+                  <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-white drop-shadow-lg mt-4">
                     {{ episode.title }}
                   </h2>
                 </div>
@@ -122,7 +122,7 @@ interface Episode {
                       [href]="episode.spotifyUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      class="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
                       <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                       </svg>
@@ -140,7 +140,7 @@ interface Episode {
                       [href]="episode.youtubeUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      class="group flex items-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
                       <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                       </svg>
@@ -158,7 +158,7 @@ interface Episode {
                       [href]="episode.appleMusicUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      class="group flex items-center gap-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
                       <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.54.605-2.5 1.68-2.986 3.21-.192.604-.293 1.23-.351 1.862-.026.29-.051.58-.051.87v11.28c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 0 0 1.57-.1c.822-.106 1.596-.35 2.296-.81a5.046 5.046 0 0 0 1.88-2.207c.186-.42.293-.87.353-1.333.047-.353.07-.71.073-1.067v-11.3c0-.14-.01-.28-.014-.418zM14.55 14.615c-.788.326-1.585.614-2.395.837-.592.163-1.194.283-1.803.344-.193.02-.387.037-.58.04-.115.002-.922-.009-1.036-.02-.49-.048-.978-.124-1.46-.24-.735-.178-1.462-.4-2.114-.81-.465-.294-.875-.65-1.122-1.146-.137-.275-.203-.57-.2-.878.003-.318.11-.61.297-.87.305-.424.696-.682 1.17-.86.51-.193 1.04-.306 1.576-.36.246-.024.494-.035.742-.027.36.01.717.05 1.072.107 1.03.164 2.028.476 3.01.816.036.013.072.024.11.035v-7.89c0-.085.01-.17.024-.25.034-.195.132-.36.293-.49.184-.15.397-.197.618-.197.036 0 .072.003.108.008.16.022.32.047.48.08 1.21.244 2.412.52 3.598.877.222.067.444.14.664.22.126.045.24.111.335.212.17.18.253.395.253.64v8.338c0 .58-.004 1.16-.01 1.74 0 .02-.005.04-.008.06z"/>
                       </svg>
@@ -178,7 +178,7 @@ interface Episode {
                   <button
                     type="button"
                     (click)="shareEpisode(episode)"
-                    class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                     </svg>
@@ -200,7 +200,7 @@ interface Episode {
                 type="button"
                 [disabled]="isLoading()"
                 (click)="loadMoreEpisodes()"
-                class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 md:hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
                 @if (isLoading()) {
                   <span class="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-white border-r-2 border-white border-b-2 border-transparent mr-2"></span>
                 }
@@ -219,7 +219,7 @@ interface Episode {
               <span class="text-xl">⚽</span>
               © 2025 Schnittstellenpass | Zwischen Profis & Amateur
             </p>
-            <div class="flex items-center gap-6 text-sm text-green-200">
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-green-200">
               <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Datenschutz</a>
               <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Impressum</a>
               <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Kontakt</a>

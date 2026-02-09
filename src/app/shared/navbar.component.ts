@@ -24,7 +24,7 @@ interface NavLink {
                 type="button"
                 (click)="navigateTo('/home')"
                 class="relative group focus:outline-none focus:ring-2 focus:ring-green-400 rounded-xl">
-                <div class="relative w-14 h-14 bg-gradient-to-br from-green-600 to-green-700 rounded-xl border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-green-400/30 animate-pulse-slow">
+                <div class="relative w-14 h-14 bg-gradient-to-br from-green-600 to-green-700 rounded-xl border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-lg transition-all duration-300 md:group-hover:scale-105 group-hover:shadow-green-400/30 animate-pulse-slow">
                   <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
                   <span class="relative text-2xl font-black text-white drop-shadow-lg">SP</span>
                 </div>
@@ -63,7 +63,7 @@ interface NavLink {
             <button
               type="button"
               (click)="onSubscribe()"
-              class="hidden md:block ml-auto px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50 animate-fade-in animation-delay-400"
+              class="hidden md:block ml-auto px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-bold rounded-xl transition-all duration-300 md:hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-400/50 animate-fade-in animation-delay-400"
               aria-label="Jetzt abonnieren">
               Abonnieren
             </button>

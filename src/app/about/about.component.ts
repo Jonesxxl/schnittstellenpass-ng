@@ -88,7 +88,7 @@ interface HighlightSection {
           <div class="space-y-4">
             @for (topic of topics(); track topic) {
               <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-white/30 transition-all duration-300 group">
-                <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-110 transition-transform">
+                <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg md:group-hover:scale-110 transition-transform">
                   ⚽
                 </div>
                 <p class="text-gray-700 text-lg leading-relaxed flex-1">{{ topic }}</p>
@@ -106,7 +106,7 @@ interface HighlightSection {
 
           <div class="grid md:grid-cols-2 gap-6">
             @for (highlight of highlights(); track highlight.id) {
-              <div class="p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/40 hover:bg-white/40 transition-all duration-300 hover:scale-105 shadow-lg">
+              <div class="p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/40 hover:bg-white/40 transition-all duration-300 md:hover:scale-105 shadow-lg">
                 <h4 class="text-xl font-bold text-gray-900 mb-4">{{ highlight.title }}</h4>
                 <ul class="space-y-2">
                   @for (item of highlight.items; track item) {
@@ -134,7 +134,7 @@ interface HighlightSection {
 
           <div class="grid sm:grid-cols-3 gap-4">
             @for (guest of guests(); track guest.id) {
-              <div class="text-center p-6 rounded-2xl bg-gradient-to-br {{ guest.gradient }} text-white shadow-xl hover:scale-105 transition-transform duration-300">
+              <div class="text-center p-6 rounded-2xl bg-gradient-to-br {{ guest.gradient }} text-white shadow-xl md:hover:scale-105 transition-transform duration-300">
                 <div class="text-4xl mb-3" aria-hidden="true">{{ guest.icon }}</div>
                 <h4 class="font-bold text-lg mb-1">{{ guest.name }}</h4>
                 <p class="text-sm opacity-90">{{ guest.role }}</p>
@@ -152,11 +152,11 @@ interface HighlightSection {
             Tauche ein in die Welt des Fußballs – authentisch, persönlich und inspirierend.
           </p>
 
-          <div class="flex flex-wrap justify-center gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
             <button
               type="button"
               (click)="navigateToHome()"
-              class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
+              class="group relative w-full inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 md:hover:scale-105 shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
               aria-label="Jetzt anhören">
               <span class="relative z-10 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -171,7 +171,7 @@ interface HighlightSection {
               href="https://www.instagram.com/schnittstellenpass/"
               target="_blank"
               rel="noopener noreferrer"
-              class="px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300 flex items-center gap-2"
+              class="w-full inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 md:hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300 gap-2"
               aria-label="Folge uns auf Instagram">
               <span class="text-xl">📸</span>
               Folge uns
@@ -187,7 +187,7 @@ interface HighlightSection {
             <p class="text-sm text-gray-700 font-medium">
               © 2025 Schnittstellenpass | Zwischen Profis & Amateur
             </p>
-            <div class="flex items-center gap-6 text-sm text-gray-600">
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
