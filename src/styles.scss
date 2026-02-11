@@ -27,6 +27,117 @@ body {
   overflow-wrap: break-word;
 }
 
+/* Reusable 3D icon badges */
+.icon-badge-3d {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.85rem;
+  background: linear-gradient(155deg, #f8fafc, #dbe2ee);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 10px 20px rgba(15, 23, 42, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -8px 14px rgba(15, 23, 42, 0.14);
+  animation: icon-badge-float 4.2s ease-in-out infinite;
+}
+
+.icon-badge-3d::before {
+  content: "";
+  position: absolute;
+  inset: 0.2rem;
+  border-radius: 0.65rem;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55), transparent 45%);
+  pointer-events: none;
+}
+
+.icon-badge-3d svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  position: relative;
+  z-index: 1;
+}
+
+.icon-badge-xs {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.55rem;
+}
+
+.icon-badge-xs svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.icon-badge-sm {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.7rem;
+}
+
+.icon-badge-sm svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.icon-badge-lg {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+}
+
+.icon-badge-lg svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.icon-badge-blue {
+  background: linear-gradient(155deg, #dbeafe, #93c5fd);
+  color: #1d4ed8;
+}
+
+.icon-badge-purple {
+  background: linear-gradient(155deg, #ede9fe, #c4b5fd);
+  color: #6d28d9;
+}
+
+.icon-badge-pink {
+  background: linear-gradient(155deg, #fce7f3, #f9a8d4);
+  color: #be185d;
+}
+
+.icon-badge-green {
+  background: linear-gradient(155deg, #dcfce7, #86efac);
+  color: #166534;
+}
+
+.icon-badge-red {
+  background: linear-gradient(155deg, #fee2e2, #fca5a5);
+  color: #b91c1c;
+}
+
+.icon-badge-amber {
+  background: linear-gradient(155deg, #fef3c7, #fcd34d);
+  color: #92400e;
+}
+
+.icon-badge-gray {
+  background: linear-gradient(155deg, #e5e7eb, #cbd5e1);
+  color: #334155;
+}
+
+@keyframes icon-badge-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 /* Custom responsive styles for mobile optimization */
 @layer utilities {
   /* Responsive text sizing */
@@ -134,5 +245,11 @@ body {
   /* Ensure proper touch target sizes */
   .touch-target {
     @apply h-12 w-12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-badge-3d {
+    animation: none;
   }
 }

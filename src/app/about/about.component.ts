@@ -8,6 +8,14 @@ interface HighlightSection {
   items: string[];
 }
 
+interface Guest {
+  id: string;
+  name: string;
+  role: string;
+  icon: 'coach' | 'player' | 'chef';
+  gradient: string;
+}
+
 @Component({
   selector: 'app-about',
   standalone: true,
@@ -37,7 +45,12 @@ interface HighlightSection {
         <!-- Hero Section -->
         <div class="text-center mb-16">
           <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm border border-white/40 rounded-full shadow-lg mb-6">
-            <span class="text-2xl" aria-hidden="true">⚽</span>
+            <span class="icon-badge-3d icon-badge-xs icon-badge-blue" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" stroke-width="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
+              </svg>
+            </span>
             <span class="text-sm font-bold text-gray-800">ÜBER UNS</span>
           </div>
 
@@ -60,7 +73,11 @@ interface HighlightSection {
             <!-- Kurzbeschreibung -->
             <div>
               <h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-4 flex items-center gap-3">
-                <span class="text-3xl" aria-hidden="true">🎙️</span>
+                <span class="icon-badge-3d icon-badge-sm icon-badge-purple" aria-hidden="true">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14a3 3 0 003-3V7a3 3 0 10-6 0v4a3 3 0 003 3zm0 0v4m-4 0h8"/>
+                  </svg>
+                </span>
                 Kurzbeschreibung
               </h3>
               <p class="text-lg text-gray-700 leading-relaxed">
@@ -70,7 +87,12 @@ interface HighlightSection {
 
             <!-- Duration Info -->
             <div class="flex items-center gap-3 p-4 bg-white/30 backdrop-blur-sm rounded-xl border border-white/40">
-              <span class="text-2xl" aria-hidden="true">⏱️</span>
+              <span class="icon-badge-3d icon-badge-sm icon-badge-amber" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="13" r="7" stroke-width="2"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V9m0-7h2m-4 0h2"/>
+                </svg>
+              </span>
               <p class="text-gray-800 font-semibold">
                 Jede Episode dauert etwa „eine Halbzeit" – ca. <span class="text-gray-900 font-black">45 Minuten</span> intensiver und authentischer Dialog.
               </p>
@@ -81,16 +103,25 @@ interface HighlightSection {
         <!-- Thematische Schwerpunkte -->
         <div class="backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
           <h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
-            <span class="text-3xl" aria-hidden="true">🎯</span>
+            <span class="icon-badge-3d icon-badge-sm icon-badge-blue" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" stroke-width="2"/>
+                <circle cx="12" cy="12" r="4" stroke-width="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12l7-7"/>
+              </svg>
+            </span>
             Thematische Schwerpunkte
           </h3>
 
           <div class="space-y-4">
             @for (topic of topics(); track topic) {
               <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-white/30 transition-all duration-300 group">
-                <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg md:group-hover:scale-110 transition-transform">
-                  ⚽
-                </div>
+                <span class="icon-badge-3d icon-badge-sm icon-badge-green md:group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="7.5" stroke-width="2"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10l3-2 3 2-1 3h-4l-1-3z"/>
+                  </svg>
+                </span>
                 <p class="text-gray-700 text-lg leading-relaxed flex-1">{{ topic }}</p>
               </div>
             }
@@ -100,7 +131,11 @@ interface HighlightSection {
         <!-- Besonderheiten Grid -->
         <div class="backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
           <h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
-            <span class="text-3xl" aria-hidden="true">✨</span>
+            <span class="icon-badge-3d icon-badge-sm icon-badge-purple" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l2.4 4.8L20 10l-4 3.9.9 5.6-4.9-2.6-4.9 2.6.9-5.6-4-3.9 5.6-2.2L12 3z"/>
+              </svg>
+            </span>
             Das macht uns besonders
           </h3>
 
@@ -124,7 +159,11 @@ interface HighlightSection {
         <!-- Gäste Highlight -->
         <div class="backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
           <h3 class="text-2xl md:text-3xl font-black text-gray-900 mb-6 flex items-center gap-3">
-            <span class="text-3xl" aria-hidden="true">🌟</span>
+            <span class="icon-badge-3d icon-badge-sm icon-badge-pink" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l2.4 4.8L20 10l-4 3.9.9 5.6-4.9-2.6-4.9 2.6.9-5.6-4-3.9 5.6-2.2L12 3z"/>
+              </svg>
+            </span>
             Unsere Gäste
           </h3>
 
@@ -135,7 +174,29 @@ interface HighlightSection {
           <div class="grid sm:grid-cols-3 gap-4">
             @for (guest of guests(); track guest.id) {
               <div class="text-center p-6 rounded-2xl bg-gradient-to-br {{ guest.gradient }} text-white shadow-xl md:hover:scale-105 transition-transform duration-300">
-                <div class="text-4xl mb-3" aria-hidden="true">{{ guest.icon }}</div>
+                <div class="flex justify-center mb-3" aria-hidden="true">
+                  <div class="icon-badge-3d icon-badge-lg"
+                       [class.icon-badge-blue]="guest.icon === 'coach'"
+                       [class.icon-badge-purple]="guest.icon === 'player'"
+                       [class.icon-badge-pink]="guest.icon === 'chef'">
+                    @if (guest.icon === 'coach') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6M8 14h8M9 6h6M6 20h12l-1-12H7L6 20z"/>
+                      </svg>
+                    }
+                    @if (guest.icon === 'player') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="7" r="3" stroke-width="2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 20a6 6 0 0112 0M8 12l4 2 4-2"/>
+                      </svg>
+                    }
+                    @if (guest.icon === 'chef') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9a4 4 0 118 0v2H8V9zm1 2v7m6-7v7M7 20h10"/>
+                      </svg>
+                    }
+                  </div>
+                </div>
                 <h4 class="font-bold text-lg mb-1">{{ guest.name }}</h4>
                 <p class="text-sm opacity-90">{{ guest.role }}</p>
               </div>
@@ -173,7 +234,13 @@ interface HighlightSection {
               rel="noopener noreferrer"
               class="w-full inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-white/50 backdrop-blur-sm border-2 border-gray-300 text-gray-900 font-bold rounded-xl hover:bg-white/70 hover:border-gray-400 transition-all duration-300 md:hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300 gap-2"
               aria-label="Folge uns auf Instagram">
-              <span class="text-xl">📸</span>
+              <span class="icon-badge-3d icon-badge-xs icon-badge-pink" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <rect x="4" y="4" width="16" height="16" rx="4" ry="4" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="3.2" stroke-width="2"/>
+                  <circle cx="17" cy="7" r="1.2" fill="currentColor" stroke="none"/>
+                </svg>
+              </span>
               Folge uns
             </a>
           </div>
@@ -221,7 +288,7 @@ export class AboutComponent {
   protected highlights = signal<HighlightSection[]>([
     {
       id: '1',
-      title: '🎯 Offener Austausch',
+      title: 'Offener Austausch',
       items: [
         'Fokus auf das, was Fußball abseits des Spielfelds ausmacht',
         'Inspiration, Werte und Kultur im Mittelpunkt',
@@ -230,7 +297,7 @@ export class AboutComponent {
     },
     {
       id: '2',
-      title: '⭐ Authentisch & Vielschichtig',
+      title: 'Authentisch & Vielschichtig',
       items: [
         'Sehr positive Bewertungen von Hörerinnen und Hörern',
         'Hebt sich durch persönliche Geschichten ab',
@@ -240,26 +307,26 @@ export class AboutComponent {
   ]);
 
   // Beispiel-Gäste
-  protected guests = signal([
+  protected guests = signal<Guest[]>([
     {
       id: '1',
       name: 'Peter Hyballa',
       role: 'Fußballtrainer',
-      icon: '👨‍🏫',
+      icon: 'coach',
       gradient: 'from-blue-600 to-blue-800'
     },
     {
       id: '2',
       name: 'Eunice Beckmann',
       role: 'Nationalspielerin',
-      icon: '⚽',
+      icon: 'player',
       gradient: 'from-purple-600 to-purple-800'
     },
     {
       id: '3',
       name: 'Kira Meenke',
       role: 'Privatköchin',
-      icon: '👨‍🍳',
+      icon: 'chef',
       gradient: 'from-pink-600 to-pink-800'
     }
   ]);

@@ -43,16 +43,26 @@ interface Episode {
         <!-- Page Header - Stadium Banner Style -->
         <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl mb-12 border-4 border-green-600">
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 text-center">
-            <div class="text-5xl sm:text-6xl" aria-hidden="true">⚽</div>
+            <span class="icon-badge-3d icon-badge-lg icon-badge-green" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" stroke-width="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
+              </svg>
+            </span>
             <div class="text-center">
               <h1 class="text-4xl md:text-6xl font-black text-green-700 tracking-tight uppercase">
                 Episoden
               </h1>
               <p class="text-xl md:text-2xl text-gray-700 font-bold mt-2">
-                Die letzten 5 Folgen 🎙️
+                Die letzten 5 Folgen
               </p>
             </div>
-            <div class="text-5xl sm:text-6xl" aria-hidden="true">⚽</div>
+            <span class="icon-badge-3d icon-badge-lg icon-badge-green" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" stroke-width="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
+              </svg>
+            </span>
           </div>
 
         </div>
@@ -61,14 +71,21 @@ interface Episode {
         @if (isLoading()) {
           <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
             <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-r-4 border-green-600 border-b-4 border-transparent mb-6"></div>
-            <p class="text-xl text-gray-700 font-bold">⚽...</p>
+            <p class="text-xl text-gray-700 font-bold">Lade Episoden...</p>
           </div>
         }
 
         <!-- No Episodes Message -->
         @if (!isLoading() && episodes().length === 0) {
           <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
-            <div class="text-5xl mb-4">😢</div>
+            <div class="flex justify-center mb-4" aria-hidden="true">
+              <span class="icon-badge-3d icon-badge-lg icon-badge-gray">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9" stroke-width="2"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v5m0 3h.01"/>
+                </svg>
+              </span>
+            </div>
             <p class="text-xl text-gray-700 font-bold">Keine Episoden gefunden.</p>
             <p class="text-gray-600 mt-2">Bitte versuche es später noch einmal.</p>
           </div>
@@ -91,11 +108,21 @@ interface Episode {
                     </div>
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-white text-xs sm:text-sm w-full sm:w-auto">
                       <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="text-lg sm:text-xl">📅</span>
+                        <span class="icon-badge-3d icon-badge-xs icon-badge-blue" aria-hidden="true">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="5" y="7" width="14" height="12" rx="2" ry="2" stroke-width="2"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v4m8-4v4M5 11h14"/>
+                          </svg>
+                        </span>
                         <span class="font-bold">{{ episode.date }}</span>
                       </div>
                       <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="text-lg sm:text-xl">⏱️</span>
+                        <span class="icon-badge-3d icon-badge-xs icon-badge-amber" aria-hidden="true">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="13" r="7" stroke-width="2"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V9m0-7h2m-4 0h2"/>
+                          </svg>
+                        </span>
                         <span class="font-bold">{{ episode.duration }}</span>
                       </div>
                     </div>
@@ -112,7 +139,11 @@ interface Episode {
                 <!-- Platform Links Section -->
                 <div class="mb-6">
                   <h3 class="text-lg font-black text-gray-700 mb-4 flex items-center gap-2">
-                    <span class="text-2xl">🎧</span>
+                    <span class="icon-badge-3d icon-badge-sm icon-badge-purple" aria-hidden="true">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14v2a2 2 0 002 2h1v-4H6a2 2 0 00-2 2zm16 0a2 2 0 00-2-2h-1v6h1a2 2 0 002-2v-2zM7 14V9a5 5 0 0110 0v5"/>
+                      </svg>
+                    </span>
                     Jetzt anhören auf:
                   </h3>
 
@@ -194,7 +225,13 @@ interface Episode {
         @if (episodes().length > 0 && hasMoreEpisodes()) {
           <div class="mt-16 text-center">
             <div class="bg-white rounded-2xl p-8 shadow-2xl border-4 border-green-600">
-              <div class="text-5xl mb-4">🏟️</div>
+              <div class="flex justify-center mb-4" aria-hidden="true">
+                <span class="icon-badge-3d icon-badge-lg icon-badge-green">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 19V9h12v10M9 9V6h6v3"/>
+                  </svg>
+                </span>
+              </div>
               <p class="text-xl text-gray-700 font-bold mb-6">Noch mehr Episoden entdecken?</p>
               <button
                 type="button"
@@ -204,7 +241,7 @@ interface Episode {
                 @if (isLoading()) {
                   <span class="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-white border-r-2 border-white border-b-2 border-transparent mr-2"></span>
                 }
-                ⚽ Weitere Episoden laden
+                Weitere Episoden laden
               </button>
             </div>
           </div>
@@ -216,7 +253,12 @@ interface Episode {
         <div class="container mx-auto max-w-7xl px-4 md:px-8">
           <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-white font-bold flex items-center gap-2">
-              <span class="text-xl">⚽</span>
+              <span class="icon-badge-3d icon-badge-xs icon-badge-green" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="8" stroke-width="2"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
+                </svg>
+              </span>
               © 2025 Schnittstellenpass | Zwischen Profis & Amateur
             </p>
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-green-200">
@@ -261,11 +303,11 @@ export class EpisodesComponent implements OnInit {
 
   // Share episode
   protected shareEpisode(episode: Episode): void {
-    const shareText = `🎙️ Hör dir diese Episode von Schnittstellenpass an: ${episode.title}\n\n` +
-                     `⚽ Zwischen Profi & Amateur\n\n` +
-                     `🎵 Spotify: ${episode.spotifyUrl}\n` +
-                     `▶️ YouTube: ${episode.youtubeUrl}\n` +
-                     `🎧 Apple Music: ${episode.appleMusicUrl}`;
+    const shareText = `Hör dir diese Episode von Schnittstellenpass an: ${episode.title}\n\n` +
+                     `Zwischen Profi und Amateur\n\n` +
+                     `Spotify: ${episode.spotifyUrl}\n` +
+                     `YouTube: ${episode.youtubeUrl}\n` +
+                     `Apple Podcasts: ${episode.appleMusicUrl}`;
 
     if (navigator.share) {
       navigator.share({
@@ -284,7 +326,7 @@ export class EpisodesComponent implements OnInit {
   // Copy to clipboard helper
   private copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Links kopiert! 🎉');
+      alert('Links kopiert');
     });
   }
 

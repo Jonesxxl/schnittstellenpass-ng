@@ -11,6 +11,13 @@ interface SocialLink {
   color: string;
 }
 
+interface Feature {
+  id: string;
+  icon: 'tactics' | 'guests' | 'stats';
+  title: string;
+  description: string;
+}
+
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -92,8 +99,13 @@ interface SocialLink {
               <!-- Latest Episode -->
               <div class="relative">
                 <div class="mb-4">
-                  <span class="inline-flex items-center px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg">
-                    ⚡ NEUESTE FOLGE
+                  <span class="inline-flex items-center gap-2 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg">
+                    <span class="icon-badge-3d icon-badge-xs icon-badge-red" aria-hidden="true">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+                      </svg>
+                    </span>
+                    NEUESTE FOLGE
                   </span>
                 </div>
 
@@ -177,7 +189,31 @@ interface SocialLink {
           <div class="grid md:grid-cols-3 gap-8">
             @for (feature of features(); track feature.id) {
               <div class="text-center space-y-4 p-6 rounded-2xl hover:bg-white/30 transition-colors duration-300">
-                <div class="text-5xl mb-4" aria-hidden="true">{{ feature.icon }}</div>
+                <div class="flex justify-center mb-4" aria-hidden="true">
+                  <div class="icon-badge-3d icon-badge-lg"
+                       [class.icon-badge-blue]="feature.icon === 'tactics'"
+                       [class.icon-badge-purple]="feature.icon === 'guests'"
+                       [class.icon-badge-amber]="feature.icon === 'stats'">
+                    @if (feature.icon === 'tactics') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18l4-4 4 3 8-9"/>
+                        <circle cx="8" cy="14" r="1.5" fill="currentColor" stroke="none"/>
+                        <circle cx="12" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+                        <circle cx="20" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+                      </svg>
+                    }
+                    @if (feature.icon === 'guests') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zm7 8a3 3 0 00-3-3m3 3v0m-14-3a3 3 0 00-3 3"/>
+                      </svg>
+                    }
+                    @if (feature.icon === 'stats') {
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M7 16V9m5 7V5m5 11v-6"/>
+                      </svg>
+                    }
+                  </div>
+                </div>
                 <h4 class="text-xl font-bold text-gray-900">{{ feature.title }}</h4>
                 <p class="text-gray-700">{{ feature.description }}</p>
               </div>
@@ -270,7 +306,7 @@ export class LandingComponent implements OnInit {
   protected stats = signal([
     { id: '1', value: '50+', label: 'Episoden' },
     { id: '2', value: '10K+', label: 'Hörer' },
-    { id: '3', value: '4.9★', label: 'Bewertung' }
+    { id: '3', value: '4.9/5', label: 'Bewertung' }
   ]);
 
   // Social Links
@@ -286,22 +322,22 @@ export class LandingComponent implements OnInit {
   protected latestEpisode = signal<Episode | null>(null);
 
   // Features
-  protected features = signal([
+  protected features = signal<Feature[]>([
     {
       id: '1',
-      icon: '⚽',
+      icon: 'tactics',
       title: 'Taktik & Analyse',
       description: 'Professionelle Spielanalysen verständlich erklärt'
     },
     {
       id: '2',
-      icon: '🎙️',
+      icon: 'guests',
       title: 'Spannende Gäste',
       description: 'Experten, Trainer und ehemalige Profis im Gespräch'
     },
     {
       id: '3',
-      icon: '📊',
+      icon: 'stats',
       title: 'Datenbasiert',
       description: 'Moderne Statistiken und deren Bedeutung für das Spiel'
     }
@@ -352,7 +388,7 @@ export class LandingComponent implements OnInit {
         this.stats.set([
           { id: '1', value: `${stats.totalEpisodes}+`, label: 'Episoden' },
           { id: '2', value: stats.listeners, label: 'Hörer' },
-          { id: '3', value: `${stats.rating}★`, label: 'Bewertung' }
+          { id: '3', value: `${stats.rating}/5`, label: 'Bewertung' }
         ]);
       },
       error: (error) => {
