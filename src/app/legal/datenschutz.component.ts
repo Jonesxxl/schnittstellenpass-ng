@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-datenschutz',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   template: `
     <div class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-gradient-to-b from-emerald-50 via-slate-50 to-amber-50/40">
       <div class="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true">
@@ -108,9 +109,9 @@ import { Component } from '@angular/core';
           <div class="flex flex-col items-center justify-between gap-3 md:flex-row">
             <p class="text-sm font-medium text-slate-300">© 2026 Schnittstellenpass | Zwischen Profis & Amateur</p>
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
-              <a href="/datenschutz" class="transition hover:text-amber-300">Datenschutz</a>
-              <a href="/impressum" class="transition hover:text-amber-300">Impressum</a>
-              <a href="/contact" class="transition hover:text-amber-300">Kontakt</a>
+              <a routerLink="/datenschutz" class="transition hover:text-amber-300">Datenschutz</a>
+              <a routerLink="/impressum" class="transition hover:text-amber-300">Impressum</a>
+              <a routerLink="/contact" class="transition hover:text-amber-300">Kontakt</a>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Component, computed, signal, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { Episode } from '../models/spotify.models';
 
@@ -22,7 +22,7 @@ interface Feature {
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   template: `
     <!-- Hero Section mit Fußballfeld-Ästhetik -->
     <div class="relative min-h-screen bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 overflow-x-hidden overflow-y-auto">
@@ -226,12 +226,12 @@ interface Feature {
         <div class="container mx-auto max-w-7xl px-4 md:px-8">
           <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-gray-700 font-medium">
-              © 2025 Schnittstellenpass | Zwischen Profi & Amateur
+              © 2026 Schnittstellenpass | Zwischen Profi & Amateur
             </p>
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
-              <a href="/contact" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
+              <a routerLink="/datenschutz" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
+              <a routerLink="/impressum" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
+              <a routerLink="/contact" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
             </div>
           </div>
         </div>
