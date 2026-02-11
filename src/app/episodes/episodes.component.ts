@@ -169,10 +169,10 @@ interface AppleLookupResponse {
       <footer class="relative z-10 mt-16 border-t border-emerald-900/20 bg-slate-900 py-8">
         <div class="container mx-auto max-w-6xl px-4 md:px-8">
           <div class="flex flex-col items-center justify-between gap-3 md:flex-row">
-            <p class="text-sm font-medium text-slate-300">© 2025 Schnittstellenpass | Zwischen Profis & Amateur</p>
+            <p class="text-sm font-medium text-slate-300">© 2026 Schnittstellenpass | Zwischen Profis & Amateur</p>
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
-              <a href="#" class="transition hover:text-amber-300">Datenschutz</a>
-              <a href="#" class="transition hover:text-amber-300">Impressum</a>
+              <a href="/datenschutz" class="transition hover:text-amber-300">Datenschutz</a>
+              <a href="/impressum" class="transition hover:text-amber-300">Impressum</a>
               <a href="/contact" class="transition hover:text-amber-300">Kontakt</a>
             </div>
           </div>

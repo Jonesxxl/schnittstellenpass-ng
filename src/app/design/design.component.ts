@@ -13,7 +13,8 @@ interface SocialLink {
 
 interface Feature {
   id: string;
-  icon: 'tactics' | 'guests' | 'stats';
+  imageUrl: string;
+  imageAlt: string;
   title: string;
   description: string;
 }
@@ -193,37 +194,30 @@ interface Feature {
 
           <div class="grid md:grid-cols-3 gap-8">
             @for (feature of features(); track feature.id) {
-              <div class="text-center space-y-4 p-6 rounded-2xl hover:bg-white/30 transition-colors duration-300">
-                <div class="flex justify-center mb-4" aria-hidden="true">
-                  <div class="icon-badge-3d icon-badge-lg"
-                       [class.icon-badge-blue]="feature.icon === 'tactics'"
-                       [class.icon-badge-purple]="feature.icon === 'guests'"
-                       [class.icon-badge-amber]="feature.icon === 'stats'">
-                    @if (feature.icon === 'tactics') {
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18l4-4 4 3 8-9"/>
-                        <circle cx="8" cy="14" r="1.5" fill="currentColor" stroke="none"/>
-                        <circle cx="12" cy="17" r="1.5" fill="currentColor" stroke="none"/>
-                        <circle cx="20" cy="8" r="1.5" fill="currentColor" stroke="none"/>
-                      </svg>
-                    }
-                    @if (feature.icon === 'guests') {
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zm7 8a3 3 0 00-3-3m3 3v0m-14-3a3 3 0 00-3 3"/>
-                      </svg>
-                    }
-                    @if (feature.icon === 'stats') {
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M7 16V9m5 7V5m5 11v-6"/>
-                      </svg>
-                    }
-                  </div>
+              <article class="overflow-hidden rounded-2xl border border-white/40 bg-white/55 shadow-lg transition duration-300 hover:bg-white/70 hover:shadow-xl">
+                <div class="relative aspect-[4/3] overflow-hidden border-b border-white/40 bg-slate-200">
+                  <img
+                    [src]="feature.imageUrl"
+                    [alt]="feature.imageAlt"
+                    loading="lazy"
+                    class="h-full w-full object-cover grayscale sepia saturate-75 contrast-110 brightness-95 transition duration-500 hover:scale-105">
+                  <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/15"></div>
+                  <div class="pointer-events-none absolute inset-0 opacity-[0.12]" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.45) 0px, rgba(255,255,255,0.45) 1px, transparent 2px, transparent 4px);"></div>
                 </div>
-                <h4 class="text-xl font-bold text-gray-900">{{ feature.title }}</h4>
-                <p class="text-gray-700">{{ feature.description }}</p>
-              </div>
+                <div class="space-y-3 p-6 text-center">
+                  <h4 class="text-xl font-bold text-gray-900">{{ feature.title }}</h4>
+                  <p class="text-gray-700">{{ feature.description }}</p>
+                </div>
+              </article>
             }
           </div>
+
+          <p class="mt-6 text-center text-xs text-gray-600">
+            Bildquellen:
+            <a class="underline hover:text-gray-900" href="https://commons.wikimedia.org/wiki/File:Ronaldinho-7-5-2006.jpg" target="_blank" rel="noopener noreferrer">Ronaldinho</a>,
+            <a class="underline hover:text-gray-900" href="https://commons.wikimedia.org/wiki/File:Zinedine_zidane_wcf_2006.jpg" target="_blank" rel="noopener noreferrer">Zidane</a>,
+            <a class="underline hover:text-gray-900" href="https://commons.wikimedia.org/wiki/File:Franz_Beckenbauer_1972.jpg" target="_blank" rel="noopener noreferrer">Beckenbauer</a>
+          </p>
         </div>
       </section>
 
@@ -484,21 +478,24 @@ export class LandingComponent implements OnInit {
   protected features = signal<Feature[]>([
     {
       id: '1',
-      icon: 'tactics',
-      title: 'Taktik & Analyse',
-      description: 'Professionelle Spielanalysen verständlich erklärt'
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Ronaldinho-7-5-2006.jpg',
+      imageAlt: 'Ronaldinho im Retro-Foto',
+      title: 'Spannende Einblicke',
+      description: 'Spannende Einblicke in die Welt des Fußballs - mit Geschichten direkt aus dem Profi- und Amateurbereich.'
     },
     {
       id: '2',
-      icon: 'guests',
-      title: 'Spannende Gäste',
-      description: 'Experten, Trainer und ehemalige Profis im Gespräch'
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Zinedine_zidane_wcf_2006.jpg',
+      imageAlt: 'Zinedine Zidane bei einem Spiel',
+      title: 'Verschiedenste Bereiche',
+      description: 'Verschiedenste Bereiche des Fußballs: Training, Taktik, Karrierewege, Führung und Alltag im Team.'
     },
     {
       id: '3',
-      icon: 'stats',
-      title: 'Datenbasiert',
-      description: 'Moderne Statistiken und deren Bedeutung für das Spiel'
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/Franz_Beckenbauer_1972.jpg',
+      imageAlt: 'Franz Beckenbauer im historischen Bild',
+      title: 'Unterschiedlichste Themen',
+      description: 'Unterschiedlichste Themengebiete rund um den Fußball - klar, relevant und mit echter fachlicher Tiefe.'
     }
   ]);
 
