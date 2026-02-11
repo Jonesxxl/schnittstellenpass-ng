@@ -3,10 +3,14 @@ import { Component, signal, OnInit, inject } from '@angular/core';
 import { SpotifyService } from '../services/spotify.service';
 import { SpotifyEpisode } from '../models/spotify.models';
 
+const APPLE_SHOW_URL = 'https://podcasts.apple.com/us/podcast/schnittstellenpass-zwischen-profi-und-amateur/id1561845736';
+const APPLE_LOOKUP_URL = 'https://itunes.apple.com/lookup?id=1561845736&entity=podcastEpisode&limit=200';
+
 interface Episode {
   id: string;
   title: string;
   date: string;
+  releaseDateIso: string;
   duration: string;
   episodeNumber: number;
   thumbnail?: string;
@@ -16,230 +20,144 @@ interface Episode {
   description?: string;
 }
 
+interface AppleLookupItem {
+  kind?: string;
+  trackName?: string;
+  releaseDate?: string;
+  trackViewUrl?: string;
+}
+
+interface AppleLookupResponse {
+  results?: AppleLookupItem[];
+}
+
 @Component({
   selector: 'app-episodes',
   standalone: true,
   imports: [],
   template: `
-    <!-- Fußball Podcast Design - Stadium Theme -->
-    <div class="relative min-h-screen bg-gradient-to-br from-green-600 via-green-500 to-green-700 overflow-x-hidden overflow-y-auto">
-
-      <!-- Rasen-Textur Overlay -->
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.1) 40px, rgba(255,255,255,0.1) 80px);"></div>
-        <div class="absolute inset-0" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.05) 60px, rgba(255,255,255,0.05) 120px);"></div>
+    <div class="relative min-h-screen overflow-x-hidden overflow-y-auto bg-gradient-to-b from-emerald-50 via-slate-50 to-amber-50/40">
+      <div class="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 10%, rgba(5,150,105,0.08), transparent 35%), radial-gradient(circle at 80% 0%, rgba(15,23,42,0.05), transparent 30%);"></div>
       </div>
 
-      <!-- Stadion Lichter Effect -->
-      <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/30 to-transparent"></div>
+      <div class="relative z-10 h-1.5 w-full bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-500"></div>
 
-      <!-- Mittelkreis Dekoration -->
-      <div class="hidden md:block absolute top-20 right-10 w-48 h-48 border-8 border-white/20 rounded-full pointer-events-none"></div>
-      <div class="hidden md:block absolute bottom-20 left-10 w-32 h-32 border-8 border-white/20 rounded-full pointer-events-none"></div>
-
-      <!-- Main Content -->
-      <main class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 py-12 md:py-20">
-
-        <!-- Page Header - Stadium Banner Style -->
-        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl mb-12 border-4 border-green-600">
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 text-center">
-            <span class="icon-badge-3d icon-badge-lg icon-badge-green" aria-hidden="true">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="8" stroke-width="2"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
-              </svg>
-            </span>
-            <div class="text-center">
-              <h1 class="text-4xl md:text-6xl font-black text-green-700 tracking-tight uppercase">
-                Episoden
-              </h1>
-              <p class="text-xl md:text-2xl text-gray-700 font-bold mt-2">
-                Die letzten 5 Folgen
-              </p>
-            </div>
-            <span class="icon-badge-3d icon-badge-lg icon-badge-green" aria-hidden="true">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="8" stroke-width="2"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
-              </svg>
-            </span>
-          </div>
-
-        </div>
-
-        <!-- Loading Indicator -->
-        @if (isLoading()) {
-          <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
-            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-green-600 border-r-4 border-green-600 border-b-4 border-transparent mb-6"></div>
-            <p class="text-xl text-gray-700 font-bold">Lade Episoden...</p>
-          </div>
-        }
-
-        <!-- No Episodes Message -->
-        @if (!isLoading() && episodes().length === 0) {
-          <div class="bg-white rounded-2xl p-12 shadow-2xl border-4 border-green-600 text-center">
-            <div class="flex justify-center mb-4" aria-hidden="true">
-              <span class="icon-badge-3d icon-badge-lg icon-badge-gray">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="9" stroke-width="2"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v5m0 3h.01"/>
+      <main class="relative z-10 container mx-auto max-w-6xl px-4 md:px-8 py-10 md:py-16">
+        <section class="mb-10 md:mb-12">
+          <div class="overflow-hidden rounded-3xl border border-emerald-200/80 bg-white/95 shadow-xl shadow-amber-100/60">
+            <div class="h-1 w-full bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500"></div>
+            <div class="px-6 py-10 md:px-12 md:py-12 text-center">
+              <p class="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700">Schnittstellenpass Podcast</p>
+              <h1 class="mt-3 text-4xl md:text-6xl font-black tracking-tight text-emerald-800 uppercase">Episoden</h1>
+              <div class="mx-auto mt-5 h-px w-32 bg-slate-300"></div>
+              <div class="mt-5 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm font-semibold text-slate-700">
+                <svg class="h-4 w-4 text-emerald-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke-width="1.8" />
+                  <polygon points="12,8.5 14.8,10.2 13.8,13.4 10.2,13.4 9.2,10.2" stroke-width="1.4" />
+                  <path stroke-width="1.4" stroke-linecap="round" d="M7.5 8.8 9.2 10.2m7.3-1.4-1.7 1.4M8.5 15.6l1.7-2.2m5.3 2.2-1.7-2.2M12 17.8v-4.4" />
                 </svg>
-              </span>
+                Die letzten 5 Folgen
+              </div>
             </div>
-            <p class="text-xl text-gray-700 font-bold">Keine Episoden gefunden.</p>
-            <p class="text-gray-600 mt-2">Bitte versuche es später noch einmal.</p>
+          </div>
+        </section>
+
+        @if (isLoading() && episodes().length === 0) {
+          <div class="rounded-2xl border border-emerald-200 bg-white p-12 text-center shadow-lg">
+            <div class="mx-auto mb-5 inline-block h-12 w-12 animate-spin rounded-full border-4 border-emerald-600 border-b-transparent"></div>
+            <p class="text-lg font-semibold text-slate-700">Lade Episoden...</p>
           </div>
         }
 
-        <!-- Episodes Grid - Spielerkarten-Style -->
-        <div class="grid grid-cols-1 gap-8">
+        @if (!isLoading() && episodes().length === 0) {
+          <div class="rounded-2xl border border-emerald-200 bg-white p-12 text-center shadow-lg">
+            <p class="text-xl font-semibold text-slate-700">Keine Episoden gefunden.</p>
+            <p class="mt-2 text-slate-500">Bitte versuche es später noch einmal.</p>
+          </div>
+        }
+
+        <div class="grid grid-cols-1 gap-7 md:gap-8">
           @for (episode of episodes(); track episode.id; let i = $index) {
-            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl overflow-hidden border-4 border-green-600 hover:border-yellow-400 transition-all duration-300 md:hover:scale-[1.02] hover:shadow-3xl">
-
-              <!-- Episode Card Header - Jersey Style -->
-              <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 text-6xl md:text-9xl font-black text-white/10 pointer-events-none">
-                  #{{ episode.episodeNumber }}
-                </div>
-                <div class="relative z-10">
-                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
-                    <div class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 border-white/40 w-fit">
-                      <span class="text-white font-black text-sm sm:text-lg">#{{ episode.episodeNumber }}</span>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-white text-xs sm:text-sm w-full sm:w-auto">
-                      <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="icon-badge-3d icon-badge-xs icon-badge-blue" aria-hidden="true">
-                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <rect x="5" y="7" width="14" height="12" rx="2" ry="2" stroke-width="2"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v4m8-4v4M5 11h14"/>
-                          </svg>
-                        </span>
-                        <span class="font-bold">{{ episode.date }}</span>
-                      </div>
-                      <div class="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                        <span class="icon-badge-3d icon-badge-xs icon-badge-amber" aria-hidden="true">
-                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="13" r="7" stroke-width="2"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V9m0-7h2m-4 0h2"/>
-                          </svg>
-                        </span>
-                        <span class="font-bold">{{ episode.duration }}</span>
-                      </div>
-                    </div>
+            <article class="overflow-hidden rounded-2xl border border-emerald-200 bg-white shadow-lg transition duration-300 hover:shadow-xl">
+              <header class="relative overflow-hidden bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 px-5 py-5 md:px-7 md:py-6">
+                <div class="absolute -right-3 -top-6 text-7xl md:text-8xl font-black text-white/10">{{ episode.episodeNumber }}</div>
+                <div class="relative z-10 flex flex-col gap-4">
+                  <div class="flex flex-wrap items-center gap-2 text-sm">
+                    <span class="rounded-full border border-amber-200/60 bg-amber-400/20 px-3 py-1.5 font-bold text-white backdrop-blur">Folge #{{ episode.episodeNumber }}</span>
+                    <span class="rounded-full bg-white/15 px-3 py-1.5 font-medium text-white/95 backdrop-blur">{{ episode.date }}</span>
+                    <span class="rounded-full bg-white/15 px-3 py-1.5 font-medium text-white/95 backdrop-blur">{{ episode.duration }}</span>
                   </div>
-                  <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-white drop-shadow-lg mt-4">
-                    {{ episode.title }}
-                  </h2>
+                  <h2 class="text-xl md:text-2xl font-extrabold leading-tight text-white">{{ episode.title }}</h2>
                 </div>
-              </div>
+              </header>
 
-              <!-- Episode Card Body -->
-              <div class="p-6 md:p-8">
-
-                <!-- Platform Links Section -->
+              <div class="p-5 md:p-7">
                 <div class="mb-6">
-                  <h3 class="text-lg font-black text-gray-700 mb-4 flex items-center gap-2">
-                    <span class="icon-badge-3d icon-badge-sm icon-badge-purple" aria-hidden="true">
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14v2a2 2 0 002 2h1v-4H6a2 2 0 00-2 2zm16 0a2 2 0 00-2-2h-1v6h1a2 2 0 002-2v-2zM7 14V9a5 5 0 0110 0v5"/>
-                      </svg>
-                    </span>
-                    Jetzt anhören auf:
-                  </h3>
-
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Spotify Link -->
+                  <h3 class="mb-3 text-base font-semibold tracking-wide text-slate-700 uppercase">Jetzt anhören auf</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <a
                       [href]="episode.spotifyUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
-                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                      </svg>
-                      <div class="flex-1 text-left">
-                        <div class="text-xs opacity-90">Spotify</div>
-                        <div class="text-sm font-black">Jetzt hören</div>
+                      class="group flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 transition hover:border-emerald-400 hover:bg-emerald-100/70">
+                      <div>
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-500">Spotify</p>
+                        <p class="mt-1 text-sm font-semibold text-slate-800">Jetzt hören</p>
                       </div>
-                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                      </svg>
+                      <span class="text-sm font-semibold text-emerald-700 transition-transform group-hover:translate-x-1">Öffnen</span>
                     </a>
 
-                    <!-- YouTube Link -->
                     <a
                       [href]="episode.youtubeUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
-                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                      </svg>
-                      <div class="flex-1 text-left">
-                        <div class="text-xs opacity-90">YouTube</div>
-                        <div class="text-sm font-black">Video ansehen</div>
+                      class="group flex items-center justify-between rounded-xl border border-rose-200 bg-rose-50/70 px-4 py-3 transition hover:border-rose-400 hover:bg-rose-100/70">
+                      <div>
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-500">YouTube</p>
+                        <p class="mt-1 text-sm font-semibold text-slate-800">Video ansehen</p>
                       </div>
-                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                      </svg>
+                      <span class="text-sm font-semibold text-emerald-700 transition-transform group-hover:translate-x-1">Öffnen</span>
                     </a>
 
-                    <!-- Apple Music Link -->
                     <a
                       [href]="episode.appleMusicUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group flex items-center gap-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
-                      <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.54.605-2.5 1.68-2.986 3.21-.192.604-.293 1.23-.351 1.862-.026.29-.051.58-.051.87v11.28c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 0 0 1.57-.1c.822-.106 1.596-.35 2.296-.81a5.046 5.046 0 0 0 1.88-2.207c.186-.42.293-.87.353-1.333.047-.353.07-.71.073-1.067v-11.3c0-.14-.01-.28-.014-.418zM14.55 14.615c-.788.326-1.585.614-2.395.837-.592.163-1.194.283-1.803.344-.193.02-.387.037-.58.04-.115.002-.922-.009-1.036-.02-.49-.048-.978-.124-1.46-.24-.735-.178-1.462-.4-2.114-.81-.465-.294-.875-.65-1.122-1.146-.137-.275-.203-.57-.2-.878.003-.318.11-.61.297-.87.305-.424.696-.682 1.17-.86.51-.193 1.04-.306 1.576-.36.246-.024.494-.035.742-.027.36.01.717.05 1.072.107 1.03.164 2.028.476 3.01.816.036.013.072.024.11.035v-7.89c0-.085.01-.17.024-.25.034-.195.132-.36.293-.49.184-.15.397-.197.618-.197.036 0 .072.003.108.008.16.022.32.047.48.08 1.21.244 2.412.52 3.598.877.222.067.444.14.664.22.126.045.24.111.335.212.17.18.253.395.253.64v8.338c0 .58-.004 1.16-.01 1.74 0 .02-.005.04-.008.06z"/>
-                      </svg>
-                      <div class="flex-1 text-left">
-                        <div class="text-xs opacity-90">Apple Music</div>
-                        <div class="text-sm font-black">Podcast öffnen</div>
+                      class="group flex items-center justify-between rounded-xl border border-indigo-200 bg-indigo-50/70 px-4 py-3 transition hover:border-indigo-400 hover:bg-indigo-100/70">
+                      <div>
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-500">Apple Podcasts</p>
+                        <p class="mt-1 text-sm font-semibold text-slate-800">Podcast öffnen</p>
                       </div>
-                      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                      </svg>
+                      <span class="text-sm font-semibold text-emerald-700 transition-transform group-hover:translate-x-1">Öffnen</span>
                     </a>
                   </div>
                 </div>
 
-                <!-- Share Button -->
-                <div class="pt-4 border-t-2 border-gray-200">
+                <div class="border-t border-slate-200 pt-4">
                   <button
                     type="button"
                     (click)="shareEpisode(episode)"
-                    class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 md:hover:scale-105">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-                    </svg>
-                    <span>Episode teilen</span>
+                    class="w-full rounded-xl bg-gradient-to-r from-emerald-700 to-emerald-600 px-5 py-3 text-sm md:text-base font-semibold text-white transition hover:from-emerald-800 hover:to-amber-600 disabled:cursor-not-allowed disabled:opacity-50">
+                    Episode teilen
                   </button>
                 </div>
               </div>
-            </div>
+            </article>
           }
         </div>
 
-        <!-- Load More Section -->
         @if (episodes().length > 0 && hasMoreEpisodes()) {
-          <div class="mt-16 text-center">
-            <div class="bg-white rounded-2xl p-8 shadow-2xl border-4 border-green-600">
-              <div class="flex justify-center mb-4" aria-hidden="true">
-                <span class="icon-badge-3d icon-badge-lg icon-badge-green">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 19V9h12v10M9 9V6h6v3"/>
-                  </svg>
-                </span>
-              </div>
-              <p class="text-xl text-gray-700 font-bold mb-6">Noch mehr Episoden entdecken?</p>
+          <div class="mt-12 text-center">
+            <div class="rounded-2xl border border-emerald-200 bg-white p-7 shadow-lg">
+              <p class="mb-5 text-lg font-semibold text-slate-700">Noch mehr Episoden entdecken?</p>
               <button
                 type="button"
                 [disabled]="isLoading()"
                 (click)="loadMoreEpisodes()"
-                class="px-10 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-black rounded-xl transition-all duration-300 md:hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                class="rounded-xl bg-gradient-to-r from-emerald-700 to-emerald-600 px-8 py-3 text-base font-semibold text-white transition hover:from-emerald-800 hover:to-amber-600 disabled:cursor-not-allowed disabled:opacity-50">
                 @if (isLoading()) {
-                  <span class="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-white border-r-2 border-white border-b-2 border-transparent mr-2"></span>
+                  <span class="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-b-transparent align-[-2px]"></span>
                 }
                 Weitere Episoden laden
               </button>
@@ -248,48 +166,27 @@ interface Episode {
         }
       </main>
 
-      <!-- Footer -->
-      <footer class="relative z-10 bg-gradient-to-r from-green-800 to-green-900 border-t-4 border-yellow-400 py-8 mt-16">
-        <div class="container mx-auto max-w-7xl px-4 md:px-8">
-          <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p class="text-sm text-white font-bold flex items-center gap-2">
-              <span class="icon-badge-3d icon-badge-xs icon-badge-green" aria-hidden="true">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="8" stroke-width="2"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l2.5 1.8-.9 2.9h-3.2l-.9-2.9L12 8z"/>
-                </svg>
-              </span>
-              © 2025 Schnittstellenpass | Zwischen Profis & Amateur
-            </p>
-            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-green-200">
-              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Datenschutz</a>
-              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Impressum</a>
-              <a href="#" class="hover:text-yellow-400 transition-colors font-semibold">Kontakt</a>
+      <footer class="relative z-10 mt-16 border-t border-emerald-900/20 bg-slate-900 py-8">
+        <div class="container mx-auto max-w-6xl px-4 md:px-8">
+          <div class="flex flex-col items-center justify-between gap-3 md:flex-row">
+            <p class="text-sm font-medium text-slate-300">© 2025 Schnittstellenpass | Zwischen Profis & Amateur</p>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
+              <a href="#" class="transition hover:text-amber-300">Datenschutz</a>
+              <a href="#" class="transition hover:text-amber-300">Impressum</a>
+              <a href="#" class="transition hover:text-amber-300">Kontakt</a>
             </div>
           </div>
         </div>
       </footer>
     </div>
   `,
-  styles: [`
-    .animation-delay-1000 {
-      animation-delay: 0.3s;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  `]
+  styles: []
 })
 export class EpisodesComponent implements OnInit {
   private readonly spotifyService = inject(SpotifyService);
+  private appleLookupPromise: Promise<void> | null = null;
+  private appleEpisodeUrlByTitle = new Map<string, string>();
+  private appleEpisodeUrlByTitleDate = new Map<string, string>();
 
   // Episodes data
   protected episodes = signal<Episode[]>([]);
@@ -352,6 +249,9 @@ export class EpisodesComponent implements OnInit {
         // Update pagination state
         this.currentOffset.set(offset + response.items.length);
         this.hasMoreEpisodes.set(response.next !== null);
+
+        // Resolve direct Apple episode links and keep show URL as fallback.
+        this.resolveAppleEpisodeUrls();
       },
       error: (error) => {
         console.error('Failed to fetch episodes:', error);
@@ -368,9 +268,9 @@ export class EpisodesComponent implements OnInit {
    */
   private transformToEpisode(spotifyEpisode: SpotifyEpisode, episodeNumber: number): Episode {
     // YouTube and Apple Music URLs are not available from Spotify API
-    // Using channel/podcast URLs as fallbacks
+    // Use show URL as fallback; direct episode links are resolved separately.
     const youtubeUrl = 'https://www.youtube.com/@schnittstellenpass1105';
-    const appleMusicUrl = 'https://podcasts.apple.com/us/podcast/schnittstellenpass/id1234567890';
+    const appleMusicUrl = APPLE_SHOW_URL;
 
     // Format date from YYYY-MM-DD to DD.MM.YYYY
     const formatDate = (dateString: string): string => {
@@ -408,6 +308,7 @@ export class EpisodesComponent implements OnInit {
       id: spotifyEpisode.id,
       title: spotifyEpisode.name,
       date: formatDate(spotifyEpisode.release_date),
+      releaseDateIso: spotifyEpisode.release_date,
       duration: formatDuration(spotifyEpisode.duration_ms),
       episodeNumber: episodeNumber,
       thumbnail: spotifyEpisode.images?.[0]?.url,
@@ -425,5 +326,93 @@ export class EpisodesComponent implements OnInit {
     if (this.hasMoreEpisodes() && !this.isLoading()) {
       this.loadEpisodes(this.currentOffset());
     }
+  }
+
+  private resolveAppleEpisodeUrls(): void {
+    this.loadAppleEpisodeMap()
+      .then(() => {
+        this.episodes.update((current) =>
+          current.map((episode) => {
+            const appleUrl = this.getAppleEpisodeUrl(episode);
+            if (appleUrl === episode.appleMusicUrl) {
+              return episode;
+            }
+            return { ...episode, appleMusicUrl: appleUrl };
+          })
+        );
+      })
+      .catch((error) => {
+        console.warn('Failed to resolve Apple Podcasts episode URLs:', error);
+      });
+  }
+
+  private loadAppleEpisodeMap(): Promise<void> {
+    if (this.appleEpisodeUrlByTitle.size > 0 || this.appleEpisodeUrlByTitleDate.size > 0) {
+      return Promise.resolve();
+    }
+
+    if (this.appleLookupPromise) {
+      return this.appleLookupPromise;
+    }
+
+    this.appleLookupPromise = fetch(APPLE_LOOKUP_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Apple lookup failed with status ${response.status}`);
+        }
+        return response.json() as Promise<AppleLookupResponse>;
+      })
+      .then((data) => {
+        const items = data.results ?? [];
+        for (const item of items) {
+          if (item.kind !== 'podcast-episode' || !item.trackName || !item.trackViewUrl) {
+            continue;
+          }
+
+          const normalizedTitle = this.normalizeTitle(item.trackName);
+          if (!normalizedTitle) {
+            continue;
+          }
+
+          const releaseDateIso = item.releaseDate?.slice(0, 10);
+          if (releaseDateIso) {
+            const titleDateKey = this.createTitleDateKey(normalizedTitle, releaseDateIso);
+            this.appleEpisodeUrlByTitleDate.set(titleDateKey, item.trackViewUrl);
+          }
+
+          if (!this.appleEpisodeUrlByTitle.has(normalizedTitle)) {
+            this.appleEpisodeUrlByTitle.set(normalizedTitle, item.trackViewUrl);
+          }
+        }
+      })
+      .finally(() => {
+        this.appleLookupPromise = null;
+      });
+
+    return this.appleLookupPromise;
+  }
+
+  private getAppleEpisodeUrl(episode: Episode): string {
+    const normalizedTitle = this.normalizeTitle(episode.title);
+    const titleDateKey = this.createTitleDateKey(normalizedTitle, episode.releaseDateIso);
+
+    return (
+      this.appleEpisodeUrlByTitleDate.get(titleDateKey) ||
+      this.appleEpisodeUrlByTitle.get(normalizedTitle) ||
+      APPLE_SHOW_URL
+    );
+  }
+
+  private createTitleDateKey(normalizedTitle: string, releaseDateIso: string): string {
+    return `${normalizedTitle}|${releaseDateIso}`;
+  }
+
+  private normalizeTitle(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
   }
 }

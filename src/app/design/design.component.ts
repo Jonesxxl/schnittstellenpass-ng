@@ -61,11 +61,12 @@ interface Feature {
             </p>
 
             <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4 md:gap-6 pt-4">
+            <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 pt-4">
               @for (stat of stats(); track stat.id) {
-                <div class="text-center lg:text-left">
-                  <div class="text-2xl md:text-4xl font-black text-gray-900 mb-1">{{ stat.value }}</div>
-                  <div class="text-xs md:text-sm text-gray-600 font-semibold">{{ stat.label }}</div>
+                <div
+                  class="stat-card-3d stat-card-green">
+                  <div class="stat-value-3d">{{ stat.value }}</div>
+                  <div class="stat-label-3d">{{ stat.label }}</div>
                 </div>
               }
             </div>
@@ -290,6 +291,82 @@ interface Feature {
       animation-delay: 0.4s;
       opacity: 0;
     }
+
+    .stat-card-3d {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      padding: 0.7rem 0.6rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.16));
+      box-shadow:
+        0 12px 24px rgba(15, 23, 42, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.68),
+        inset 0 -8px 14px rgba(15, 23, 42, 0.06);
+      backdrop-filter: blur(8px);
+      animation: statFloat 6s ease-in-out infinite;
+    }
+
+    .stat-card-3d::before {
+      content: "";
+      position: absolute;
+      left: -25%;
+      top: -40%;
+      width: 90%;
+      height: 170%;
+      transform: rotate(18deg);
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+      pointer-events: none;
+    }
+
+    .stat-value-3d {
+      font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65), 0 10px 20px rgba(15, 23, 42, 0.18);
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-label-3d {
+      margin-top: 0.4rem;
+      font-size: clamp(0.75rem, 2.2vw, 1.15rem);
+      font-weight: 700;
+      color: #4b5563;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card-green .stat-value-3d {
+      background: linear-gradient(180deg, #15803d, #166534);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes statFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stat-card-3d {
+        border-radius: 0.85rem;
+        padding: 0.6rem 0.4rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .stat-card-3d {
+        animation: none;
+      }
+    }
   `]
 })
 export class LandingComponent implements OnInit {
@@ -313,7 +390,7 @@ export class LandingComponent implements OnInit {
   protected platforms = signal<SocialLink[]>([
     { id: '1', name: 'Spotify', icon: '/assets/icons/spotify-logo.svg', url: 'https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc', color: '#1DB954' },
     { id: '2', name: 'YouTube', icon: '/assets/icons/youtube-logo.svg', url: 'https://www.youtube.com/@schnittstellenpass1105', color: '#FF0000' },
-    { id: '3', name: 'Apple Podcasts', icon: '/assets/icons/apple-logo.svg', url: 'https://podcasts.apple.com/us/search?term=schnittstellenpass%20-%20zwischen%20profi%20und%20amateur', color: '#9333EA' },
+    { id: '3', name: 'Apple Podcasts', icon: '/assets/icons/apple-logo.svg', url: 'https://podcasts.apple.com/us/podcast/schnittstellenpass-zwischen-profi-und-amateur/id1561845736', color: '#9333EA' },
     { id: '4', name: 'Instagram', icon: '/assets/icons/instagram-logo.svg', url: 'https://www.instagram.com/schnittstellenpass/', color: '#E4405F' }
   ]);
 

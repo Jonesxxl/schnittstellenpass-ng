@@ -14,19 +14,21 @@ interface NavLink {
   imports: [],
   template: `
     <!-- Header Navigation -->
-    <header class="fixed z-[90] top-0 left-0 right-0 px-4 md:px-8 pt-4 max-w-full overflow-x-hidden">
+    <header class="fixed z-[90] top-0 left-0 right-0 px-4 md:px-8 pt-2 md:pt-4 max-w-full overflow-x-hidden">
       <nav class="container mx-auto max-w-7xl animate-fade-in w-full">
-        <div class="backdrop-blur-md bg-white/90 md:bg-white/80 border border-white/30 rounded-2xl px-6 py-4 shadow-xl max-w-full">
-          <div class="flex items-center relative min-h-[56px] w-full max-w-full">
+        <div class="bg-white/95 md:bg-white/80 md:backdrop-blur-md border border-white/20 md:border-white/30 rounded-xl md:rounded-2xl px-4 md:px-6 py-2.5 md:py-4 shadow-sm md:shadow-xl max-w-full">
+          <div class="flex items-center relative min-h-[44px] md:min-h-[56px] w-full max-w-full">
             <!-- Logo - Centered on mobile, left on desktop -->
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0">
+            <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center md:static md:inset-y-auto md:translate-x-0">
               <button
                 type="button"
                 (click)="navigateTo('/home')"
                 class="relative group focus:outline-none focus:ring-2 focus:ring-green-400 rounded-xl">
-                <div class="relative w-14 h-14 bg-gradient-to-br from-green-600 to-green-700 rounded-xl border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-lg transition-all duration-300 md:group-hover:scale-105 group-hover:shadow-green-400/30 animate-pulse-slow">
-                  <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
-                  <span class="relative text-2xl font-black text-white drop-shadow-lg">SP</span>
+                <div class="relative w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl border border-white/30 overflow-hidden shadow-md md:shadow-lg transition-all duration-300 md:group-hover:scale-105 group-hover:shadow-green-400/30 md:animate-pulse-slow">
+                  <img
+                    src="assets/logo.jpg"
+                    alt="Schnittstellenpass Logo"
+                    class="block w-full h-full object-cover">
                 </div>
               </button>
             </div>
@@ -72,7 +74,7 @@ interface NavLink {
             <button
               type="button"
               (click)="toggleMobileMenu()"
-              class="md:hidden flex flex-col justify-center items-center space-y-1.5 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 relative z-[120] w-10 h-10 ml-auto"
+              class="md:hidden flex flex-col justify-center items-center space-y-1 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 relative z-[120] w-9 h-9 ml-auto"
               aria-label="Toggle menu"
               [attr.aria-expanded]="isMobileMenuOpen()">
               <span class="block w-6 h-0.5 bg-gray-700 transition-all duration-300 origin-center"
@@ -105,9 +107,11 @@ interface NavLink {
           <div class="p-6 flex flex-col min-h-full">
             <div class="flex justify-between items-center mb-8">
               <div class="flex items-center">
-                <div class="relative w-10 h-10 bg-gradient-to-br from-green-600 to-green-700 rounded-lg border border-white/30 flex items-center justify-center overflow-hidden shadow-md">
-                  <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-70"></div>
-                  <span class="relative text-lg font-black text-white drop-shadow-md">SP</span>
+                <div class="relative w-10 h-10 rounded-lg border border-white/30 overflow-hidden shadow-md">
+                  <img
+                    src="assets/logo.jpg"
+                    alt="Schnittstellenpass Logo"
+                    class="block w-full h-full object-cover">
                 </div>
               </div>
               <button
