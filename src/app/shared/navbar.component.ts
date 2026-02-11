@@ -272,7 +272,7 @@ export class NavbarComponent {
     { id: '1', label: 'Home', url: '/home', isRoute: true },
     { id: '2', label: 'Episoden', url: '/episodes', isRoute: true },
     { id: '3', label: 'Über uns', url: '/about', isRoute: true },
-    { id: '4', label: 'Kontakt', url: '#contact', isRoute: false }
+    { id: '4', label: 'Kontakt', url: '/contact', isRoute: true }
   ]);
 
   // Navigation method

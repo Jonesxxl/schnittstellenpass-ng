@@ -74,16 +74,20 @@ interface Feature {
 
 
             <!-- Platform Badges -->
-            <div class="mt-6 flex flex-wrap gap-5">
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
               @for (platform of platforms(); track platform.id) {
                 <a
                   [href]="platform.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm border border-white/40 rounded-xl text-sm font-semibold text-gray-800 hover:bg-white/70 hover:border-white/60 transition-all duration-300 md:hover:scale-105 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  class="social-pill group"
+                  [style.--platform-color]="platform.color"
                   [attr.aria-label]="'Auf ' + platform.name + ' anhören'">
-                  <img [src]="platform.icon" [alt]="platform.name + ' logo'" class="w-5 h-5">
-                  {{ platform.name }}
+                  <span class="social-pill-icon">
+                    <img [src]="platform.icon" [alt]="platform.name + ' logo'" class="w-7 h-7">
+                  </span>
+                  <span class="social-pill-name">{{ platform.name }}</span>
+                  <span class="social-pill-arrow" aria-hidden="true">→</span>
                 </a>
               }
             </div>
@@ -233,7 +237,7 @@ interface Feature {
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
+              <a href="/contact" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
             </div>
           </div>
         </div>
@@ -365,6 +369,84 @@ interface Feature {
     @media (prefers-reduced-motion: reduce) {
       .stat-card-3d {
         animation: none;
+      }
+    }
+
+    .social-pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-height: 4.75rem;
+      width: 100%;
+      padding: 0.9rem 1.15rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.28));
+      box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      color: #1f2937;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .social-pill:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--platform-color), white 60%);
+      box-shadow:
+        0 14px 24px rgba(15, 23, 42, 0.15),
+        0 0 0 1px color-mix(in srgb, var(--platform-color), white 55%) inset;
+    }
+
+    .social-pill:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--platform-color), black 10%);
+      outline-offset: 2px;
+    }
+
+    .social-pill-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.55rem;
+      height: 2.55rem;
+      border-radius: 0.85rem;
+      background: color-mix(in srgb, var(--platform-color), white 86%);
+      border: 1px solid color-mix(in srgb, var(--platform-color), white 50%);
+      flex-shrink: 0;
+    }
+
+    .social-pill-name {
+      font-size: 1.32rem;
+      line-height: 1.15;
+      font-weight: 750;
+      color: #1f2937;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .social-pill-arrow {
+      margin-left: auto;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: color-mix(in srgb, var(--platform-color), #0f172a 42%);
+      transform: translateX(0);
+      transition: transform 180ms ease;
+    }
+
+    .social-pill:hover .social-pill-arrow {
+      transform: translateX(3px);
+    }
+
+    @media (max-width: 640px) {
+      .social-pill {
+        min-height: 4.35rem;
+      }
+
+      .social-pill-name {
+        font-size: 1.15rem;
       }
     }
   `]

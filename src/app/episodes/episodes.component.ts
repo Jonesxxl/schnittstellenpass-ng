@@ -173,7 +173,7 @@ interface AppleLookupResponse {
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
               <a href="#" class="transition hover:text-amber-300">Datenschutz</a>
               <a href="#" class="transition hover:text-amber-300">Impressum</a>
-              <a href="#" class="transition hover:text-amber-300">Kontakt</a>
+              <a href="/contact" class="transition hover:text-amber-300">Kontakt</a>
             </div>
           </div>
         </div>

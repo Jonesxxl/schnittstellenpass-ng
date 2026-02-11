@@ -257,7 +257,7 @@ interface Guest {
             <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Datenschutz</a>
               <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Impressum</a>
-              <a href="#" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
+              <a href="/contact" class="hover:text-gray-900 transition-colors focus:outline-none focus:text-gray-900">Kontakt</a>
             </div>
           </div>
         </div>
