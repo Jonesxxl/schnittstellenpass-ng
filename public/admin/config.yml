@@ -1,0 +1,59 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+editor:
+  preview: false
+
+collections:
+  - name: "site_texts"
+    label: "Website Texte"
+    files:
+      - name: "home_hero"
+        label: "Home - Hero"
+        file: "public/content/home-hero.json"
+        format: "json"
+        fields:
+          - label: "Titelzeilen (3)"
+            name: "titleLines"
+            widget: "list"
+            min: 3
+            max: 3
+            allow_add: false
+            field:
+              label: "Zeile"
+              name: "line"
+              widget: "string"
+          - label: "Unterzeile"
+            name: "subtitle"
+            widget: "text"
+
+      - name: "about_intro"
+        label: "Über uns - Intro"
+        file: "public/content/ueber-uns.json"
+        format: "json"
+        fields:
+          - { label: "Überschrift", name: "headline", widget: "string" }
+          - { label: "Text", name: "body", widget: "text" }
+
+      - name: "warum_cards"
+        label: "Home - Warum Karten"
+        file: "public/content/warum-cards.json"
+        format: "json"
+        fields:
+          - { label: "Sektion Überschrift", name: "sectionHeadline", widget: "string" }
+          - label: "Karten (3)"
+            name: "cards"
+            widget: "list"
+            min: 3
+            max: 3
+            allow_add: false
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Titel", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }

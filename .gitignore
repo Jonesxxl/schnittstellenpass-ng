@@ -48,3 +48,8 @@ environment.local.ts
 environment.*.local.ts
 .env
 .env.local
+/src/app/models/instagram.models.ts
+/src/app/services/instagram.service.ts
+/netlify/functions/instagram-feed.ts
+/src/app/instagram/instagram-feed.component.ts
+/src/environments/environment.development.ts

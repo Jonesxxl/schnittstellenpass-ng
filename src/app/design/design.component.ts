@@ -1,6 +1,7 @@
 import { Component, computed, signal, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
+import { ContentService } from '../services/content.service';
 import { Episode } from '../models/spotify.models';
 
 interface SocialLink {
@@ -49,9 +50,15 @@ interface Feature {
             <!-- Main Title -->
             <div class="space-y-4 overflow-x-hidden">
               <h2 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 leading-tight flex flex-col">
-                <span class="animate-fly-in-right">SCHNITT</span>
-                <span class="animate-fly-in-left animation-delay-200">STELLEN</span>
-                <span class="animate-fly-in-right animation-delay-400">PASS</span>
+                @for (line of heroTitleLines(); track $index; let i = $index) {
+                  <span
+                    [class.animate-fly-in-right]="i % 2 === 0"
+                    [class.animate-fly-in-left]="i % 2 !== 0"
+                    [class.animation-delay-200]="i === 1"
+                    [class.animation-delay-400]="i === 2">
+                    {{ line }}
+                  </span>
+                }
               </h2>
               <div class="h-2 w-24 md:w-32 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
             </div>
@@ -189,7 +196,7 @@ interface Feature {
       <section class="relative z-10 container mx-auto max-w-7xl px-4 md:px-8 pb-24">
         <div class="backdrop-blur-xl bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl">
           <h3 class="text-3xl md:text-4xl font-black text-gray-900 mb-8 text-center">
-            Warum Schnittstellenpass?
+            {{ whySectionHeadline() }}
           </h3>
 
           <div class="grid md:grid-cols-3 gap-8">
@@ -448,10 +455,12 @@ interface Feature {
 export class LandingComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly spotifyService = inject(SpotifyService);
+  private readonly contentService = inject(ContentService);
 
   // State
-  protected mainTitle = signal('SCHNITTSTELLENPASS');
+  protected heroTitleLines = signal(['SCHNITT', 'STELLEN', 'PASS']);
   protected subtitle = signal('Der Fußball-Podcast zwischen Profi und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.');
+  protected whySectionHeadline = signal('Warum Schnittstellenpass?');
   protected isLoading = signal(false);
   protected showSpotifyUrl = signal('');
 
@@ -503,7 +512,26 @@ export class LandingComponent implements OnInit {
   protected gridLines = computed(() => Array.from({ length: 36 }, (_, i) => i));
 
   ngOnInit(): void {
+    this.loadCmsContent();
     this.loadSpotifyData();
+  }
+
+  private loadCmsContent(): void {
+    this.contentService.getHomeHeroContent().subscribe((content) => {
+      this.heroTitleLines.set(content.titleLines);
+      this.subtitle.set(content.subtitle);
+    });
+
+    this.contentService.getWhyCardsContent().subscribe((content) => {
+      this.whySectionHeadline.set(content.sectionHeadline);
+      this.features.update((currentFeatures) =>
+        currentFeatures.map((feature, index) => ({
+          ...feature,
+          title: content.cards[index]?.title ?? feature.title,
+          description: content.cards[index]?.text ?? feature.description
+        }))
+      );
+    });
   }
 
   /**

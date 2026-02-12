@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { ContentService } from '../services/content.service';
 
 interface HighlightSection {
   id: string;
@@ -37,10 +38,10 @@ interface Guest {
           <div class="h-1 w-full bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500"></div>
           <div class="px-6 py-10 text-center md:px-12 md:py-12">
             <p class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 sm:text-sm">Schnittstellenpass Podcast</p>
-            <h1 class="mt-3 text-4xl font-black uppercase tracking-tight text-emerald-800 md:text-6xl">Über Uns</h1>
+            <h1 class="mt-3 text-4xl font-black uppercase tracking-tight text-emerald-800 md:text-6xl">{{ introHeadline() }}</h1>
             <div class="mx-auto mt-5 h-px w-32 bg-slate-300"></div>
             <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 md:text-xl">
-              Wir sprechen über Fußball mit Perspektive: ehrlich, analytisch und nah an den Realitäten zwischen Profi- und Amateurbereich.
+              {{ introBody() }}
             </p>
 
             <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -168,8 +169,20 @@ interface Guest {
   `,
   styles: []
 })
-export class AboutComponent {
+export class AboutComponent implements OnInit {
+  private readonly contentService = inject(ContentService);
+
   constructor(private router: Router) {}
+
+  protected introHeadline = signal('Über Uns');
+  protected introBody = signal('Wir sprechen über Fußball mit Perspektive: ehrlich, analytisch und nah an den Realitäten zwischen Profi- und Amateurbereich.');
+
+  ngOnInit(): void {
+    this.contentService.getAboutIntroContent().subscribe((content) => {
+      this.introHeadline.set(content.headline);
+      this.introBody.set(content.body);
+    });
+  }
 
   protected stats = signal([
     { id: '1', label: 'Format', value: '~45 Min / Folge' },
