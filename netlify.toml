@@ -28,10 +28,6 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-    # Content Security Policy
-    # Note: Adjust as needed for your app's requirements
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://*.netlify.com; frame-ancestors 'self'"
-
 # Cache static assets
 [[headers]]
   for = "/*.js"
@@ -52,16 +48,11 @@
   for = "/admin/*"
   [headers.values]
     Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://identity.netlify.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https://*.netlify.com; frame-ancestors 'self'"
 
 [[headers]]
   for = "/content/*"
   [headers.values]
     Cache-Control = "no-store"
-
-[[headers]]
-  for = "/.netlify/identity/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    Content-Security-Policy = "frame-ancestors 'self'"
 
 # This project is deployed as a plain SPA via static files + rewrites.
