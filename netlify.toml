@@ -70,4 +70,10 @@
   [headers.values]
     Cache-Control = "no-store"
 
+[[headers]]
+  for = "/.netlify/identity/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "frame-ancestors 'self'"
+
 # This project is deployed as a plain SPA via static files + rewrites.
