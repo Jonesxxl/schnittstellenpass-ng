@@ -12,6 +12,18 @@
   to = "/admin/index.html"
   status = 200
 
+# Netlify Identity endpoint passthrough
+[[redirects]]
+  from = "/.netlify/identity/*"
+  to = "/.netlify/identity/:splat"
+  status = 200
+
+# Netlify Functions endpoint passthrough
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
 # Redirect all requests to index.html for Angular routing
 [[redirects]]
   from = "/*"
@@ -30,7 +42,7 @@
 
     # Content Security Policy
     # Note: Adjust as needed for your app's requirements
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://*.netlify.com; frame-ancestors 'none'"
 
 # Cache static assets
 [[headers]]
