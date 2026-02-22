@@ -42,7 +42,7 @@ interface ContactFormData {
           </div>
           <h1 class="mt-5 text-4xl sm:text-5xl md:text-6xl font-black text-gray-900">Feature-Anfragen und Feedback</h1>
           <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            Schicke uns Vorschlaege fuer neue Gaeste oder Feedback zu einzelnen Folgen.
+            Schicke uns Vorschläge für neue Gäste oder Feedback zu einzelnen Folgen.
           </p>
         </section>
 
@@ -134,7 +134,7 @@ interface ContactFormData {
                     name="guestReason"
                     rows="3"
                     class="mt-1 w-full px-3 py-3 rounded-xl border border-gray-300 bg-white/90 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Kurz begruenden"></textarea>
+                    placeholder="Kurz begründen"></textarea>
                 </label>
                 <label class="block">
                   <span class="text-sm font-semibold text-gray-700">Kontakt/Profil (optional)</span>
@@ -165,7 +165,7 @@ interface ContactFormData {
                       class="mt-1 w-full px-3 py-3 rounded-xl border border-gray-300 bg-white/90 focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="inhalt">Inhalt</option>
                       <option value="gastwahl">Gastwahl</option>
-                      <option value="audio">Audio/Qualitaet</option>
+                      <option value="audio">Audio/Qualität</option>
                       <option value="themenwunsch">Themenwunsch</option>
                     </select>
                   </label>
@@ -187,7 +187,7 @@ interface ContactFormData {
                 <p class="text-sm text-red-700 font-semibold">{{ errorMessage() }}</p>
               }
               @if (submitted()) {
-                <p class="text-sm text-green-800 font-semibold">Mailprogramm wurde geoeffnet. Wenn nichts passiert, nutze die Direkt-E-Mail rechts.</p>
+                <p class="text-sm text-green-800 font-semibold">Mailprogramm wurde geöffnet. Wenn nichts passiert, nutze die Direkt-E-Mail rechts.</p>
               }
 
               <button
@@ -210,11 +210,11 @@ interface ContactFormData {
             <div class="mt-6 space-y-3 text-sm text-gray-700">
               <div class="p-3 rounded-xl bg-white/50 border border-white/50">
                 <p class="font-bold text-gray-900">Neue Gäste</p>
-                <p>Nenne Name, Kontext und warum die Person fuer die Community spannend ist.</p>
+                <p>Nenne Name, Kontext und warum die Person für die Community spannend ist.</p>
               </div>
               <div class="p-3 rounded-xl bg-white/50 border border-white/50">
                 <p class="font-bold text-gray-900">Folgen-Feedback</p>
-                <p>Nenne am besten den Folgentitel oder das Datum fuer eine schnelle Zuordnung.</p>
+                <p>Nenne am besten den Folgentitel oder das Datum für eine schnelle Zuordnung.</p>
               </div>
             </div>
           </aside>
@@ -251,7 +251,7 @@ export class ContactComponent {
 
   protected submitForm(): void {
     if (!this.formData.name.trim() || !this.formData.email.trim() || !this.formData.message.trim()) {
-      this.errorMessage.set('Bitte Name, E-Mail und Nachricht ausfuellen.');
+      this.errorMessage.set('Bitte Name, E-Mail und Nachricht ausfüllen.');
       return;
     }
 
@@ -275,14 +275,14 @@ export class ContactComponent {
   }
 
   private buildSubject(): string {
-    const prefix = this.requestType() === 'guest' ? 'Neue Gaesteanfrage' : 'Feedback zu Folge';
+    const prefix = this.requestType() === 'guest' ? 'Neue Gästeanfrage' : 'Feedback zu Folge';
     const detail = this.formData.subject.trim();
     return detail ? `${prefix}: ${detail}` : prefix;
   }
 
   private buildMailLines(): string[] {
     const baseLines = [
-      `Anfrage-Typ: ${this.requestType() === 'guest' ? 'Neue Gaeste' : 'Folgen-Feedback'}`,
+      `Anfrage-Typ: ${this.requestType() === 'guest' ? 'Neue Gäste' : 'Folgen-Feedback'}`,
       `Name: ${this.formData.name}`,
       `E-Mail: ${this.formData.email}`,
       ''

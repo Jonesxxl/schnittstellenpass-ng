@@ -24,11 +24,11 @@ interface NavLink {
                 type="button"
                 (click)="navigateTo('/home')"
                 class="relative group focus:outline-none focus:ring-2 focus:ring-green-400 rounded-xl">
-                <div class="relative w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl border border-white/30 overflow-hidden shadow-md md:shadow-lg transition-all duration-300 md:group-hover:scale-105 group-hover:shadow-green-400/30 md:animate-pulse-slow">
+                <div class="relative w-[68px] h-10 md:w-[96px] md:h-14 rounded-lg md:rounded-xl border border-white/50 bg-white/95 p-1 overflow-hidden shadow-md md:shadow-lg transition-all duration-300 md:group-hover:scale-105 group-hover:shadow-green-400/30">
                   <img
-                    src="assets/logo.jpg"
+                    src="assets/logo.png"
                     alt="Schnittstellenpass Logo"
-                    class="block w-full h-full object-cover">
+                    class="block w-full h-full object-contain select-none">
                 </div>
               </button>
             </div>
@@ -107,11 +107,11 @@ interface NavLink {
           <div class="p-6 flex flex-col min-h-full">
             <div class="flex justify-between items-center mb-8">
               <div class="flex items-center">
-                <div class="relative w-10 h-10 rounded-lg border border-white/30 overflow-hidden shadow-md">
+                <div class="relative w-[88px] h-12 rounded-lg border border-white/50 bg-white/95 p-1 overflow-hidden shadow-md">
                   <img
-                    src="assets/logo.jpg"
+                    src="assets/logo.png"
                     alt="Schnittstellenpass Logo"
-                    class="block w-full h-full object-cover">
+                    class="block w-full h-full object-contain select-none">
                 </div>
               </div>
               <button

@@ -60,6 +60,11 @@
       background: #111827;
     }
 
+    #open-login:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
     #identity-error {
       margin-top: 10px;
       color: #b91c1c;
@@ -71,16 +76,19 @@
   <main id="identity-login" hidden>
     <h1>CMS Login</h1>
     <p>Melde dich mit Netlify Identity an, um Inhalte zu bearbeiten.</p>
-    <button id="open-login" type="button">Login with Netlify Identity</button>
+    <button id="open-login" type="button" disabled>Login with Netlify Identity</button>
     <p id="identity-error" hidden></p>
   </main>
+  <div id="identity-widget-container"></div>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
     (function() {
       var loginPanel = document.getElementById('identity-login');
       var openLoginButton = document.getElementById('open-login');
       var errorText = document.getElementById('identity-error');
+      var widgetContainer = document.getElementById('identity-widget-container');
       var cmsLoaded = false;
+      var identityReady = false;
       var hash = window.location.hash || '';
       var hasIdentityToken = /(invite_token|confirmation_token|recovery_token|email_change_token)=/.test(hash);
 
@@ -107,7 +115,19 @@
         errorText.hidden = false;
       }
 
+      function hideError() {
+        errorText.hidden = true;
+        errorText.textContent = '';
+      }
+
       function openIdentityModal(mode) {
+        if (!identityReady) {
+          showError('Authentifizierung wird initialisiert. Bitte in 1-2 Sekunden erneut klicken.');
+          return;
+        }
+
+        hideError();
+
         window.setTimeout(function() {
           if (mode) {
             window.netlifyIdentity.open(mode);
@@ -117,8 +137,9 @@
         }, 0);
       }
 
+      showLoginPanel();
+
       if (!window.netlifyIdentity) {
-        showLoginPanel();
         openLoginButton.disabled = true;
         showError('Netlify Identity konnte nicht geladen werden. Bitte Seite neu laden.');
         return;
@@ -129,6 +150,10 @@
       });
 
       window.netlifyIdentity.on('init', function(user) {
+        identityReady = true;
+        openLoginButton.disabled = false;
+        hideError();
+
         if (user) {
           loadCmsApp();
           return;
@@ -151,7 +176,11 @@
       });
 
       if (typeof window.netlifyIdentity.init === 'function') {
-        window.netlifyIdentity.init();
+        window.netlifyIdentity.init({
+          container: '#identity-widget-container'
+        });
+      } else if (!widgetContainer) {
+        showError('Identity-Container fehlt. Bitte Seite neu laden.');
       }
     })();
   </script>

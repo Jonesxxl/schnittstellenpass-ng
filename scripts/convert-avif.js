@@ -4,7 +4,7 @@ const sharp = require('sharp');
 
 // Define paths
 const sourceFile = path.join(__dirname, '../src/assets/schnittstellenpass-zwischen-profi-und-amateur-trailer-8muzwmq49esbq.avif');
-const targetFile = path.join(__dirname, '../src/assets/logo.jpg');
+const targetFile = path.join(__dirname, '../src/assets/logo.png');
 
 // Check if source file exists
 if (!fs.existsSync(sourceFile)) {
