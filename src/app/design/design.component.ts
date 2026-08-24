@@ -1,4 +1,4 @@
-import { Component, computed, signal, inject, OnInit } from '@angular/core';
+import { Component, computed, signal, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { ContentService } from '../services/content.service';
@@ -245,6 +245,7 @@ interface Feature {
       </footer>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .animation-delay-1000 {
       animation-delay: 1s;
