@@ -50,7 +50,7 @@ export class HomeComponent {
     stream: () => this.spotifyService.getLatestEpisode()
   });
 
-  protected readonly livePhoto: ImageArea = { placeholder: 'Foto von der ersten Live-Folge' };
+  protected readonly livePhoto: ImageArea = { src: 'assets/live-event.webp', placeholder: 'Foto von der ersten Live-Folge' };
   protected readonly hostPortrait: ImageArea = { placeholder: 'Portrait von Agy' };
   protected readonly instagramPosts: ImageArea[] = [
     { placeholder: 'Instagram-Post 1' },
