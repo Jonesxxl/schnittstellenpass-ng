@@ -4,6 +4,7 @@ import { Observable, Subject, of } from 'rxjs';
 import { HomeComponent } from './home.component';
 import { ContentService } from '../services/content.service';
 import { SpotifyService } from '../services/spotify.service';
+import { InstagramFeedService, InstagramPost } from '../services/instagram-feed.service';
 import { Episode } from '../models/spotify.models';
 
 describe('HomeComponent', () => {
@@ -18,13 +19,27 @@ describe('HomeComponent', () => {
     audioPreviewUrl: null
   };
 
+  const instagramPost = (id: string, caption = ''): InstagramPost => ({
+    id,
+    permalink: `https://www.instagram.com/p/${id}/`,
+    caption,
+    mediaType: 'IMAGE',
+    timestamp: '2026-09-20T18:00:00+0000',
+    image: `/.netlify/functions/instagram?image=${id}`
+  });
+
   // settle: wait for all resources; not possible while an episode request is deliberately left pending
-  async function render(latestEpisode: Observable<Episode | null>, settle = true): Promise<HTMLElement> {
+  async function render(
+    latestEpisode: Observable<Episode | null>,
+    settle = true,
+    instagramPosts: Observable<InstagramPost[]> = of([])
+  ): Promise<HTMLElement> {
     TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
         provideRouter([]),
         { provide: SpotifyService, useValue: { getLatestEpisode: () => latestEpisode } },
+        { provide: InstagramFeedService, useValue: { getLatestPosts: () => instagramPosts } },
         {
           provide: ContentService,
           useValue: {
@@ -91,5 +106,32 @@ describe('HomeComponent', () => {
 
     expect(rows.length).toBe(6);
     expect(rows[0].textContent).toContain('Sebastian „Kiwi“ Müller');
+  });
+
+  it('should link the Instagram tiles to the latest posts', async () => {
+    const root = await render(of(episode), true, of([instagramPost('1', 'Neue Folge ist online'), instagramPost('2')]));
+    const links = root.querySelectorAll<HTMLAnchorElement>('#social a[href*="instagram.com/p/"]');
+
+    expect(links.length).toBe(2);
+    expect(links[0].getAttribute('href')).toBe('https://www.instagram.com/p/1/');
+    expect(links[0].getAttribute('target')).toBe('_blank');
+    expect(links[0].querySelector('img')!.getAttribute('src')).toBe('/.netlify/functions/instagram?image=1');
+    expect(links[0].querySelector('img')!.getAttribute('alt')).toBe('Instagram-Beitrag: Neue Folge ist online');
+    expect(links[1].querySelector('img')!.getAttribute('alt')).toBe('Instagram-Beitrag von Schnittstellenpass');
+    // The remaining tiles keep their placeholders
+    expect(text(root, '#social .placeholder')).toBe('Instagram-Post 3');
+    expect(root.querySelectorAll('#social .placeholder').length).toBe(2);
+  });
+
+  it('should keep the Instagram placeholders while loading and if the feed is unavailable', async () => {
+    const loading = await render(of(episode), false, new Subject<InstagramPost[]>());
+    expect(loading.querySelector('#social [aria-busy]')!.getAttribute('aria-busy')).toBe('true');
+    expect(loading.querySelectorAll('#social .placeholder').length).toBe(4);
+
+    TestBed.resetTestingModule();
+    const unavailable = await render(of(episode), true, of([]));
+    expect(unavailable.querySelector('#social [aria-busy]')!.getAttribute('aria-busy')).toBe('false');
+    expect(unavailable.querySelectorAll('#social .placeholder').length).toBe(4);
+    expect(unavailable.querySelector('#social a[href*="instagram.com/p/"]')).toBeNull();
   });
 });

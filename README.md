@@ -36,6 +36,41 @@ This application integrates with the Spotify Web API to fetch podcast episode da
 - **Never commit your actual credentials to Git!**
 - For local development with Spotify data, run `npx netlify dev` instead of `ng serve`: it serves the app together with the function. Put the credentials into a `.env` file in the project root (already git-ignored). With plain `ng serve` the function is not available and the "Aktuelle Folge" card shows its fallback content.
 
+## Instagram Feed ("Aus der Kabine")
+
+The four tiles in the "Aus der Kabine" section show the latest Instagram posts. The Netlify function `netlify/functions/instagram.mts` loads them from the Instagram API and also serves their images. Visitors therefore only talk to this site, never to Instagram or Meta, so no cookie consent is needed for the feed. Clicking a tile opens the post on Instagram. Without a token, or if Instagram cannot be reached, the tiles keep their placeholders.
+
+### Setup Instructions
+
+1. **Professional account**
+   - The Instagram account must be a Business or Creator account (Instagram app → Settings → *Account type and tools*).
+
+2. **Create a Meta app**
+   - Go to [Meta for Developers](https://developers.facebook.com/apps) and click *Create app*.
+   - Choose the Instagram use case (Instagram API with Instagram Login).
+
+3. **Generate an access token**
+   - In the app dashboard, open *Instagram → API setup with Instagram login*.
+   - Under *Generate access tokens*, click *Add account* and log in with the Schnittstellenpass account.
+   - Copy the token; it is shown only once. The permission `instagram_business_basic` is sufficient.
+   - If the account cannot be added, give it the *Instagram Tester* role under *App roles* and accept the invite in Instagram (Settings → *Website permissions → Apps and websites → Tester invites*).
+
+4. **Configure the Netlify Function**
+   - In the Netlify site settings under *Environment variables*, set `INSTAGRAM_ACCESS_TOKEN`. Its scope must include **Functions**.
+   - Trigger a new deploy so the functions pick up the variable.
+
+### Token renewal
+
+- The token is valid for 60 days. The scheduled function `netlify/functions/instagram-token-refresh.mts` renews it once a week and stores the renewed token in Netlify Blobs (store `instagram`). Nothing has to be done manually.
+- Scheduled functions only run on the published production deploy. Their runs are visible in Netlify under *Logs → Functions → instagram-token-refresh* ("Instagram token refreshed, valid for 60 days").
+- If the token does expire (e.g. the site was paused for two months), it cannot be renewed anymore: generate a new one (step 3) and replace `INSTAGRAM_ACCESS_TOKEN`. A changed environment variable always takes precedence over the stored token.
+
+### Important Notes
+
+- **Never put the access token into `src/` or any other frontend file.**
+- The post list is cached on the Netlify CDN for 15 minutes and the images for 7 days, so a new post can take up to about 15 minutes to appear.
+- For local development, put `INSTAGRAM_ACCESS_TOKEN` into `.env` and run `npx netlify dev`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

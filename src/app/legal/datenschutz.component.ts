@@ -58,6 +58,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             <p class="mt-4 leading-relaxed text-forest">
               Diese Website enthält Links zu externen Plattformen (u. a. Spotify, YouTube, Apple Podcasts, Instagram, Deezer, X/Twitter). Beim Anklicken eines Links verlässt du diese Website. Für die Datenverarbeitung auf den Zielseiten sind die jeweiligen Anbieter verantwortlich.
             </p>
+            <p class="mt-3 leading-relaxed text-forest">
+              Die Vorschaubilder unserer letzten Instagram-Beiträge laden wir über unseren eigenen Server. Beim Aufruf dieser Website werden dabei keine Daten an Instagram bzw. Meta übermittelt; erst ein Klick auf einen Beitrag öffnet Instagram.
+            </p>
           </article>
 
           <article class="rounded-md border-2 border-ink bg-paper p-6">
