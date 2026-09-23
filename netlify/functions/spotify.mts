@@ -3,10 +3,9 @@
  *
  * Spotify's Client Credentials flow needs the client secret, which must never
  * reach the browser. This function requests the access token on the server and
- * forwards only the read-only requests the site needs. The show is fixed here,
+ * forwards only the read-only request the site needs. The show is fixed here,
  * so the function cannot be used to query arbitrary Spotify resources.
  *
- *   GET /.netlify/functions/spotify?resource=show
  *   GET /.netlify/functions/spotify?resource=episodes&limit=5&offset=0
  *
  * Environment variables (Netlify site settings, scope must include Functions):
@@ -95,9 +94,6 @@ export default async (req: Request): Promise<Response> => {
   const params = new URL(req.url).searchParams;
   let path: string;
   switch (params.get('resource')) {
-    case 'show':
-      path = `/shows/${showId}`;
-      break;
     case 'episodes': {
       const limit = parseIntParam(params.get('limit'), 10, 1, MAX_EPISODE_LIMIT);
       const offset = parseIntParam(params.get('offset'), 0, 0, 999_999);

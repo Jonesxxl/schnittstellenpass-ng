@@ -22,11 +22,18 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('schnittstellenpass');
   });
 
-  it('should render the navbar', () => {
+  it('should render the site header navigation', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-navbar nav')).toBeTruthy();
+    expect(compiled.querySelector('app-site-header nav')).toBeTruthy();
+  });
+
+  it('should render the site footer with the legal links', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const links = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('app-site-footer footer a'));
+    expect(links.map(link => link.getAttribute('href'))).toEqual(['/impressum', '/datenschutz']);
   });
 
   it('should render a router outlet for the routed pages', () => {

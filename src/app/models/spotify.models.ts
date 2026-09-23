@@ -3,22 +3,6 @@
  * Interfaces for Spotify Web API responses
  */
 
-// Spotify Show (Podcast) Response
-export interface SpotifyShow {
-  id: string;
-  name: string;
-  description: string;
-  publisher: string;
-  images: SpotifyImage[];
-  external_urls: {
-    spotify: string;
-  };
-  total_episodes: number;
-  languages: string[];
-  media_type: string;
-  explicit: boolean;
-}
-
 // Spotify Episode Response
 export interface SpotifyEpisode {
   id: string;
@@ -63,11 +47,4 @@ export interface Episode {
   spotifyUrl: string;
   imageUrl: string;
   audioPreviewUrl: string | null;
-}
-
-// Application Show Statistics
-export interface ShowStats {
-  totalEpisodes: number;
-  rating: number;
-  listeners: string;
 }

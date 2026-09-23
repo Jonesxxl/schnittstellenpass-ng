@@ -1,17 +1,6 @@
-/* Add padding to the top of the app to account for the navbar */
+// No overflow rules here: they would make this host a scroll container and
+// disable the sticky site header. Horizontal overflow is clipped on html/body.
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, rgb(229, 231, 235), rgb(209, 213, 219), rgb(156, 163, 175));
-  padding-top: 5rem; /* Adjust this value based on the navbar height */
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
-}
-
-/* For larger screens, increase the padding to account for the larger navbar */
-@media (min-width: 768px) {
-  :host {
-    padding-top: 7rem;
-  }
 }

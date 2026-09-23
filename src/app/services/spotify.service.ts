@@ -2,14 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import {
-  SpotifyShow,
-  SpotifyEpisode,
-  SpotifyEpisodesResponse,
-  Episode,
-  ShowStats
-} from '../models/spotify.models';
-import { environment } from '../../environments/environment';
+import { SpotifyEpisode, SpotifyEpisodesResponse, Episode } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -20,20 +13,6 @@ export class SpotifyService {
   // Netlify function (netlify/functions/spotify.mts) that holds the Spotify
   // credentials server-side and forwards requests for the configured show
   private readonly SPOTIFY_PROXY_URL = '/.netlify/functions/spotify';
-
-  /**
-   * Get podcast show details
-   */
-  getShow(): Observable<SpotifyShow> {
-    return this.http.get<SpotifyShow>(this.SPOTIFY_PROXY_URL, {
-      params: { resource: 'show' }
-    }).pipe(
-      catchError(error => {
-        console.error('Failed to fetch show details:', error);
-        return throwError(() => error);
-      })
-    );
-  }
 
   /**
    * Get podcast episodes
@@ -61,24 +40,6 @@ export class SpotifyService {
         return this.transformSpotifyEpisode(response.items[0]);
       }),
       catchError(() => of(null))
-    );
-  }
-
-  /**
-   * Get show statistics
-   */
-  getShowStats(): Observable<ShowStats> {
-    return this.getShow().pipe(
-      map(show => ({
-        totalEpisodes: show.total_episodes,
-        rating: 4.9, // Spotify API doesn't provide ratings, using hardcoded value
-        listeners: '10K+' // Spotify API doesn't provide listener count, using hardcoded value
-      })),
-      catchError(() => of({
-        totalEpisodes: 0,
-        rating: 4.9,
-        listeners: '10K+'
-      }))
     );
   }
 
@@ -134,22 +95,5 @@ export class SpotifyService {
       const remainingSeconds = seconds % 60;
       return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
-  }
-
-  /**
-   * Open Spotify URL in new tab
-   */
-  openSpotify(url: string): void {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  /**
-   * Get show Spotify URL
-   */
-  getShowUrl(): Observable<string> {
-    return this.getShow().pipe(
-      map(show => show.external_urls.spotify),
-      catchError(() => of(`https://open.spotify.com/show/${environment.spotify.showId}`))
-    );
   }
 }

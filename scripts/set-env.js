@@ -7,10 +7,6 @@ const envConfigFile = `export const environment = {
   production: true,
   spotify: {
     showId: '${process.env.SPOTIFY_SHOW_ID || "4gpxvhJ8WyrGAnba5A6LQc"}'
-  },
-  applePodcasts: {
-    podcastId: '${process.env.APPLE_PODCAST_ID || ""}',
-    rssFeedUrl: '${process.env.APPLE_RSS_FEED_URL || ""}'
   }
 };
 `;
