@@ -1,4 +1,4 @@
-import { Component, signal, effect, Renderer2, inject } from '@angular/core';
+import { Component, signal, effect, Renderer2, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 interface NavLink {
@@ -160,6 +160,7 @@ interface NavLink {
         </div>
     </header>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     @keyframes flyInRight {
       0% {

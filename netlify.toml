@@ -3,8 +3,12 @@
 [build]
   # Build command
   command = "npm run build"
-  # Directory where the build output is located (Angular 19 uses browser subdirectory)
+  # Directory where the build output is located (the application builder emits a browser subdirectory)
   publish = "dist/schnittstellenpass/browser"
+
+[build.environment]
+  # Angular 22 requires Node ^22.22.3 || ^24.15.0 || >=26.0.0
+  NODE_VERSION = "24"
 
 # Decap CMS admin route
 [[redirects]]
