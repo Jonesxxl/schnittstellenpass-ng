@@ -58,7 +58,7 @@ export class HomeComponent {
     defaultValue: []
   });
 
-  protected readonly livePhoto: ImageArea = { placeholder: 'Foto von der ersten Live-Folge' };
+  protected readonly livePhoto: ImageArea = { src: 'assets/live-event.webp', placeholder: 'Foto von der ersten Live-Folge' };
   protected readonly hostPortrait: ImageArea = { placeholder: 'Portrait von Agy' };
   protected readonly instagramTiles = ['Instagram-Post 1', 'Instagram-Post 2', 'Instagram-Post 3', 'Instagram-Post 4'];
 
