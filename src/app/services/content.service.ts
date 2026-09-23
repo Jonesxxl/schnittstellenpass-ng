@@ -22,14 +22,15 @@ export interface WhyCardsContent {
   cards: WhyCardContent[];
 }
 
-const DEFAULT_HOME_HERO: HomeHeroContent = {
-  titleLines: ['SCHNITT', 'STELLEN', 'PASS'],
-  subtitle: 'Der Fußball-Podcast zwischen Profi und Amateur. Taktik, Analysen und spannende Gespräche über das schönste Spiel der Welt.'
+// Used until the CMS content has loaded and if it cannot be loaded
+export const DEFAULT_HOME_HERO: HomeHeroContent = {
+  titleLines: ['Zwischen Profi', '& Amateur'],
+  subtitle: 'Gespräche mit Menschen aus Bundesliga, Kreisliga und allem dazwischen. Ehrlich, persönlich und mit Geschichten, die sonst in der Kabine bleiben.'
 };
 
-const DEFAULT_ABOUT_INTRO: AboutIntroContent = {
-  headline: 'Über Uns',
-  body: 'Wir sprechen über Fußball mit Perspektive: ehrlich, analytisch und nah an den Realitäten zwischen Profi- und Amateurbereich.'
+export const DEFAULT_ABOUT_INTRO: AboutIntroContent = {
+  headline: 'Marc „Agy“ Agyemang',
+  body: 'Agy kennt beide Seiten: Nachwuchs beim VfB Stuttgart, später Amateurfußball. Genau an dieser Schnittstelle setzt der Podcast an. Was verbindet die Bundesliga mit dem Sportplatz um die Ecke, und was trennt sie?'
 };
 
 const DEFAULT_WHY_CARDS: WhyCardsContent = {
@@ -115,7 +116,7 @@ export class ContentService {
       .filter((line) => line.length > 0)
       .slice(0, 3);
 
-    if (resolvedLines.length !== 3) {
+    if (resolvedLines.length === 0) {
       return DEFAULT_HOME_HERO.titleLines;
     }
 

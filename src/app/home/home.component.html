@@ -1,0 +1,178 @@
+<!-- overflow-wrap: the global break-word rule would split words mid-word in the narrow mobile episode rows; the design keeps them whole -->
+<main class="[overflow-wrap:normal]">
+  @if (showLive) {
+    <a routerLink="/home" fragment="live" class="block bg-ink font-mono text-[13px] uppercase tracking-[.08em] text-paper hover:text-pitch">
+      <div class="mx-auto box-content flex max-w-[1280px] flex-wrap items-center gap-3 px-6 py-2.5">
+        <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
+        <span>Neu seit 22.09.2026 — Schnittstellenpass jetzt auch live</span>
+        <span class="ml-auto">Mehr →</span>
+      </div>
+    </a>
+  }
+
+  <section id="top" class="relative overflow-hidden border-b-2 border-ink bg-pitch">
+    @if (showPitch) {
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div class="absolute bottom-0 left-1/2 top-0 border-l-2 border-ink/[.14]"></div>
+        <div class="absolute left-1/2 top-1/2 aspect-square w-[min(56vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink/[.14]"></div>
+        <div class="absolute left-1/2 top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink/20"></div>
+        <div class="absolute -left-0.5 bottom-[18%] top-[18%] w-[12%] border-2 border-ink/[.14]"></div>
+        <div class="absolute -right-0.5 bottom-[18%] top-[18%] w-[12%] border-2 border-ink/[.14]"></div>
+      </div>
+    }
+    <div class="relative mx-auto box-content grid max-w-[1280px] grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] items-center gap-12 px-6 pb-[clamp(40px,6vw,80px)] pt-[clamp(48px,8vw,104px)]">
+      <div class="flex flex-col gap-7">
+        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-forest">Der Fußball-Podcast · Seit 2021</div>
+        <img appReveal src="assets/brand/logo-black.webp" alt="Schnittstellenpass" width="1200" height="656" class="block h-auto w-full max-w-[600px]" />
+        <h1 appReveal class="m-0 font-display text-[clamp(34px,4.4vw,56px)] font-black uppercase leading-[.95] tracking-[.01em]">
+          @for (line of hero.value().titleLines; track $index) {
+            @if (!$first) {
+              <br />
+            }
+            {{ line }}
+          }
+        </h1>
+        <p appReveal class="m-0 max-w-[520px] text-pretty text-[clamp(17px,1.4vw,20px)] leading-normal">{{ hero.value().subtitle }}</p>
+        <div class="flex flex-wrap gap-3">
+          <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="rounded-full bg-ink px-[22px] py-3.5 font-semibold text-paper hover:bg-moss">Spotify</a>
+          <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Apple Podcasts</a>
+          <a [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">YouTube</a>
+        </div>
+      </div>
+
+      @let episode = latestEpisode.value();
+      @let loading = latestEpisode.isLoading();
+      <a appReveal [href]="episode?.spotifyUrl || links.spotify" target="_blank" rel="noopener noreferrer" [attr.aria-busy]="loading" class="box-content flex w-full max-w-[520px] flex-col justify-self-center rounded-md border-2 border-ink bg-paper shadow-block">
+        <div class="flex items-center justify-between border-b-2 border-ink px-4 py-3 font-mono text-[12px] uppercase tracking-[.1em]">
+          <span>Aktuelle Folge</span>
+          <span>{{ episode?.duration }}</span>
+        </div>
+        <div class="relative box-content aspect-square border-b-2 border-ink">
+          <app-image-slot [src]="loading ? null : episode?.imageUrl || 'assets/cover.jpg'" placeholder="Cover der aktuellen Folge" />
+        </div>
+        <div class="flex flex-col gap-1.5 px-4 py-[18px]">
+          @if (loading) {
+            <div class="font-display text-[28px] font-extrabold uppercase leading-none text-forest">Wird geladen …</div>
+          } @else if (episode) {
+            <div class="line-clamp-3 font-display text-[28px] font-extrabold uppercase leading-none">{{ episode.title }}</div>
+            <div class="text-[15px] text-forest">Folge vom {{ episode.date }}</div>
+          } @else {
+            <div class="font-display text-[28px] font-extrabold uppercase leading-none">Alle Folgen auf Spotify</div>
+            <div class="text-[15px] text-forest">Jetzt reinhören</div>
+          }
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section id="live" class="border-b-2 border-ink bg-ink text-paper">
+    <div class="mx-auto box-content grid max-w-[1280px] grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-12 px-6 py-[clamp(56px,8vw,112px)]">
+      <div appReveal class="flex flex-col gap-6">
+        <div class="flex items-center gap-2.5 font-mono text-[13px] uppercase tracking-[.12em] text-pitch">
+          <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
+          <span>Neu · seit 22.09.2026</span>
+        </div>
+        <h2 class="m-0 font-display text-[clamp(56px,8vw,112px)] font-black uppercase leading-[.85]">Jetzt<br />auch live.</h2>
+        <p class="m-0 max-w-[480px] text-pretty text-[19px] leading-[1.55] text-chalk">Schnittstellenpass verlässt das Studio: Gäste auf der Bühne, Publikum im Raum, Fragen direkt aus der Kurve. Termine und Tickets kündigen wir auf Instagram an.</p>
+        <div class="flex flex-wrap gap-3">
+          <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full bg-pitch px-[22px] py-3.5 font-semibold text-ink hover:bg-paper">Termine auf Instagram</a>
+          <a [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-pitch px-5 py-3 font-semibold text-pitch hover:bg-pitch hover:text-ink">Live-Mitschnitte</a>
+        </div>
+      </div>
+      <div appReveal class="relative box-content aspect-[4/3] overflow-hidden rounded-md border-2 border-pitch">
+        <app-image-slot [src]="livePhoto.src" [placeholder]="livePhoto.placeholder" alt="Schnittstellenpass live auf der Bühne" />
+      </div>
+    </div>
+  </section>
+
+  <section id="folgen" class="bg-paper">
+    <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
+      <div appReveal class="flex flex-wrap items-end justify-between gap-6">
+        <div class="flex flex-col gap-3">
+          <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">Spielplan</div>
+          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Ausgewählte Folgen</h2>
+        </div>
+        <p class="m-0 max-w-[380px] text-[17px] leading-normal text-forest">Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.</p>
+      </div>
+      <div class="flex flex-col border-t-2 border-ink">
+        @for (featured of featuredEpisodes; track featured.guest) {
+          <a appReveal [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] items-center gap-5 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink">
+            <div class="font-mono text-[13px] text-moss">{{ featured.badge }}</div>
+            <div class="flex min-w-0 flex-col gap-1">
+              <div class="font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-none">{{ featured.guest }}</div>
+              <div class="text-pretty text-[15px] text-forest">{{ featured.description }}</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em]">{{ featured.tag }}</span>
+              <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
+            </div>
+          </a>
+        }
+      </div>
+      <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="self-start rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Alle Folgen anhören →</a>
+    </div>
+  </section>
+
+  <section id="ueber" class="border-y-2 border-ink bg-pitch">
+    <div class="mx-auto box-content grid max-w-[1280px] grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] items-center gap-14 px-6 py-[clamp(56px,8vw,112px)]">
+      <div appReveal class="relative box-content aspect-[4/5] w-full max-w-[480px] overflow-hidden rounded-md border-2 border-ink shadow-block">
+        <app-image-slot [src]="hostPortrait.src" [placeholder]="hostPortrait.placeholder" [alt]="host.value().headline" />
+      </div>
+      <div appReveal class="flex flex-col gap-6">
+        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-forest">Der Gastgeber</div>
+        <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ host.value().headline }}</h2>
+        <p class="m-0 max-w-[560px] text-pretty text-[19px] leading-[1.55]">{{ host.value().body }}</p>
+        <div class="box-content grid max-w-[560px] grid-cols-3 divide-x-2 divide-ink rounded-md border-2 border-ink bg-paper">
+          @for (fact of facts; track fact.label) {
+            <div class="flex flex-col gap-1 p-4">
+              <span class="whitespace-nowrap font-display text-[clamp(26px,3vw,40px)] font-black leading-none">{{ fact.value }}</span>
+              <span class="text-[13px] text-forest">{{ fact.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="social" class="bg-paper">
+    <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
+      <div appReveal class="flex flex-wrap items-end justify-between gap-6">
+        <div class="flex flex-col gap-3">
+          <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">&#64;schnittstellenpass</div>
+          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Aus der Kabine</h2>
+        </div>
+        <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Auf Instagram folgen →</a>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,220px),1fr))] gap-4">
+        @for (post of instagramPosts; track post.placeholder) {
+          <div appReveal class="relative box-content aspect-[4/5] overflow-hidden rounded-md border-2 border-ink">
+            <app-image-slot [src]="post.src" [placeholder]="post.placeholder" alt="Instagram-Beitrag von Schnittstellenpass" />
+          </div>
+        }
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-4">
+        <a appReveal [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md bg-ink p-6 text-paper hover:bg-moss">
+          <div class="flex flex-col gap-1">
+            <span class="font-display text-[30px] font-extrabold uppercase leading-none">YouTube</span>
+            <span class="text-[15px] text-pitch">Folgen mit Bild &amp; Live-Mitschnitte</span>
+          </div>
+          <span aria-hidden="true" class="text-[24px]">→</span>
+        </a>
+        <a appReveal [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md border-2 border-ink bg-pitch p-6 hover:bg-ink hover:text-paper">
+          <div class="flex flex-col gap-1">
+            <span class="font-display text-[30px] font-extrabold uppercase leading-none">Instagram</span>
+            <span class="text-[15px]">Clips, Gäste &amp; Live-Termine</span>
+          </div>
+          <span aria-hidden="true" class="text-[24px]">→</span>
+        </a>
+        <a appReveal [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md border-2 border-ink p-6 hover:bg-ink hover:text-paper">
+          <div class="flex flex-col gap-1">
+            <span class="font-display text-[30px] font-extrabold uppercase leading-none">Spotify &amp; Apple</span>
+            <span class="text-[15px]">Abonnieren, nichts verpassen</span>
+          </div>
+          <span aria-hidden="true" class="text-[24px]">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>

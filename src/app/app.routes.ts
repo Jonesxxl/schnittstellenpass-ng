@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () => import('./design/design.component').then(m => m.LandingComponent)
+    loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'episodes',
