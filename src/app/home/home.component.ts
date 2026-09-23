@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_HOME_HERO } from '../services/content.service';
 import { SpotifyService } from '../services/spotify.service';
+import { InstagramFeedService } from '../services/instagram-feed.service';
 import { ImageSlotComponent } from '../shared/image-slot.component';
 import { RevealDirective } from '../shared/reveal.directive';
 import { LINKS } from '../shared/links';
@@ -28,6 +29,7 @@ interface ImageArea {
 export class HomeComponent {
   private readonly spotifyService = inject(SpotifyService);
   private readonly contentService = inject(ContentService);
+  private readonly instagramFeedService = inject(InstagramFeedService);
 
   // Switch off the live announcement banner / the pitch markings in the hero
   protected readonly showLive = true;
@@ -50,14 +52,15 @@ export class HomeComponent {
     stream: () => this.spotifyService.getLatestEpisode()
   });
 
+  // Latest posts for the "Aus der Kabine" tiles; tiles without a post keep their placeholder
+  protected readonly instagramPosts = rxResource({
+    stream: () => this.instagramFeedService.getLatestPosts(),
+    defaultValue: []
+  });
+
   protected readonly livePhoto: ImageArea = { placeholder: 'Foto von der ersten Live-Folge' };
   protected readonly hostPortrait: ImageArea = { placeholder: 'Portrait von Agy' };
-  protected readonly instagramPosts: ImageArea[] = [
-    { placeholder: 'Instagram-Post 1' },
-    { placeholder: 'Instagram-Post 2' },
-    { placeholder: 'Instagram-Post 3' },
-    { placeholder: 'Instagram-Post 4' }
-  ];
+  protected readonly instagramTiles = ['Instagram-Post 1', 'Instagram-Post 2', 'Instagram-Post 3', 'Instagram-Post 4'];
 
   protected readonly featuredEpisodes: FeaturedEpisode[] = [
     { badge: 'NEU', guest: 'Sebastian „Kiwi“ Müller', description: 'Die Zukunft des Amateurfußballs: Ehrenamt, Verbandsarbeit, Nachwuchs.', tag: 'Amateur' },
