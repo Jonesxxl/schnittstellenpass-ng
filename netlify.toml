@@ -10,6 +10,10 @@
   # Angular 22 requires Node ^22.22.3 || ^24.15.0 || >=26.0.0
   NODE_VERSION = "24"
 
+[functions]
+  # Serverless functions, e.g. the Spotify API proxy (netlify/functions/spotify.mts)
+  directory = "netlify/functions"
+
 # Decap CMS admin route
 [[redirects]]
   from = "/admin/*"
@@ -59,4 +63,6 @@
   [headers.values]
     Cache-Control = "no-store"
 
-# This project is deployed as a plain SPA via static files + rewrites.
+# This project is deployed as a SPA via static files + rewrites. API calls that
+# need secrets go through the functions in netlify/functions, which are served
+# under /.netlify/functions/* and are not affected by the redirects above.

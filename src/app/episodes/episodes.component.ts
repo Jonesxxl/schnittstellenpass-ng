@@ -236,7 +236,7 @@ export class EpisodesComponent implements OnInit {
     this.isLoading.set(true);
 
     // Fetch 5 episodes from Spotify
-    this.spotifyService.getEpisodes(undefined, 5, offset).subscribe({
+    this.spotifyService.getEpisodes(5, offset).subscribe({
       next: (response) => {
         const newEpisodes = response.items.map((spotifyEpisode, index) => this.transformToEpisode(spotifyEpisode, offset + index + 1));
 

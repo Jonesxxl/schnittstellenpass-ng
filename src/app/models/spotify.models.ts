@@ -3,13 +3,6 @@
  * Interfaces for Spotify Web API responses
  */
 
-// Spotify Authentication Token Response
-export interface SpotifyAuthToken {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-}
-
 // Spotify Show (Podcast) Response
 export interface SpotifyShow {
   id: string;
