@@ -25,17 +25,16 @@ This application integrates with the Spotify Web API to fetch podcast episode da
    - Click "Show client secret" to reveal your **Client Secret**
    - Copy both values
 
-4. **Update Environment File**
-   - Open `src/environments/environment.development.ts`
-   - Replace `YOUR_SPOTIFY_CLIENT_ID` with your actual Client ID
-   - Replace `YOUR_SPOTIFY_CLIENT_SECRET` with your actual Client Secret
-   - The `showId` is already configured for the Schnittstellenpass podcast
+4. **Configure the Netlify Function**
+   - The credentials are used only by the Netlify function `netlify/functions/spotify.mts`. The browser talks to that function at `/.netlify/functions/spotify` and never sees the credentials.
+   - In the Netlify site settings under *Environment variables*, set `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`. Their scope must include **Functions**.
+   - `SPOTIFY_SHOW_ID` is optional; it defaults to the Schnittstellenpass podcast.
 
 ### Important Notes
 
-- **Never commit your actual credentials to Git!** The development environment file should only contain real credentials locally.
-- For production deployments (Netlify, Vercel, etc.), set these as environment variables in your hosting platform.
-- The Spotify API uses Client Credentials flow, which is suitable for server-side or public data access.
+- **Never put the Client Secret into `src/environments/*` or any other frontend file.** Everything under `src/` is shipped to the browser. The Client Credentials flow is server-to-server only.
+- **Never commit your actual credentials to Git!**
+- For local development with Spotify data, run `npx netlify dev` instead of `ng serve`: it serves the app together with the function. Put the credentials into a `.env` file in the project root (already git-ignored). With plain `ng serve` the function is not available and the Spotify sections show their fallback content.
 
 ## Development server
 

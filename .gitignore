@@ -48,6 +48,10 @@ environment.local.ts
 environment.*.local.ts
 .env
 .env.local
+
+# Local state of the Netlify CLI (netlify dev)
+.netlify
+
 /src/app/models/instagram.models.ts
 /src/app/services/instagram.service.ts
 /netlify/functions/instagram-feed.ts

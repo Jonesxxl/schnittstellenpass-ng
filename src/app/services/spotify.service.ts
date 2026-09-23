@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
-import { map, catchError, tap, switchMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import {
-  SpotifyAuthToken,
   SpotifyShow,
   SpotifyEpisode,
   SpotifyEpisodesResponse,
@@ -18,78 +17,17 @@ import { environment } from '../../environments/environment';
 export class SpotifyService {
   private readonly http = inject(HttpClient);
 
-  private readonly SPOTIFY_API_BASE = 'https://api.spotify.com/v1';
-  private readonly SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/api/token';
-
-  private accessToken$ = new BehaviorSubject<string | null>(null);
-  private tokenExpiry: number = 0;
-
-  /**
-   * Get Spotify access token using Client Credentials flow
-   */
-  private getAccessToken(): Observable<string> {
-    // Check if token is still valid
-    if (this.accessToken$.value && Date.now() < this.tokenExpiry) {
-      return of(this.accessToken$.value);
-    }
-
-    const clientId = environment.spotify.clientId;
-    const clientSecret = environment.spotify.clientSecret;
-
-    if (!clientId || !clientSecret) {
-      console.error('Spotify credentials not configured');
-      return throwError(() => new Error('Spotify credentials not configured'));
-    }
-
-    const body = new URLSearchParams();
-    body.set('grant_type', 'client_credentials');
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa(`${clientId}:${clientSecret}`)
-    });
-
-    return this.http.post<SpotifyAuthToken>(this.SPOTIFY_AUTH_URL, body.toString(), { headers }).pipe(
-      tap(response => {
-        this.accessToken$.next(response.access_token);
-        // Set expiry time (subtract 5 minutes for safety)
-        this.tokenExpiry = Date.now() + (response.expires_in - 300) * 1000;
-      }),
-      map(response => response.access_token),
-      catchError(error => {
-        console.error('Failed to get Spotify access token:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  /**
-   * Create authenticated headers for Spotify API requests
-   */
-  private createAuthHeaders(token: string): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-  }
+  // Netlify function (netlify/functions/spotify.mts) that holds the Spotify
+  // credentials server-side and forwards requests for the configured show
+  private readonly SPOTIFY_PROXY_URL = '/.netlify/functions/spotify';
 
   /**
    * Get podcast show details
    */
-  getShow(showId?: string): Observable<SpotifyShow> {
-    const id = showId || environment.spotify.showId;
-
-    if (!id) {
-      return throwError(() => new Error('Show ID not configured'));
-    }
-
-    return this.getAccessToken().pipe(
-      switchMap(token => {
-        const headers = this.createAuthHeaders(token);
-        return this.http.get<SpotifyShow>(
-          `${this.SPOTIFY_API_BASE}/shows/${id}`,
-          { headers }
-        );
-      }),
+  getShow(): Observable<SpotifyShow> {
+    return this.http.get<SpotifyShow>(this.SPOTIFY_PROXY_URL, {
+      params: { resource: 'show' }
+    }).pipe(
       catchError(error => {
         console.error('Failed to fetch show details:', error);
         return throwError(() => error);
@@ -100,21 +38,10 @@ export class SpotifyService {
   /**
    * Get podcast episodes
    */
-  getEpisodes(showId?: string, limit: number = 10, offset: number = 0): Observable<SpotifyEpisodesResponse> {
-    const id = showId || environment.spotify.showId;
-
-    if (!id) {
-      return throwError(() => new Error('Show ID not configured'));
-    }
-
-    return this.getAccessToken().pipe(
-      switchMap(token => {
-        const headers = this.createAuthHeaders(token);
-        return this.http.get<SpotifyEpisodesResponse>(
-          `${this.SPOTIFY_API_BASE}/shows/${id}/episodes?limit=${limit}&offset=${offset}`,
-          { headers }
-        );
-      }),
+  getEpisodes(limit: number = 10, offset: number = 0): Observable<SpotifyEpisodesResponse> {
+    return this.http.get<SpotifyEpisodesResponse>(this.SPOTIFY_PROXY_URL, {
+      params: { resource: 'episodes', limit, offset }
+    }).pipe(
       catchError(error => {
         console.error('Failed to fetch episodes:', error);
         return throwError(() => error);
@@ -125,8 +52,8 @@ export class SpotifyService {
   /**
    * Get latest episode
    */
-  getLatestEpisode(showId?: string): Observable<Episode | null> {
-    return this.getEpisodes(showId, 1, 0).pipe(
+  getLatestEpisode(): Observable<Episode | null> {
+    return this.getEpisodes(1, 0).pipe(
       map(response => {
         if (response.items.length === 0) {
           return null;
@@ -140,8 +67,8 @@ export class SpotifyService {
   /**
    * Get show statistics
    */
-  getShowStats(showId?: string): Observable<ShowStats> {
-    return this.getShow(showId).pipe(
+  getShowStats(): Observable<ShowStats> {
+    return this.getShow().pipe(
       map(show => ({
         totalEpisodes: show.total_episodes,
         rating: 4.9, // Spotify API doesn't provide ratings, using hardcoded value
@@ -219,10 +146,10 @@ export class SpotifyService {
   /**
    * Get show Spotify URL
    */
-  getShowUrl(showId?: string): Observable<string> {
-    return this.getShow(showId).pipe(
+  getShowUrl(): Observable<string> {
+    return this.getShow().pipe(
       map(show => show.external_urls.spotify),
-      catchError(() => of(`https://open.spotify.com/show/${showId || environment.spotify.showId}`))
+      catchError(() => of(`https://open.spotify.com/show/${environment.spotify.showId}`))
     );
   }
 }
