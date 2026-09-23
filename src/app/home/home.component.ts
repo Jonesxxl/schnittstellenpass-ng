@@ -51,7 +51,7 @@ export class HomeComponent {
   });
 
   protected readonly livePhoto: ImageArea = { src: 'assets/live-event.webp', placeholder: 'Foto von der ersten Live-Folge' };
-  protected readonly hostPortrait: ImageArea = { placeholder: 'Portrait von Agy' };
+  protected readonly hostPortrait: ImageArea = { src: 'assets/host-portrait.webp', placeholder: 'Portrait von Agy' };
   protected readonly instagramPosts: ImageArea[] = [
     { placeholder: 'Instagram-Post 1' },
     { placeholder: 'Instagram-Post 2' },

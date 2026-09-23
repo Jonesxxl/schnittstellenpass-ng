@@ -1,10 +1,10 @@
 <main>
   @if (showLive) {
-    <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[13px] uppercase tracking-[.08em] text-paper hover:text-pitch">
-      <div class="mx-auto box-content flex max-w-[1280px] flex-wrap items-center gap-3 px-6 py-2.5">
-        <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
-        <span>5 Jahre Schnittstellenpass — erstes Live-Event erfolgreich gestartet</span>
-        <span class="ml-auto">Mehr →</span>
+    <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[11px] uppercase tracking-[.08em] text-paper hover:text-pitch sm:text-[13px]">
+      <div class="mx-auto box-content flex max-w-[1280px] items-center gap-2 px-4 py-1.5 sm:gap-3 sm:px-6 sm:py-2.5">
+        <span aria-hidden="true" class="inline-block size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
+        <span class="min-w-0 truncate">5 Jahre<span class="max-sm:hidden"> Schnittstellenpass</span> — erstes Live-Event</span>
+        <span class="ml-auto shrink-0">Mehr →</span>
       </div>
     </a>
   }
