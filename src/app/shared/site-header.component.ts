@@ -11,12 +11,12 @@ import { LINKS } from './links';
   template: `
     <header class="border-b-2 border-ink bg-paper">
       <div class="mx-auto box-content flex max-w-[1280px] flex-wrap items-center justify-between gap-4 px-6 py-3">
-        <a routerLink="/home" fragment="top" class="flex items-center">
+        <a routerLink="/" fragment="top" class="flex items-center">
           <img src="assets/brand/logo-black.webp" alt="Schnittstellenpass" width="1200" height="656" class="block h-10 w-auto" />
         </a>
         <nav aria-label="Hauptnavigation" class="flex flex-wrap gap-6 font-mono text-[13px] uppercase tracking-[.08em]">
           @for (item of navItems; track item.fragment) {
-            <a routerLink="/home" [fragment]="item.fragment" class="hover:text-moss">{{ item.label }}</a>
+            <a routerLink="/" [fragment]="item.fragment" class="hover:text-moss">{{ item.label }}</a>
           }
         </nav>
         <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="rounded-full bg-ink px-[18px] py-2.5 text-[14px] font-semibold text-paper hover:bg-moss">Jetzt reinhören</a>

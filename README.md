@@ -34,7 +34,7 @@ This application integrates with the Spotify Web API to fetch podcast episode da
 
 - **Never put the Client Secret into `src/environments/*` or any other frontend file.** Everything under `src/` is shipped to the browser. The Client Credentials flow is server-to-server only.
 - **Never commit your actual credentials to Git!**
-- For local development with Spotify data, run `npx netlify dev` instead of `ng serve`: it serves the app together with the function. Put the credentials into a `.env` file in the project root (already git-ignored). With plain `ng serve` the function is not available and the Spotify sections show their fallback content.
+- For local development with Spotify data, run `npx netlify dev` instead of `ng serve`: it serves the app together with the function. Put the credentials into a `.env` file in the project root (already git-ignored). With plain `ng serve` the function is not available and the "Aktuelle Folge" card shows its fallback content.
 
 ## Development server
 
@@ -46,9 +46,8 @@ The project now includes a Decap CMS admin interface at `/admin`.
 
 ### Editable content files
 
-- `public/content/home-hero.json`
-- `public/content/ueber-uns.json`
-- `public/content/warum-cards.json`
+- `public/content/home-hero.json` – headline and text of the hero section
+- `public/content/ueber-uns.json` – name and text of the host section
 
 ### Netlify setup for login
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { SpotifyService } from './spotify.service';
-import { Episode, ShowStats, SpotifyEpisodesResponse } from '../models/spotify.models';
+import { Episode, SpotifyEpisodesResponse } from '../models/spotify.models';
 
 describe('SpotifyService', () => {
   let service: SpotifyService;
@@ -75,15 +75,15 @@ describe('SpotifyService', () => {
     expect(latest?.date).toMatch(/^\d{2}\.\d{2}\.2026$/);
   });
 
-  it('should fall back to default show stats when the proxy fails', () => {
+  it('should resolve the latest episode to null when the proxy fails', () => {
     const consoleError = spyOn(console, 'error');
-    let stats: ShowStats | undefined;
-    service.getShowStats().subscribe(result => stats = result);
+    let latest: Episode | null | undefined;
+    service.getLatestEpisode().subscribe(episode => latest = episode);
 
-    httpMock.expectOne(r => r.params.get('resource') === 'show')
+    httpMock.expectOne(r => r.params.get('resource') === 'episodes')
       .flush({ error: 'Spotify request failed' }, { status: 502, statusText: 'Bad Gateway' });
 
-    expect(stats).toEqual({ totalEpisodes: 0, rating: 4.9, listeners: '10K+' });
+    expect(latest).toBeNull();
     expect(consoleError).toHaveBeenCalled();
   });
 });

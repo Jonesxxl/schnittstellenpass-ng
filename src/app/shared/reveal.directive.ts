@@ -1,18 +1,21 @@
-import { Directive, ElementRef, OnDestroy, OnInit, Service, inject } from '@angular/core';
+import { Directive, ElementRef, NgZone, OnDestroy, OnInit, Service, inject } from '@angular/core';
 
 /**
  * One observer for all revealed elements, so elements that enter the viewport
- * together fade in with a short stagger.
+ * together fade in with a short stagger. Runs outside the Angular zone: it only
+ * changes inline styles, and its cleanup timers would otherwise keep the app
+ * "unstable" for seconds after every scroll.
  */
 @Service()
 export class RevealObserver {
+  private readonly zone = inject(NgZone);
   private observer: IntersectionObserver | null = null;
 
   observe(element: HTMLElement): void {
-    this.observer ??= new IntersectionObserver(entries => this.reveal(entries), {
+    this.observer ??= this.zone.runOutsideAngular(() => new IntersectionObserver(entries => this.reveal(entries), {
       threshold: 0.12,
       rootMargin: '0px 0px -40px 0px'
-    });
+    }));
     this.observer.observe(element);
   }
 

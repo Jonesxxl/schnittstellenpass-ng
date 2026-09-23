@@ -7,7 +7,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     <div class="bg-paper">
 
 
-      <main class="mx-auto max-w-5xl px-6 py-[clamp(48px,6vw,80px)]">
+      <main class="mx-auto max-w-5xl break-words px-6 py-[clamp(48px,6vw,80px)]">
         <section class="mb-10">
           <div class="flex flex-col gap-4">
             <p class="m-0 font-mono text-[13px] uppercase tracking-[.12em] text-moss">Rechtliche Angaben</p>

@@ -12,16 +12,6 @@ export interface AboutIntroContent {
   body: string;
 }
 
-export interface WhyCardContent {
-  title: string;
-  text: string;
-}
-
-export interface WhyCardsContent {
-  sectionHeadline: string;
-  cards: WhyCardContent[];
-}
-
 // Used until the CMS content has loaded and if it cannot be loaded
 export const DEFAULT_HOME_HERO: HomeHeroContent = {
   titleLines: ['Zwischen Profi', '& Amateur'],
@@ -31,24 +21,6 @@ export const DEFAULT_HOME_HERO: HomeHeroContent = {
 export const DEFAULT_ABOUT_INTRO: AboutIntroContent = {
   headline: 'Marc „Agy“ Agyemang',
   body: 'Agy kennt beide Seiten: Nachwuchs beim VfB Stuttgart, später Amateurfußball. Genau an dieser Schnittstelle setzt der Podcast an. Was verbindet die Bundesliga mit dem Sportplatz um die Ecke, und was trennt sie?'
-};
-
-const DEFAULT_WHY_CARDS: WhyCardsContent = {
-  sectionHeadline: 'Warum Schnittstellenpass?',
-  cards: [
-    {
-      title: 'Spannende Einblicke',
-      text: 'Spannende Einblicke in die Welt des Fußballs - mit Geschichten direkt aus dem Profi- und Amateurbereich.'
-    },
-    {
-      title: 'Verschiedenste Bereiche',
-      text: 'Verschiedenste Bereiche des Fußballs: Training, Taktik, Karrierewege, Führung und Alltag im Team.'
-    },
-    {
-      title: 'Unterschiedlichste Themen',
-      text: 'Unterschiedlichste Themengebiete rund um den Fußball - klar, relevant und mit echter fachlicher Tiefe.'
-    }
-  ]
 };
 
 @Injectable({ providedIn: 'root' })
@@ -73,16 +45,6 @@ export class ContentService {
         body: this.asNonEmptyString(payload.body, DEFAULT_ABOUT_INTRO.body)
       })),
       catchError(() => of(DEFAULT_ABOUT_INTRO))
-    );
-  }
-
-  getWhyCardsContent(): Observable<WhyCardsContent> {
-    return this.http.get<Partial<WhyCardsContent>>(`${this.contentBasePath}/warum-cards.json`).pipe(
-      map((payload) => ({
-        sectionHeadline: this.asNonEmptyString(payload.sectionHeadline, DEFAULT_WHY_CARDS.sectionHeadline),
-        cards: this.resolveWhyCards(payload.cards)
-      })),
-      catchError(() => of(DEFAULT_WHY_CARDS))
     );
   }
 
@@ -123,15 +85,4 @@ export class ContentService {
     return resolvedLines;
   }
 
-  private resolveWhyCards(value: unknown): WhyCardContent[] {
-    const inputCards = Array.isArray(value) ? value : [];
-
-    return DEFAULT_WHY_CARDS.cards.map((fallbackCard, index) => {
-      const inputCard = inputCards[index] as Partial<WhyCardContent> | undefined;
-      return {
-        title: this.asNonEmptyString(inputCard?.title, fallbackCard.title),
-        text: this.asNonEmptyString(inputCard?.text, fallbackCard.text)
-      };
-    });
-  }
 }
