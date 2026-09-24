@@ -1,10 +1,10 @@
 <main>
   @if (showLive) {
-    <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[13px] uppercase tracking-[.08em] text-paper hover:text-pitch">
-      <div class="mx-auto box-content flex max-w-[1280px] flex-wrap items-center gap-3 px-6 py-2.5">
-        <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
-        <span>5 Jahre Schnittstellenpass — erstes Live-Event erfolgreich gestartet</span>
-        <span class="ml-auto">Mehr →</span>
+    <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[11px] uppercase tracking-[.08em] text-paper hover:text-pitch sm:text-[13px]">
+      <div class="mx-auto box-content flex max-w-[1280px] items-center gap-2 px-4 py-1.5 sm:gap-3 sm:px-6 sm:py-2.5">
+        <span aria-hidden="true" class="inline-block size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
+        <span class="min-w-0 truncate">5 Jahre<span class="max-sm:hidden"> Schnittstellenpass</span> — erstes Live-Event</span>
+        <span class="ml-auto shrink-0">Mehr →</span>
       </div>
     </a>
   }
@@ -39,8 +39,8 @@
         </div>
       </div>
 
-      @let episode = latestEpisode.value();
-      @let loading = latestEpisode.isLoading();
+      @let episode = episodes.value()?.[0];
+      @let loading = episodes.isLoading();
       <a appReveal [href]="episode?.spotifyUrl || links.spotify" target="_blank" rel="noopener noreferrer" [attr.aria-busy]="loading" class="box-content flex w-full max-w-[520px] flex-col justify-self-center rounded-md border-2 border-ink bg-paper shadow-block">
         <div class="flex items-center justify-between border-b-2 border-ink px-4 py-3 font-mono text-[12px] uppercase tracking-[.1em]">
           <span>Aktuelle Folge</span>
@@ -53,7 +53,7 @@
           @if (loading) {
             <div class="font-display text-[28px] font-extrabold uppercase leading-none text-forest">Wird geladen …</div>
           } @else if (episode) {
-            <div class="line-clamp-3 font-display text-[28px] font-extrabold uppercase leading-none">{{ episode.title }}</div>
+            <div class="line-clamp-3 font-display text-[28px] font-extrabold uppercase leading-[1.15]">{{ episode.title }}</div>
             <div class="text-[15px] text-forest">Folge vom {{ episode.date }}</div>
           } @else {
             <div class="font-display text-[28px] font-extrabold uppercase leading-none">Alle Folgen auf Spotify</div>
@@ -83,7 +83,7 @@
         </div>
       </div>
       <div appReveal class="relative box-content aspect-[4/3] overflow-hidden rounded-md border-2 border-pitch">
-        <app-image-slot [src]="livePhoto.src" [placeholder]="livePhoto.placeholder" alt="Schnittstellenpass live auf der Bühne" />
+        <app-image-slot [src]="livePhoto.src" [placeholder]="livePhoto.placeholder" alt="Schnittstellenpass live: Aufnahme vor Publikum beim ersten Live-Event" />
       </div>
     </div>
   </section>
@@ -93,23 +93,46 @@
       <div appReveal class="flex flex-wrap items-end justify-between gap-6">
         <div class="flex flex-col gap-3">
           <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">Spielplan</div>
-          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Ausgewählte Folgen</h2>
+          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Neueste Folgen</h2>
         </div>
         <p class="m-0 max-w-[380px] text-[17px] leading-normal text-forest">Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.</p>
       </div>
-      <div class="flex flex-col border-t-2 border-ink">
-        @for (featured of featuredEpisodes; track featured.guest) {
-          <a appReveal [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] items-center gap-5 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink">
-            <div class="font-mono text-[13px] text-moss">{{ featured.badge }}</div>
-            <div class="flex min-w-0 flex-col gap-1">
-              <div class="font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-none">{{ featured.guest }}</div>
-              <div class="text-pretty text-[15px] text-forest">{{ featured.description }}</div>
+      <div class="flex flex-col border-t-2 border-ink" [attr.aria-busy]="episodes.isLoading()">
+        @if (episodes.isLoading()) {
+          @for (row of episodeRows; track row) {
+            <div aria-hidden="true" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
+              <div class="col-span-2 h-4 w-24 rounded bg-ink/10 motion-safe:animate-pulse sm:col-span-1 sm:w-12"></div>
+              <div class="flex flex-col gap-2">
+                <div class="h-[clamp(28px,3vw,39px)] w-2/3 rounded bg-ink/10 motion-safe:animate-pulse"></div>
+                <div class="h-4 w-11/12 rounded bg-ink/10 motion-safe:animate-pulse"></div>
+              </div>
+              <span class="size-10 rounded-full bg-ink/10"></span>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em]">{{ featured.tag }}</span>
-              <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
-            </div>
-          </a>
+          }
+        } @else {
+          @for (item of episodes.value() ?? []; track item.id) {
+            <a appReveal [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
+              <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
+                {{ item.code }}<span class="sm:hidden">{{ item.code ? ' · ' : '' }}{{ item.date }}</span>
+              </div>
+              <div class="flex min-w-0 flex-col gap-1">
+                <div class="line-clamp-2 font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-[1.15]">{{ item.title }}</div>
+                <div class="line-clamp-2 text-pretty text-[15px] text-forest">{{ item.description }}</div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ item.date }}</span>
+                <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
+              </div>
+            </a>
+          } @empty {
+            <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-5 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink">
+              <div class="flex min-w-0 flex-col gap-1">
+                <div class="font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-none">Alle Folgen auf Spotify</div>
+                <div class="text-[15px] text-forest">Jetzt reinhören</div>
+              </div>
+              <span aria-hidden="true" class="flex size-10 shrink-0 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
+            </a>
+          }
         }
       </div>
       <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="self-start rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Alle Folgen anhören →</a>

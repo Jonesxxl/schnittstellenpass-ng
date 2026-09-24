@@ -8,13 +8,6 @@ import { ImageSlotComponent } from '../shared/image-slot.component';
 import { RevealDirective } from '../shared/reveal.directive';
 import { LINKS } from '../shared/links';
 
-interface FeaturedEpisode {
-  badge: string;
-  guest: string;
-  description: string;
-  tag: string;
-}
-
 interface ImageArea {
   placeholder: string;
   // Path of the photo, e.g. 'assets/images/host.jpg'; the placeholder is shown until it is set
@@ -47,9 +40,12 @@ export class HomeComponent {
     defaultValue: DEFAULT_ABOUT_INTRO
   });
 
-  // Resolves to null if Spotify cannot be reached
-  protected readonly latestEpisode = rxResource({
-    stream: () => this.spotifyService.getLatestEpisode()
+  // Rows of the episode list, also shown as placeholders while loading
+  protected readonly episodeRows = [0, 1, 2, 3, 4, 5];
+
+  // Newest first, for the "Aktuelle Folge" card and the episode list; null if Spotify cannot be reached
+  protected readonly episodes = rxResource({
+    stream: () => this.spotifyService.getLatestEpisodes(this.episodeRows.length)
   });
 
   // Latest posts for the "Aus der Kabine" tiles; tiles without a post keep their placeholder
@@ -58,18 +54,9 @@ export class HomeComponent {
     defaultValue: []
   });
 
-  protected readonly livePhoto: ImageArea = { placeholder: 'Foto von der ersten Live-Folge' };
-  protected readonly hostPortrait: ImageArea = { placeholder: 'Portrait von Agy' };
+  protected readonly livePhoto: ImageArea = { src: 'assets/live-event.webp', placeholder: 'Foto von der ersten Live-Folge' };
+  protected readonly hostPortrait: ImageArea = { src: 'assets/host-portrait.webp', placeholder: 'Portrait von Agy' };
   protected readonly instagramTiles = ['Instagram-Post 1', 'Instagram-Post 2', 'Instagram-Post 3', 'Instagram-Post 4'];
-
-  protected readonly featuredEpisodes: FeaturedEpisode[] = [
-    { badge: 'NEU', guest: 'Sebastian „Kiwi“ Müller', description: 'Die Zukunft des Amateurfußballs: Ehrenamt, Verbandsarbeit, Nachwuchs.', tag: 'Amateur' },
-    { badge: '', guest: 'Nick Fennell', description: 'Vom Amateurbereich über den Profifußball zum Spielerberater.', tag: 'Profi' },
-    { badge: '', guest: 'Matthias Esch', description: 'Fußballjournalismus von der Kreisliga bis zu FUMS und Stadionumfrage.', tag: 'Medien' },
-    { badge: '', guest: 'Peter Hyballa', description: 'Der erfahrene Trainer über Ansprache, Druck und Leidenschaft.', tag: 'Trainer' },
-    { badge: 'S2 · 8', guest: 'Jan Kirchhoff', description: 'Unter Guardiola und Tuchel: Bundesliga, Premier League und Trainerpläne.', tag: 'Profi' },
-    { badge: 'S1 · 2', guest: 'Marco Caligiuri', description: 'Trainertypen, die Mainzer Boyband und Trainingsbetrüger.', tag: 'Profi' }
-  ];
 
   protected readonly facts = [
     { value: '45\'', label: 'pro Folge' },
