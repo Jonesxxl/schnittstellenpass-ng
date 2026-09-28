@@ -6,6 +6,7 @@ import { SpotifyService } from '../services/spotify.service';
 import { InstagramFeedService } from '../services/instagram-feed.service';
 import { ImageSlotComponent } from '../shared/image-slot.component';
 import { RevealDirective } from '../shared/reveal.directive';
+import { ThroughPassComponent } from './through-pass.component';
 import { LINKS } from '../shared/links';
 
 interface ImageArea {
@@ -16,7 +17,7 @@ interface ImageArea {
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ImageSlotComponent, RevealDirective],
+  imports: [RouterLink, ImageSlotComponent, RevealDirective, ThroughPassComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
