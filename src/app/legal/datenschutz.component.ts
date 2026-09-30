@@ -24,7 +24,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             <div class="mt-4 space-y-1 leading-relaxed text-forest">
               <p><strong>Marc Agyemang</strong></p>
               <p>Schnittstellenpass Podcast</p>
-              <p>Am Steig 10</p>
+              <p>Steig 12/1</p>
               <p>78628 Rottweil</p>
               <p>Deutschland</p>
               <p>E-Mail: <a href="mailto:schnittstellenpassderpodcast@gmail.com" class="font-semibold underline decoration-2 underline-offset-2 hover:text-moss">schnittstellenpassderpodcast@gmail.com</a></p>
@@ -110,7 +110,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
         </section>
 
-        <p class="mt-8 text-[14px] text-forest">Stand: 28. September 2026</p>
+        <p class="mt-8 text-[14px] text-forest">Stand: 30. September 2026</p>
       </main>
 
     </div>
