@@ -27,7 +27,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
               <p>Steig 12/1</p>
               <p>78628 Rottweil</p>
               <p>Deutschland</p>
-              <p>E-Mail: <a href="mailto:schnittstellenpassderpodcast@gmail.com" class="font-semibold underline decoration-2 underline-offset-2 hover:text-moss">schnittstellenpassderpodcast@gmail.com</a></p>
+              <p>E-Mail: <a href="mailto:schnittstellepass@gmail.com" class="font-semibold underline decoration-2 underline-offset-2 hover:text-moss">schnittstellepass@gmail.com</a></p>
             </div>
           </article>
 
