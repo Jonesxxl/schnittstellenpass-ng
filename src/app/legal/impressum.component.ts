@@ -49,7 +49,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">Haftung für Inhalte</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+              Für eigene Inhalte auf diesen Seiten bin ich nach den allgemeinen Gesetzen verantwortlich. Für fremde Informationen, die ich lediglich übermittle oder speichere, gelten die Haftungsbeschränkungen der Art. 4 bis 6 des Digital Services Act (DSA). Eine allgemeine Verpflichtung, solche Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen, besteht nicht (Art. 8 DSA). Sobald mir konkrete Rechtsverletzungen bekannt werden, entferne ich die betreffenden Inhalte umgehend.
             </p>
           </article>
 
@@ -75,7 +75,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
         </section>
 
-        <p class="mt-8 text-[14px] text-forest">Stand: 30. September 2026</p>
+        <p class="mt-8 text-[14px] text-forest">Stand: 2. Oktober 2026</p>
       </main>
 
     </div>
