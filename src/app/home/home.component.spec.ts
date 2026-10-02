@@ -137,30 +137,10 @@ describe('HomeComponent', () => {
     expect(rows[0].textContent).toContain('Alle Folgen auf Spotify');
   });
 
-  it('should link the Instagram tiles to the latest posts', async () => {
-    const root = await render(of(latestSix), true, of([instagramPost('1', 'Neue Folge ist online'), instagramPost('2')]));
-    const links = root.querySelectorAll<HTMLAnchorElement>('#social a[href*="instagram.com/p/"]');
+  it('should show the Instagram section with the texts from the CMS', async () => {
+    const root = await render(of(latestSix), true, of([instagramPost('1', 'Neue Folge ist online')]));
 
-    expect(links.length).toBe(2);
-    expect(links[0].getAttribute('href')).toBe('https://www.instagram.com/p/1/');
-    expect(links[0].getAttribute('target')).toBe('_blank');
-    expect(links[0].querySelector('img')!.getAttribute('src')).toBe('/.netlify/functions/instagram?image=1');
-    expect(links[0].querySelector('img')!.getAttribute('alt')).toBe('Instagram-Beitrag: Neue Folge ist online');
-    expect(links[1].querySelector('img')!.getAttribute('alt')).toBe('Instagram-Beitrag von Schnittstellenpass');
-    // The remaining tiles keep their placeholders
-    expect(text(root, '#social .placeholder')).toBe('Instagram-Post 3');
-    expect(root.querySelectorAll('#social .placeholder').length).toBe(2);
-  });
-
-  it('should keep the Instagram placeholders while loading and if the feed is unavailable', async () => {
-    const loading = await render(of(latestSix), false, new Subject<InstagramPost[]>());
-    expect(loading.querySelector('#social [aria-busy]')!.getAttribute('aria-busy')).toBe('true');
-    expect(loading.querySelectorAll('#social .placeholder').length).toBe(4);
-
-    TestBed.resetTestingModule();
-    const unavailable = await render(of(latestSix), true, of([]));
-    expect(unavailable.querySelector('#social [aria-busy]')!.getAttribute('aria-busy')).toBe('false');
-    expect(unavailable.querySelectorAll('#social .placeholder').length).toBe(4);
-    expect(unavailable.querySelector('#social a[href*="instagram.com/p/"]')).toBeNull();
+    expect(text(root, '#social app-instagram-feed h2')).toBe(DEFAULT_SOCIAL.headline);
+    expect(root.querySelector('#social a[href="https://www.instagram.com/p/1/"]')).not.toBeNull();
   });
 });

@@ -78,7 +78,7 @@ export const DEFAULT_EPISODES: EpisodesContent = {
 };
 
 export const DEFAULT_SOCIAL: SocialContent = {
-  eyebrow: '@schnittstellenpass',
+  eyebrow: 'Instagram',
   headline: 'Aus der Kabine'
 };
 

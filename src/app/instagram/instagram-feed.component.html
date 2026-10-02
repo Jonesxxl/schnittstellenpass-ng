@@ -1,0 +1,158 @@
+<div class="group/ticker overflow-hidden bg-ink py-3.5 text-pitch">
+  <div class="flex w-max motion-safe:animate-marquee group-hover/ticker:[animation-play-state:paused]">
+    @for (copy of [0, 1]; track copy) {
+      <ul class="m-0 flex shrink-0 list-none items-center gap-7 p-0 pr-7 font-display text-[26px] font-extrabold uppercase leading-none" [attr.aria-hidden]="copy === 1 ? 'true' : null">
+        @for (item of tickerItems; track item) {
+          <li class="whitespace-nowrap">{{ item }}</li>
+          <li aria-hidden="true" class="text-[18px] text-signal">●</li>
+        }
+      </ul>
+    }
+  </div>
+</div>
+
+<div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 pb-10 pt-[clamp(56px,8vw,112px)]">
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    <div class="flex flex-col gap-3">
+      <div class="font-mono text-[12px] font-medium uppercase tracking-[.12em] text-moss">{{ eyebrow() }}</div>
+      <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ headline() }}</h2>
+    </div>
+    <p class="m-0 max-w-[380px] text-[17px] leading-normal text-forest">Clips, Gäste und Live-Termine. Alles, was zwischen den Folgen passiert.</p>
+  </div>
+
+  <div
+    class="flex flex-wrap overflow-hidden rounded-[10px] bg-ink text-paper"
+    [attr.aria-busy]="loading()"
+    (mouseenter)="onPointer(true)"
+    (mouseleave)="onPointer(false)"
+    (focusin)="onFocus(true)"
+    (focusout)="onFocusOut($event)">
+    @if (loading()) {
+      <div aria-hidden="true" class="relative min-h-[clamp(420px,48vw,600px)] min-w-0 flex-[1_1_380px] bg-forest motion-safe:animate-pulse">
+        <div class="absolute inset-x-4 top-4 flex gap-1.5">
+          @for (row of placeholderRows; track row) {
+            <span class="h-[3px] flex-1 rounded-full bg-paper/30"></span>
+          }
+        </div>
+      </div>
+      <div class="flex min-w-0 flex-[1_1_340px] flex-col">
+        <div class="flex items-center justify-between gap-3 whitespace-nowrap border-b border-paper/[.18] px-4 py-[18px] font-mono text-[12px] font-medium uppercase tracking-[.1em] text-pitch sm:px-6">
+          <span class="flex items-center gap-2.5">
+            <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
+            Live aus dem Feed
+          </span>
+          <span aria-hidden="true">-- / {{ pad(placeholderRows.length) }}</span>
+        </div>
+        @for (row of placeholderRows; track row) {
+          <div aria-hidden="true" class="grid grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-4 border-b border-paper/[.18] px-4 py-5 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:px-6">
+            <span class="h-[44px] w-10 rounded bg-paper/10 motion-safe:animate-pulse"></span>
+            <span class="flex flex-col gap-1.5">
+              <span class="h-[14px] w-12 rounded bg-paper/10 motion-safe:animate-pulse"></span>
+              <span class="flex h-[2.3em] flex-col justify-around text-[clamp(20px,1.9vw,25px)]">
+                <span class="h-[.7em] w-11/12 rounded bg-paper/10 motion-safe:animate-pulse"></span>
+                <span class="h-[.7em] w-2/3 rounded bg-paper/10 motion-safe:animate-pulse"></span>
+              </span>
+            </span>
+            <span class="w-4"></span>
+          </div>
+        }
+        <ng-container [ngTemplateOutlet]="feedLink" />
+      </div>
+    } @else if (current(); as post) {
+      <a
+        id="kabine-stage"
+        [href]="post.permalink"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="post.chip + ': ' + post.caption + ' – auf Instagram ansehen'"
+        class="relative block min-h-[clamp(420px,48vw,600px)] min-w-0 flex-[1_1_380px] overflow-hidden bg-forest focus-visible:[outline-offset:-4px] focus-visible:[outline:2px_solid_#CFE3C4]">
+        @for (slide of slides(); track slide.id; let i = $index) {
+          <img
+            [src]="slide.image"
+            [alt]="slide.short"
+            [attr.loading]="i === 0 ? null : 'lazy'"
+            [attr.fetchpriority]="i === 0 ? 'high' : null"
+            decoding="async"
+            [attr.aria-hidden]="i === active() ? null : 'true'"
+            class="absolute inset-0 h-full w-full object-cover [transition:opacity_.8s_ease,transform_6s_ease-out] motion-reduce:[transition:opacity_.8s_ease]"
+            [class]="i === active() ? 'pointer-events-auto z-[1] opacity-100 motion-safe:scale-[1.06]' : 'pointer-events-none opacity-0'" />
+        }
+
+        <div class="absolute inset-x-4 top-4 z-[2] flex gap-1.5" aria-hidden="true">
+          @for (slide of slides(); track slide.id; let i = $index) {
+            <span class="relative h-[3px] flex-1 overflow-hidden rounded-full bg-paper/30">
+              @if (i < active()) {
+                <span class="absolute inset-0 bg-paper"></span>
+              } @else if (i === active()) {
+                @for (run of runs(); track run.id) {
+                  <span
+                    class="absolute inset-0 origin-left bg-paper animate-fillbar motion-reduce:animate-none"
+                    [style.animation-play-state]="holdProgress() ? 'paused' : null"></span>
+                }
+              }
+            </span>
+          }
+        </div>
+
+        <div class="absolute inset-x-0 bottom-0 z-[2] bg-gradient-to-t from-ink/[.92] to-transparent px-6 pb-[22px] pt-14" [attr.aria-live]="running() ? 'off' : 'polite'">
+          @for (run of runs(); track run.id) {
+            <div class="flex flex-col items-start gap-3 motion-safe:animate-capin">
+              <span class="rounded-full border border-pitch px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[.1em] text-pitch">{{ post.chip }}</span>
+              <span class="line-clamp-3 font-display text-[clamp(30px,3.4vw,46px)] font-black uppercase leading-[.92]">{{ post.caption }}</span>
+            </div>
+          }
+        </div>
+      </a>
+
+      <div class="flex min-w-0 flex-[1_1_340px] flex-col">
+        <div class="flex items-center justify-between gap-3 whitespace-nowrap border-b border-paper/[.18] px-4 py-[18px] font-mono text-[12px] font-medium uppercase tracking-[.1em] text-pitch sm:px-6">
+          <span class="flex items-center gap-2.5">
+            <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
+            Live aus dem Feed
+          </span>
+          <span><span class="sr-only">Beitrag </span>{{ pad(active() + 1) }} / {{ pad(slides().length) }}</span>
+        </div>
+        <div class="flex flex-col" role="group" aria-label="Neueste Instagram-Beiträge" (keydown)="onListKeydown($event)">
+          @for (slide of slides(); track slide.id; let i = $index) {
+            @let selected = i === active();
+            <button
+              #row
+              type="button"
+              aria-controls="kabine-stage"
+              [attr.aria-pressed]="selected"
+              (click)="select(i)"
+              class="relative grid w-full cursor-pointer grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-4 border-b border-paper/[.18] px-4 py-5 text-left transition-colors duration-[350ms] focus-visible:[outline-offset:-4px] sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:px-6"
+              [class]="selected ? 'bg-pitch text-ink focus-visible:[outline:2px_solid_#16261B]' : 'bg-transparent text-paper hover:bg-paper/[.06] focus-visible:[outline:2px_solid_#CFE3C4]'">
+              <span class="font-display text-[44px] font-black leading-none">{{ pad(i + 1) }}</span>
+              <span class="flex min-w-0 flex-col gap-1.5">
+                <span class="font-mono text-[11px] font-medium uppercase leading-[14px] tracking-[.1em] opacity-75">{{ slide.chip }}</span>
+                <span class="line-clamp-2 min-h-[2.3em] font-display text-[clamp(20px,1.9vw,25px)] font-extrabold uppercase leading-[1.15]">{{ slide.short }}</span>
+              </span>
+              <span aria-hidden="true" class="text-[20px]">→</span>
+              @if (selected) {
+                @for (run of runs(); track run.id) {
+                  <span
+                    aria-hidden="true"
+                    class="absolute inset-x-0 bottom-0 h-[3px] origin-left bg-ink animate-fillbar motion-reduce:animate-none"
+                    [style.animation-play-state]="holdProgress() ? 'paused' : null"></span>
+                }
+              }
+            </button>
+          }
+        </div>
+        <ng-container [ngTemplateOutlet]="feedLink" />
+      </div>
+    } @else {
+      <div class="flex min-h-[clamp(420px,48vw,600px)] w-full flex-col items-center justify-center gap-7 px-6 py-12 text-center">
+        <p class="m-0 font-display text-[clamp(36px,5vw,64px)] font-black uppercase leading-[.92]">Feed gerade im Abseits</p>
+        <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full bg-pitch px-[22px] py-3.5 font-semibold text-ink hover:bg-paper">Direkt auf Instagram →</a>
+      </div>
+    }
+  </div>
+</div>
+
+<ng-template #feedLink>
+  <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="mt-auto flex items-center justify-between gap-4 bg-pitch px-6 py-5 font-display text-[22px] font-extrabold uppercase leading-none text-ink transition-colors hover:bg-paper focus-visible:[outline-offset:-4px] focus-visible:[outline:2px_solid_#16261B]">
+    Zum kompletten Feed <span aria-hidden="true">→</span>
+  </a>
+</ng-template>
