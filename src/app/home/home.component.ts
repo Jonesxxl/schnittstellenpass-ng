@@ -1,25 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_HOME_HERO } from '../services/content.service';
+import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_HOME_HERO, DEFAULT_LIVE, DEFAULT_SOCIAL } from '../services/content.service';
 import { SpotifyService } from '../services/spotify.service';
 import { InstagramFeedService } from '../services/instagram-feed.service';
 import { ImageSlotComponent } from '../shared/image-slot.component';
 import { RevealDirective } from '../shared/reveal.directive';
 import { LINKS } from '../shared/links';
-
-interface FeaturedEpisode {
-  badge: string;
-  guest: string;
-  description: string;
-  tag: string;
-}
-
-interface ImageArea {
-  placeholder: string;
-  // Path of the photo, e.g. 'assets/images/host.jpg'; the placeholder is shown until it is set
-  src?: string;
-}
 
 @Component({
   selector: 'app-home',
@@ -47,6 +34,21 @@ export class HomeComponent {
     defaultValue: DEFAULT_ABOUT_INTRO
   });
 
+  protected readonly live = rxResource({
+    stream: () => this.contentService.getLiveContent(),
+    defaultValue: DEFAULT_LIVE
+  });
+
+  protected readonly episodes = rxResource({
+    stream: () => this.contentService.getEpisodesContent(),
+    defaultValue: DEFAULT_EPISODES
+  });
+
+  protected readonly social = rxResource({
+    stream: () => this.contentService.getSocialContent(),
+    defaultValue: DEFAULT_SOCIAL
+  });
+
   // Resolves to null if Spotify cannot be reached
   protected readonly latestEpisode = rxResource({
     stream: () => this.spotifyService.getLatestEpisode()
@@ -58,22 +60,5 @@ export class HomeComponent {
     defaultValue: []
   });
 
-  protected readonly livePhoto: ImageArea = { src: 'assets/live-event.webp', placeholder: 'Foto von der ersten Live-Folge' };
-  protected readonly hostPortrait: ImageArea = { src: 'assets/host-portrait.webp', placeholder: 'Portrait von Agy' };
   protected readonly instagramTiles = ['Instagram-Post 1', 'Instagram-Post 2', 'Instagram-Post 3', 'Instagram-Post 4'];
-
-  protected readonly featuredEpisodes: FeaturedEpisode[] = [
-    { badge: 'NEU', guest: 'Sebastian „Kiwi“ Müller', description: 'Die Zukunft des Amateurfußballs: Ehrenamt, Verbandsarbeit, Nachwuchs.', tag: 'Amateur' },
-    { badge: '', guest: 'Nick Fennell', description: 'Vom Amateurbereich über den Profifußball zum Spielerberater.', tag: 'Profi' },
-    { badge: '', guest: 'Matthias Esch', description: 'Fußballjournalismus von der Kreisliga bis zu FUMS und Stadionumfrage.', tag: 'Medien' },
-    { badge: '', guest: 'Peter Hyballa', description: 'Der erfahrene Trainer über Ansprache, Druck und Leidenschaft.', tag: 'Trainer' },
-    { badge: 'S2 · 8', guest: 'Jan Kirchhoff', description: 'Unter Guardiola und Tuchel: Bundesliga, Premier League und Trainerpläne.', tag: 'Profi' },
-    { badge: 'S1 · 2', guest: 'Marco Caligiuri', description: 'Trainertypen, die Mainzer Boyband und Trainingsbetrüger.', tag: 'Profi' }
-  ];
-
-  protected readonly facts = [
-    { value: '45\'', label: 'pro Folge' },
-    { value: '14-tägig', label: 'neue Folgen' },
-    { value: 'Live', label: 'seit 09/2026' }
-  ];
 }

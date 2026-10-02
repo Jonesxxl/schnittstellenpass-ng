@@ -1,0 +1,43 @@
+{
+  "eyebrow": "Spielplan",
+  "headline": "Ausgewählte Folgen",
+  "intro": "Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.",
+  "episodes": [
+    {
+      "badge": "NEU",
+      "guest": "Sebastian „Kiwi“ Müller",
+      "description": "Die Zukunft des Amateurfußballs: Ehrenamt, Verbandsarbeit, Nachwuchs.",
+      "tag": "Amateur"
+    },
+    {
+      "badge": "",
+      "guest": "Nick Fennell",
+      "description": "Vom Amateurbereich über den Profifußball zum Spielerberater.",
+      "tag": "Profi"
+    },
+    {
+      "badge": "",
+      "guest": "Matthias Esch",
+      "description": "Fußballjournalismus von der Kreisliga bis zu FUMS und Stadionumfrage.",
+      "tag": "Medien"
+    },
+    {
+      "badge": "",
+      "guest": "Peter Hyballa",
+      "description": "Der erfahrene Trainer über Ansprache, Druck und Leidenschaft.",
+      "tag": "Trainer"
+    },
+    {
+      "badge": "S2 · 8",
+      "guest": "Jan Kirchhoff",
+      "description": "Unter Guardiola und Tuchel: Bundesliga, Premier League und Trainerpläne.",
+      "tag": "Profi"
+    },
+    {
+      "badge": "S1 · 2",
+      "guest": "Marco Caligiuri",
+      "description": "Trainertypen, die Mainzer Boyband und Trainingsbetrüger.",
+      "tag": "Profi"
+    }
+  ]
+}
