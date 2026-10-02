@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { AboutFact, ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_LIVE, EpisodesContent, FeaturedEpisode, LiveContent } from './content.service';
+import { AboutFact, ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_LIVE, EpisodesContent, LiveContent } from './content.service';
 
 describe('ContentService', () => {
   let service: ContentService;
@@ -56,12 +56,14 @@ describe('ContentService', () => {
     expect(episodes).toEqual(DEFAULT_EPISODES);
   });
 
-  it('should drop empty episodes and facts', () => {
-    let episodes: FeaturedEpisode[] | undefined;
-    service.getEpisodesContent().subscribe(content => (episodes = content.episodes));
-    http.expectOne('/content/folgen.json').flush({ episodes: [{ guest: 'Gast', tag: 'Profi' }, { guest: '' }, 'kaputt'] });
-    expect(episodes).toEqual([{ badge: '', guest: 'Gast', description: '', tag: 'Profi' }]);
+  it('should read only the section texts of the episodes, not a list of episodes', () => {
+    let episodes: EpisodesContent | undefined;
+    service.getEpisodesContent().subscribe(content => (episodes = content));
+    http.expectOne('/content/folgen.json').flush({ headline: 'Aus dem CMS', intro: '', episodes: [{ guest: 'Gast' }] });
+    expect(episodes).toEqual({ eyebrow: DEFAULT_EPISODES.eyebrow, headline: 'Aus dem CMS', intro: DEFAULT_EPISODES.intro });
+  });
 
+  it('should drop empty facts', () => {
     let facts: AboutFact[] | undefined;
     service.getAboutIntroContent().subscribe(content => (facts = content.facts));
     http.expectOne('/content/ueber-uns.json').flush({ facts: [{ value: '', label: 'leer' }] });

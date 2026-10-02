@@ -42,9 +42,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
 
           <article class="rounded-md border-2 border-ink bg-paper p-6">
-            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">3. Cookies und Tracking</h2>
+            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">3. Cookies, Tracking und Schriftarten</h2>
             <p class="mt-4 leading-relaxed text-forest">
               Diese Website setzt keine Cookies zu Analyse- oder Werbezwecken und verwendet keine Tracking- oder Analysedienste. Es werden keine Informationen auf deinem Endgerät gespeichert oder von dort ausgelesen, die über den technisch erforderlichen Abruf der Website hinausgehen. Ein Einwilligungsbanner ist daher nicht erforderlich.
+            </p>
+            <p class="mt-3 leading-relaxed text-forest">
+              Die verwendeten Schriftarten sind lokal eingebunden und werden zusammen mit der Website ausgeliefert. Beim Laden der Seite wird keine Verbindung zu Servern von Drittanbietern wie Google Fonts hergestellt.
             </p>
           </article>
 
@@ -98,7 +101,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">9. Beschwerderecht</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren, z. B. bei der für meinen Wohnort zuständigen Landesdatenschutzbehörde, wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen Datenschutzrecht verstößt.
+              Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren, z. B. bei der für meinen Wohnort zuständigen Landesdatenschutzbehörde, wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen Datenschutzrecht verstößt (Art. 77 DSGVO).
             </p>
           </article>
 
@@ -110,7 +113,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
         </section>
 
-        <p class="mt-8 text-[14px] text-forest">Stand: 30. September 2026</p>
+        <p class="mt-8 text-[14px] text-forest">Stand: 2. Oktober 2026</p>
       </main>
 
     </div>

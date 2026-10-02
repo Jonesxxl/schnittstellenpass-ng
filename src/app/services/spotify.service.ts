@@ -29,16 +29,13 @@ export class SpotifyService {
   }
 
   /**
-   * Get latest episode
+   * The latest episodes, newest first; null if Spotify cannot be reached
    */
-  getLatestEpisode(): Observable<Episode | null> {
-    return this.getEpisodes(1, 0).pipe(
-      map(response => {
-        if (response.items.length === 0) {
-          return null;
-        }
-        return this.transformSpotifyEpisode(response.items[0]);
-      }),
+  getLatestEpisodes(count: number): Observable<Episode[] | null> {
+    return this.getEpisodes(count, 0).pipe(
+      map(response => response.items
+        .filter((item): item is SpotifyEpisode => item !== null)
+        .map(item => this.transformSpotifyEpisode(item))),
       catchError(() => of(null))
     );
   }
@@ -49,7 +46,7 @@ export class SpotifyService {
   private transformSpotifyEpisode(spotifyEpisode: SpotifyEpisode): Episode {
     return {
       id: spotifyEpisode.id,
-      title: spotifyEpisode.name,
+      ...this.splitEpisodeCode(spotifyEpisode.name),
       description: this.stripHtml(spotifyEpisode.description),
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
@@ -57,6 +54,18 @@ export class SpotifyService {
       imageUrl: spotifyEpisode.images[0]?.url || '',
       audioPreviewUrl: spotifyEpisode.audio_preview_url
     };
+  }
+
+  /**
+   * Moves "Saison 4 Folge #8" from the title into a short code ("S4 · 8")
+   */
+  private splitEpisodeCode(name: string): Pick<Episode, 'title' | 'code'> {
+    const match = /\s*[-–—|:]?\s*\(?Saison\s*(\d+)[\s,]*Folge\s*#?\s*(\d+)\)?\s*[-–—|:]?\s*/i.exec(name);
+    const title = match ? `${name.slice(0, match.index)} ${name.slice(match.index + match[0].length)}`.trim() : '';
+    if (!match || !title) {
+      return { title: name.trim(), code: null };
+    }
+    return { title, code: `S${match[1]} · ${match[2]}` };
   }
 
   /**

@@ -39,7 +39,8 @@ export class HomeComponent {
     defaultValue: DEFAULT_LIVE
   });
 
-  protected readonly episodes = rxResource({
+  // Texts of the episode section from the CMS; the episodes themselves come from Spotify
+  protected readonly episodeSection = rxResource({
     stream: () => this.contentService.getEpisodesContent(),
     defaultValue: DEFAULT_EPISODES
   });
@@ -49,9 +50,12 @@ export class HomeComponent {
     defaultValue: DEFAULT_SOCIAL
   });
 
-  // Resolves to null if Spotify cannot be reached
-  protected readonly latestEpisode = rxResource({
-    stream: () => this.spotifyService.getLatestEpisode()
+  // Rows of the episode list, also shown as placeholders while loading
+  protected readonly episodeRows = [0, 1, 2, 3, 4, 5];
+
+  // Newest first, for the "Aktuelle Folge" card and the episode list; null if Spotify cannot be reached
+  protected readonly episodes = rxResource({
+    stream: () => this.spotifyService.getLatestEpisodes(this.episodeRows.length)
   });
 
   // Latest posts for the "Aus der Kabine" tiles; tiles without a post keep their placeholder

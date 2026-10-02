@@ -29,7 +29,8 @@ export interface SpotifyImage {
 
 // Spotify Episodes List Response
 export interface SpotifyEpisodesResponse {
-  items: SpotifyEpisode[];
+  // Spotify returns null for episodes that are not available in the market
+  items: (SpotifyEpisode | null)[];
   total: number;
   limit: number;
   offset: number;
@@ -40,7 +41,10 @@ export interface SpotifyEpisodesResponse {
 // Application Episode Model (transformed from Spotify)
 export interface Episode {
   id: string;
+  // Title without the "Saison 4 Folge #8" part, which is moved into code
   title: string;
+  // Short episode code such as "S4 · 8", if the title contains one
+  code: string | null;
   description: string;
   date: string;
   duration: string;

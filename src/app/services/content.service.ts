@@ -29,18 +29,11 @@ export interface LiveContent {
   photo: string;
 }
 
-export interface FeaturedEpisode {
-  badge: string;
-  guest: string;
-  description: string;
-  tag: string;
-}
-
+// Texts of the episode section; the episodes themselves come from Spotify
 export interface EpisodesContent {
   eyebrow: string;
   headline: string;
   intro: string;
-  episodes: FeaturedEpisode[];
 }
 
 export interface SocialContent {
@@ -80,16 +73,8 @@ export const DEFAULT_LIVE: LiveContent = {
 
 export const DEFAULT_EPISODES: EpisodesContent = {
   eyebrow: 'Spielplan',
-  headline: 'Ausgewählte Folgen',
-  intro: 'Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.',
-  episodes: [
-    { badge: 'NEU', guest: 'Sebastian „Kiwi“ Müller', description: 'Die Zukunft des Amateurfußballs: Ehrenamt, Verbandsarbeit, Nachwuchs.', tag: 'Amateur' },
-    { badge: '', guest: 'Nick Fennell', description: 'Vom Amateurbereich über den Profifußball zum Spielerberater.', tag: 'Profi' },
-    { badge: '', guest: 'Matthias Esch', description: 'Fußballjournalismus von der Kreisliga bis zu FUMS und Stadionumfrage.', tag: 'Medien' },
-    { badge: '', guest: 'Peter Hyballa', description: 'Der erfahrene Trainer über Ansprache, Druck und Leidenschaft.', tag: 'Trainer' },
-    { badge: 'S2 · 8', guest: 'Jan Kirchhoff', description: 'Unter Guardiola und Tuchel: Bundesliga, Premier League und Trainerpläne.', tag: 'Profi' },
-    { badge: 'S1 · 2', guest: 'Marco Caligiuri', description: 'Trainertypen, die Mainzer Boyband und Trainingsbetrüger.', tag: 'Profi' }
-  ]
+  headline: 'Neueste Folgen',
+  intro: 'Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.'
 };
 
 export const DEFAULT_SOCIAL: SocialContent = {
@@ -147,13 +132,7 @@ export class ContentService {
       map((payload) => ({
         eyebrow: this.asNonEmptyString(payload['eyebrow'], DEFAULT_EPISODES.eyebrow),
         headline: this.asNonEmptyString(payload['headline'], DEFAULT_EPISODES.headline),
-        intro: this.asNonEmptyString(payload['intro'], DEFAULT_EPISODES.intro),
-        episodes: this.asList(payload['episodes'], DEFAULT_EPISODES.episodes, 12, (entry) => ({
-          badge: this.asNonEmptyString(entry['badge'], ''),
-          guest: this.asNonEmptyString(entry['guest'], ''),
-          description: this.asNonEmptyString(entry['description'], ''),
-          tag: this.asNonEmptyString(entry['tag'], '')
-        }), (episode) => episode.guest.length > 0)
+        intro: this.asNonEmptyString(payload['intro'], DEFAULT_EPISODES.intro)
       })),
       catchError(() => of(DEFAULT_EPISODES))
     );

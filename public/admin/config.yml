@@ -72,23 +72,14 @@ collections:
           - { label: "Foto (Querformat 4:3)", name: "photo", widget: "image", required: false, choose_url: false }
 
       - name: "episodes"
-        label: "Home - Ausgewählte Folgen"
+        label: "Home - Neueste Folgen"
         file: "public/content/folgen.json"
         format: "json"
         fields:
           - { label: "Kleine Zeile über der Überschrift", name: "eyebrow", widget: "string" }
           - { label: "Überschrift", name: "headline", widget: "string" }
           - { label: "Einleitung", name: "intro", widget: "text" }
-          - label: "Folgen (bis zu 12)"
-            name: "episodes"
-            widget: "list"
-            max: 12
-            summary: "{{fields.guest}}"
-            fields:
-              - { label: "Gast", name: "guest", widget: "string" }
-              - { label: "Beschreibung", name: "description", widget: "text" }
-              - { label: "Kategorie (z. B. Profi, Amateur)", name: "tag", widget: "string", required: false }
-              - { label: "Markierung (z. B. NEU oder S2 · 8)", name: "badge", widget: "string", required: false }
+          # The episodes themselves are loaded from Spotify (newest first)
 
       - name: "social"
         label: "Home - Instagram"
