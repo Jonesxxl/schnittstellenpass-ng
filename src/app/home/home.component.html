@@ -139,27 +139,44 @@
 
   <section id="social" class="bg-paper">
     <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
-      <div appReveal class="flex flex-wrap items-end justify-between gap-6">
-        <div class="flex flex-col gap-3">
-          <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">&#64;schnittstellenpass</div>
-          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Aus der Kabine</h2>
-        </div>
-        <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Auf Instagram folgen →</a>
+      <div appReveal class="flex flex-col items-center gap-3 text-center">
+        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">&#64;schnittstellenpass</div>
+        <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Aus der Kabine</h2>
       </div>
-      <div class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,220px),1fr))] gap-4" [attr.aria-busy]="instagramPosts.isLoading()">
-        @let posts = instagramPosts.value();
-        @for (placeholder of instagramTiles; track placeholder; let i = $index) {
-          <div appReveal class="relative box-content aspect-[4/5] overflow-hidden rounded-md border-2 border-ink">
-            @if (posts[i]; as post) {
-              <a [href]="post.permalink" target="_blank" rel="noopener noreferrer" class="group absolute inset-0 block focus-visible:[outline-offset:-4px]">
-                <app-image-slot [src]="post.image" [alt]="post.caption ? 'Instagram-Beitrag: ' + post.caption : 'Instagram-Beitrag von Schnittstellenpass'" class="motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04]" />
-              </a>
-            } @else {
-              <app-image-slot [placeholder]="placeholder" />
-            }
+
+      <div appReveal class="mx-auto flex w-full max-w-[880px] flex-col gap-5">
+        <div class="flex items-center gap-4">
+          <span aria-hidden="true" class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-ink p-[3px] ring-2 ring-pitch ring-offset-2 ring-offset-paper">
+            <span class="font-display text-[26px] font-black leading-none text-pitch">SP</span>
+          </span>
+          <div class="flex min-w-0 flex-1 flex-col">
+            <span class="truncate text-[17px] font-bold leading-tight">schnittstellenpass</span>
+            <span class="text-[14px] leading-tight text-forest">Podcast · zwischen Profi und Amateur</span>
           </div>
-        }
+          <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="shrink-0 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper hover:bg-moss">Folgen</a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1 sm:grid-cols-4 sm:gap-1.5" [attr.aria-busy]="instagramPosts.isLoading()">
+          @let posts = instagramPosts.value();
+          @for (placeholder of instagramTiles; track placeholder; let i = $index) {
+            <div class="relative aspect-[4/5] overflow-hidden rounded-sm bg-chalk">
+              @if (posts[i]; as post) {
+                <a [href]="post.permalink" target="_blank" rel="noopener noreferrer" class="group absolute inset-0 block focus-visible:[outline-offset:-4px]">
+                  <app-image-slot [src]="post.image" [alt]="post.caption ? 'Instagram-Beitrag: ' + post.caption : 'Instagram-Beitrag von Schnittstellenpass'" class="motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04]" />
+                  <span class="absolute inset-0 flex items-end bg-gradient-to-t from-ink/85 via-ink/10 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                    <span class="line-clamp-3 text-[13px] font-medium leading-snug text-paper">{{ post.caption || 'Auf Instagram ansehen' }}</span>
+                  </span>
+                </a>
+              } @else {
+                <app-image-slot [placeholder]="placeholder" />
+              }
+            </div>
+          }
+        </div>
+
+        <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="self-center text-[15px] font-semibold underline decoration-2 underline-offset-4 hover:text-moss">Mehr auf Instagram →</a>
       </div>
+
       <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-4">
         <a appReveal [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md bg-ink p-6 text-paper hover:bg-moss">
           <div class="flex flex-col gap-1">

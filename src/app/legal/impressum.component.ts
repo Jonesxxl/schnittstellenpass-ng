@@ -33,7 +33,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">Kontakt</h2>
             <div class="mt-4 space-y-2 leading-relaxed text-forest">
-              <p>E-Mail: <a href="mailto:schnittstellepass@gmail.com" class="font-semibold underline decoration-2 underline-offset-2 hover:text-moss">schnittstellepass@gmail.com</a></p>
+              <p>E-Mail: <a href="mailto:schnittstellenpass@gmail.com" class="font-semibold underline decoration-2 underline-offset-2 hover:text-moss">schnittstellenpass@gmail.com</a></p>
             </div>
           </article>
 
