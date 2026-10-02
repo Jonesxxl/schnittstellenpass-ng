@@ -4,6 +4,11 @@ backend:
 
 local_backend: true
 
+# Changes are saved as drafts (a branch with a pull request) and only go live
+# once they are published in the CMS; Netlify builds a preview for each draft
+publish_mode: editorial_workflow
+show_preview_links: true
+
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
