@@ -6,16 +6,6 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script>
-    (function() {
-      var hash = window.location.hash || '';
-      var hasIdentityToken = /(invite_token|confirmation_token|recovery_token|email_change_token)=/.test(hash);
-
-      if (hasIdentityToken && !window.location.pathname.startsWith('/admin')) {
-        window.location.replace('/admin/' + hash);
-      }
-    })();
-  </script>
 </head>
 <body>
   <app-root></app-root>

@@ -3,186 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
   <title>Schnittstellenpass CMS</title>
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f3f4f6;
-    }
-
-    #identity-login {
-      width: min(92vw, 420px);
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 28px 24px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    #identity-login[hidden] {
-      display: none;
-    }
-
-    #identity-login h1 {
-      margin: 0 0 8px;
-      font-size: 1.4rem;
-      color: #111827;
-    }
-
-    #identity-login p {
-      margin: 0 0 20px;
-      color: #4b5563;
-      line-height: 1.45;
-    }
-
-    #open-login {
-      border: 0;
-      border-radius: 10px;
-      background: #1f2937;
-      color: white;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 18px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    #open-login:hover {
-      background: #111827;
-    }
-
-    #open-login:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-    }
-
-    #identity-error {
-      margin-top: 10px;
-      color: #b91c1c;
-      font-size: 0.9rem;
-    }
-  </style>
 </head>
 <body>
-  <main id="identity-login" hidden>
-    <h1>CMS Login</h1>
-    <p>Melde dich mit Netlify Identity an, um Inhalte zu bearbeiten.</p>
-    <button id="open-login" type="button" disabled>Login with Netlify Identity</button>
-    <p id="identity-error" hidden></p>
-  </main>
-  <div id="identity-widget-container"></div>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    (function() {
-      var loginPanel = document.getElementById('identity-login');
-      var openLoginButton = document.getElementById('open-login');
-      var errorText = document.getElementById('identity-error');
-      var widgetContainer = document.getElementById('identity-widget-container');
-      var cmsLoaded = false;
-      var identityReady = false;
-      var hash = window.location.hash || '';
-      var hasIdentityToken = /(invite_token|confirmation_token|recovery_token|email_change_token)=/.test(hash);
-
-      function loadCmsApp() {
-        if (cmsLoaded) {
-          return;
-        }
-
-        cmsLoaded = true;
-        loginPanel.hidden = true;
-
-        var script = document.createElement('script');
-        script.src = 'https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js';
-        script.async = false;
-        document.body.appendChild(script);
-      }
-
-      function showLoginPanel() {
-        loginPanel.hidden = false;
-      }
-
-      function showError(message) {
-        errorText.textContent = message;
-        errorText.hidden = false;
-      }
-
-      function hideError() {
-        errorText.hidden = true;
-        errorText.textContent = '';
-      }
-
-      function openIdentityModal(mode) {
-        if (!identityReady) {
-          showError('Authentifizierung wird initialisiert. Bitte in 1-2 Sekunden erneut klicken.');
-          return;
-        }
-
-        hideError();
-
-        window.setTimeout(function() {
-          if (mode) {
-            window.netlifyIdentity.open(mode);
-          } else {
-            window.netlifyIdentity.open();
-          }
-        }, 0);
-      }
-
-      showLoginPanel();
-
-      if (!window.netlifyIdentity) {
-        openLoginButton.disabled = true;
-        showError('Netlify Identity konnte nicht geladen werden. Bitte Seite neu laden.');
-        return;
-      }
-
-      openLoginButton.addEventListener('click', function() {
-        openIdentityModal('login');
-      });
-
-      window.netlifyIdentity.on('init', function(user) {
-        identityReady = true;
-        openLoginButton.disabled = false;
-        hideError();
-
-        if (user) {
-          loadCmsApp();
-          return;
-        }
-
-        showLoginPanel();
-
-        if (hasIdentityToken) {
-          openIdentityModal();
-        }
-      });
-
-      window.netlifyIdentity.on('login', function() {
-        document.location.href = '/admin/';
-      });
-
-      window.netlifyIdentity.on('error', function(error) {
-        console.error('Netlify Identity Error:', error);
-        showError('Login fehlgeschlagen. Bitte Invite-Link erneut öffnen.');
-      });
-
-      if (typeof window.netlifyIdentity.init === 'function') {
-        window.netlifyIdentity.init({
-          container: '#identity-widget-container'
-        });
-      } else if (!widgetContainer) {
-        showError('Identity-Container fehlt. Bitte Seite neu laden.');
-      }
-    })();
-  </script>
+  <!--
+    Decap CMS with login via GitHub (backend in config.yml). Netlify handles the
+    OAuth handshake; the GitHub OAuth app is installed under Project configuration
+    > Access & security > OAuth (see README). The integrity hash pins the exact
+    file; update it together with the version.
+  -->
+  <script
+    src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"
+    integrity="sha384-A/Gdn928CNLufmnGWGs9RM4Q9o8bSNLeJERqBFrBjwzL7FRpoLT3MPF8Tl0+Wd2p"
+    crossorigin="anonymous"></script>
 </body>
 </html>
