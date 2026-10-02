@@ -3,7 +3,7 @@
     <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[11px] uppercase tracking-[.08em] text-paper hover:text-pitch sm:text-[13px]">
       <div class="mx-auto box-content flex max-w-[1280px] items-center gap-2 px-4 py-1.5 sm:gap-3 sm:px-6 sm:py-2.5">
         <span aria-hidden="true" class="inline-block size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
-        <span class="min-w-0 truncate">5 Jahre<span class="max-sm:hidden"> Schnittstellenpass</span> — erstes Live-Event</span>
+        <span class="min-w-0 truncate">{{ live.value().bannerText }}</span>
         <span class="ml-auto shrink-0">Mehr →</span>
       </div>
     </a>
@@ -69,13 +69,20 @@
       <div appReveal class="flex flex-col gap-6">
         <div class="flex items-center gap-2.5 font-mono text-[13px] uppercase tracking-[.12em] text-pitch">
           <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
-          <span>Neu · seit 22.09.2026</span>
+          <span>{{ live.value().eyebrow }}</span>
         </div>
-        <h2 class="m-0 font-display text-[clamp(56px,8vw,112px)] font-black uppercase leading-[.85]">Jetzt<br />auch live.</h2>
-        <p class="m-0 max-w-[480px] text-pretty text-[19px] leading-[1.55] text-chalk">Schnittstellenpass verlässt das Studio: Gäste auf der Bühne, Publikum im Raum, Fragen direkt aus der Kurve. Termine und Tickets kündigen wir auf Instagram an.</p>
+        <h2 class="m-0 font-display text-[clamp(56px,8vw,112px)] font-black uppercase leading-[.85]">
+          @for (line of live.value().headlineLines; track $index) {
+            @if (!$first) {
+              <br />
+            }
+            {{ line }}
+          }
+        </h2>
+        <p class="m-0 max-w-[480px] text-pretty text-[19px] leading-[1.55] text-chalk">{{ live.value().text }}</p>
         <div class="flex max-w-[480px] flex-col gap-1.5 rounded-md border-2 border-pitch p-4">
-          <span class="font-mono text-[12px] uppercase tracking-[.1em] text-pitch">5 Jahre Schnittstellenpass</span>
-          <p class="m-0 text-pretty text-[17px] leading-normal">Zum 5-jährigen Jubiläum ist unser erstes Live-Event an den Start gegangen – und war ein voller Erfolg. Danke an alle, die dabei waren!</p>
+          <span class="font-mono text-[12px] uppercase tracking-[.1em] text-pitch">{{ live.value().jubileeLabel }}</span>
+          <p class="m-0 text-pretty text-[17px] leading-normal">{{ live.value().jubileeText }}</p>
         </div>
         <div class="flex flex-wrap gap-3">
           <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full bg-pitch px-[22px] py-3.5 font-semibold text-ink hover:bg-paper">Termine auf Instagram</a>
@@ -83,7 +90,7 @@
         </div>
       </div>
       <div appReveal class="relative box-content aspect-[4/3] overflow-hidden rounded-md border-2 border-pitch">
-        <app-image-slot [src]="livePhoto.src" [placeholder]="livePhoto.placeholder" alt="Schnittstellenpass live: Aufnahme vor Publikum beim ersten Live-Event" />
+        <app-image-slot [src]="live.value().photo" placeholder="Foto von der ersten Live-Folge" alt="Schnittstellenpass live: Aufnahme vor Publikum beim ersten Live-Event" />
       </div>
     </div>
   </section>
@@ -92,10 +99,10 @@
     <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
       <div appReveal class="flex flex-wrap items-end justify-between gap-6">
         <div class="flex flex-col gap-3">
-          <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">Spielplan</div>
-          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Neueste Folgen</h2>
+          <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">{{ episodeSection.value().eyebrow }}</div>
+          <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ episodeSection.value().headline }}</h2>
         </div>
-        <p class="m-0 max-w-[380px] text-[17px] leading-normal text-forest">Jede Folge dauert eine Halbzeit: 45 Minuten, kein Nachspielzeit-Gelaber.</p>
+        <p class="m-0 max-w-[380px] text-[17px] leading-normal text-forest">{{ episodeSection.value().intro }}</p>
       </div>
       <div class="flex flex-col border-t-2 border-ink" [attr.aria-busy]="episodes.isLoading()">
         @if (episodes.isLoading()) {
@@ -142,14 +149,14 @@
   <section id="ueber" class="border-y-2 border-ink bg-pitch">
     <div class="mx-auto box-content grid max-w-[1280px] grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] items-center gap-14 px-6 py-[clamp(56px,8vw,112px)]">
       <div appReveal class="relative box-content aspect-[4/5] w-full max-w-[480px] overflow-hidden rounded-md border-2 border-ink shadow-block">
-        <app-image-slot [src]="hostPortrait.src" [placeholder]="hostPortrait.placeholder" [alt]="host.value().headline" />
+        <app-image-slot [src]="host.value().portrait" placeholder="Portrait von Agy" [alt]="host.value().headline" />
       </div>
       <div appReveal class="flex flex-col gap-6">
         <div class="font-mono text-[13px] uppercase tracking-[.12em] text-forest">Der Gastgeber</div>
         <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ host.value().headline }}</h2>
         <p class="m-0 max-w-[560px] text-pretty text-[19px] leading-[1.55]">{{ host.value().body }}</p>
         <div class="box-content grid max-w-[560px] grid-cols-3 divide-x-2 divide-ink rounded-md border-2 border-ink bg-paper">
-          @for (fact of facts; track fact.label) {
+          @for (fact of host.value().facts; track $index) {
             <div class="flex flex-col gap-1 p-4">
               <span class="whitespace-nowrap font-display text-[clamp(26px,3vw,40px)] font-black leading-none">{{ fact.value }}</span>
               <span class="text-[13px] text-forest">{{ fact.label }}</span>
@@ -163,8 +170,8 @@
   <section id="social" class="bg-paper">
     <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
       <div appReveal class="flex flex-col items-center gap-3 text-center">
-        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">&#64;schnittstellenpass</div>
-        <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">Aus der Kabine</h2>
+        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">{{ social.value().eyebrow }}</div>
+        <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ social.value().headline }}</h2>
       </div>
 
       <div appReveal class="mx-auto flex w-full max-w-[880px] flex-col gap-5">

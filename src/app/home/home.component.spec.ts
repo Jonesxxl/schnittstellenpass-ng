@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Observable, Subject, of } from 'rxjs';
 import { HomeComponent } from './home.component';
-import { ContentService } from '../services/content.service';
+import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_LIVE, DEFAULT_SOCIAL } from '../services/content.service';
 import { SpotifyService } from '../services/spotify.service';
 import { InstagramFeedService, InstagramPost } from '../services/instagram-feed.service';
 import { Episode } from '../models/spotify.models';
@@ -47,7 +47,10 @@ describe('HomeComponent', () => {
           provide: ContentService,
           useValue: {
             getHomeHeroContent: () => of({ titleLines: ['Erste Zeile', 'Zweite Zeile'], subtitle: 'Unterzeile aus dem CMS' }),
-            getAboutIntroContent: () => of({ headline: 'Gastgeber aus dem CMS', body: 'Text aus dem CMS' })
+            getAboutIntroContent: () => of({ ...DEFAULT_ABOUT_INTRO, headline: 'Gastgeber aus dem CMS', body: 'Text aus dem CMS' }),
+            getLiveContent: () => of(DEFAULT_LIVE),
+            getEpisodesContent: () => of(DEFAULT_EPISODES),
+            getSocialContent: () => of(DEFAULT_SOCIAL)
           }
         }
       ]
