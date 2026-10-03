@@ -12,10 +12,12 @@ would pull its whole dependency tree into every build.
 Update to a new version:
 
 ```bash
-npm pack decap-cms@<version>
-tar -xzf decap-cms-<version>.tgz
+tmp=$(mktemp -d)
+npm pack decap-cms@<version> --pack-destination "$tmp"
+tar -xzf "$tmp"/decap-cms-<version>.tgz -C "$tmp"
 mkdir public/vendor/decap-cms-<version>
-cp package/dist/*decap-cms.js package/dist/*.wasm package/dist/decap-cms.js.LICENSE.txt public/vendor/decap-cms-<version>/
+cp "$tmp"/package/dist/*decap-cms.js "$tmp"/package/dist/*.wasm "$tmp"/package/dist/decap-cms.js.LICENSE.txt public/vendor/decap-cms-<version>/
+rm -rf "$tmp"
 ```
 
 Then copy this README, point the script in `public/admin/index.html` to the new

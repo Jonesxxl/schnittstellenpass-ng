@@ -20,6 +20,19 @@
   to = "/admin/index.html"
   status = 200
 
+# Missing CMS files and uploads are a plain 404. Without these rules the SPA
+# rewrite below would answer with index.html, which then gets the immutable
+# cache of /vendor or the sandbox CSP of /uploads.
+[[redirects]]
+  from = "/vendor/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/uploads/*"
+  to = "/404.html"
+  status = 404
+
 # Redirect all requests to index.html for Angular routing
 [[redirects]]
   from = "/*"
@@ -55,7 +68,8 @@
 # The CMS page holds the editor's GitHub token: scripts only from this site
 # (Decap is served from /vendor), no inline scripts. 'unsafe-eval' is needed
 # because Decap validates its configuration with generated code and compiles
-# WebAssembly; blob: in connect-src because it reads picked files for upload.
+# WebAssembly; blob: in connect-src because it reads picked files for upload,
+# localhost:8081 for the local decap-server (npx netlify dev, see README).
 # Keep both blocks identical: "/admin" covers the page without trailing slash.
 # (A /admin -> /admin/ redirect rule would loop, Netlify ignores trailing
 # slashes when matching rules; Pretty URLs already forwards to /admin/.)
@@ -63,13 +77,13 @@
   for = "/admin"
   [headers.values]
     Cache-Control = "no-store"
-    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob: http://localhost:8081; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
 
 [[headers]]
   for = "/admin/*"
   [headers.values]
     Cache-Control = "no-store"
-    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob: http://localhost:8081; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
 
 # Decap CMS files, the version is part of the path
 [[headers]]

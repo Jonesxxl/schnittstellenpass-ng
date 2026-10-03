@@ -47,8 +47,7 @@ export class SpotifyService {
     return {
       id: spotifyEpisode.id,
       ...this.splitEpisodeCode(spotifyEpisode.name),
-      // Plain text: Spotify strips HTML from this field (html_description has the markup)
-      description: spotifyEpisode.description,
+      description: this.decodeEntities(spotifyEpisode.description),
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       spotifyUrl: spotifyEpisode.external_urls.spotify,
@@ -67,6 +66,18 @@ export class SpotifyService {
       return { title: name.trim(), code: null };
     }
     return { title, code: `S${match[1]} · ${match[2]}` };
+  }
+
+  /**
+   * The description is plain text (Spotify strips HTML from it, html_description
+   * has the markup), but may contain character references such as &amp;. The
+   * content of a <textarea> is parsed as text only: references are decoded,
+   * anything that looks like a tag stays text and nothing is loaded or run.
+   */
+  private decodeEntities(text: string): string {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
   }
 
   /**
