@@ -103,6 +103,8 @@ One-time setup:
 
 Further editors are added as collaborators of the GitHub repository.
 
+Decap CMS itself is served from this site (`public/vendor/decap-cms-<version>/`), not from a CDN; that folder's README describes how to update it.
+
 **About the login token:** after logging in, the browser keeps a GitHub token in its local storage for schnittstellenpass.de. The CMS requests the `public_repo` scope, the smallest GitHub offers for this, but the token is then valid for *all* public repositories the editor can push to, not just this one, and logging out of the CMS does not revoke it. Editors should log out after editing and can revoke the access at any time under GitHub → Settings → Applications → *Authorized OAuth Apps*. If the repository is ever made private, change `auth_scope` in `public/admin/config.yml` to `repo`.
 
 ### Local testing

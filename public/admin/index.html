@@ -29,15 +29,9 @@
   <!--
     Decap CMS with login via GitHub (backend in config.yml). Netlify handles the
     OAuth handshake; the GitHub OAuth app is installed under Project configuration
-    > Access & security > OAuth (see README).
-    Loaded from unpkg in an exact version: the npm package would pull its whole
-    dependency tree into every build. The integrity hash is the sha384 of
-    dist/decap-cms.js from the npm package; update it together with the version
-    (and the version in the CSP in netlify.toml).
+    > Access & security > OAuth (see README). Served from this site together with
+    its lazily loaded chunks, see public/vendor/decap-cms-3.16.3/README.md.
   -->
-  <script
-    src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"
-    integrity="sha384-A/Gdn928CNLufmnGWGs9RM4Q9o8bSNLeJERqBFrBjwzL7FRpoLT3MPF8Tl0+Wd2p"
-    crossorigin="anonymous"></script>
+  <script src="/vendor/decap-cms-3.16.3/decap-cms.js"></script>
 </body>
 </html>

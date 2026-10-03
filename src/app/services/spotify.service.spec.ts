@@ -12,7 +12,7 @@ describe('SpotifyService', () => {
     items: [{
       id: 'ep1',
       name: 'Folge 1',
-      description: '<p>Taktik &amp; Analyse</p>',
+      description: 'Taktik & Analyse',
       release_date: '2026-09-01',
       duration_ms: 3_725_000,
       external_urls: { spotify: 'https://open.spotify.com/episode/ep1' },
@@ -77,20 +77,17 @@ describe('SpotifyService', () => {
     expect(latest![0].date).toMatch(/^\d{2}\.\d{2}\.2026$/);
   });
 
-  it('should strip HTML from the description without running any of it', async () => {
-    const win = window as unknown as { strippedHtmlRan?: boolean };
+  it('should keep the plain-text description exactly as Spotify sends it', () => {
     let latest: Episode[] | null | undefined;
     service.getLatestEpisodes(6).subscribe(episodes => latest = episodes);
 
+    const description = 'Taktik <Pressing> & Q&amp;A';
     httpMock.expectOne(r => r.params.get('resource') === 'episodes').flush({
       ...episodesResponse,
-      items: [{ ...episodesResponse.items[0]!, description: '<img src="/missing.png" onerror="window.strippedHtmlRan = true">Taktik &amp; <b>Analyse</b>' }]
+      items: [{ ...episodesResponse.items[0]!, description }]
     });
-    // Give a loaded image time to fail
-    await new Promise(resolve => setTimeout(resolve, 300));
 
-    expect(latest![0].description).toBe('Taktik & Analyse');
-    expect(win.strippedHtmlRan).toBeUndefined();
+    expect(latest![0].description).toBe(description);
   });
 
   it('should move the season and episode number from the title into a code', () => {

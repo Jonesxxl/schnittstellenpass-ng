@@ -47,7 +47,8 @@ export class SpotifyService {
     return {
       id: spotifyEpisode.id,
       ...this.splitEpisodeCode(spotifyEpisode.name),
-      description: this.stripHtml(spotifyEpisode.description),
+      // Plain text: Spotify strips HTML from this field (html_description has the markup)
+      description: spotifyEpisode.description,
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       spotifyUrl: spotifyEpisode.external_urls.spotify,
@@ -66,15 +67,6 @@ export class SpotifyService {
       return { title: name.trim(), code: null };
     }
     return { title, code: `S${match[1]} · ${match[2]}` };
-  }
-
-  /**
-   * Strip HTML tags from description
-   */
-  private stripHtml(html: string): string {
-    // DOMParser creates an inert document: unlike innerHTML on an element of the
-    // page, it loads no images and runs no handlers such as <img onerror>
-    return new DOMParser().parseFromString(html, 'text/html').body.textContent || '';
   }
 
   /**

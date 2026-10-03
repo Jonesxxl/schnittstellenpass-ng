@@ -52,21 +52,38 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# The CMS page holds the editor's GitHub token: scripts only from this site and
-# the pinned Decap version on unpkg, no inline scripts. 'unsafe-eval' is needed
-# because Decap validates its configuration with generated code. "/admin" is
-# listed as well, in case the page is opened without the trailing slash.
+# The CMS page holds the editor's GitHub token: scripts only from this site
+# (Decap is served from /vendor), no inline scripts. 'unsafe-eval' is needed
+# because Decap validates its configuration with generated code and compiles
+# WebAssembly; blob: in connect-src because it reads picked files for upload.
+# Keep both blocks identical: "/admin" covers the page without trailing slash.
+# (A /admin -> /admin/ redirect rule would loop, Netlify ignores trailing
+# slashes when matching rules; Pretty URLs already forwards to /admin/.)
 [[headers]]
   for = "/admin"
   [headers.values]
     Cache-Control = "no-store"
-    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval' https://unpkg.com/decap-cms@3.16.3/; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
 
 [[headers]]
   for = "/admin/*"
   [headers.values]
     Cache-Control = "no-store"
-    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval' https://unpkg.com/decap-cms@3.16.3/; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+
+# Decap CMS files, the version is part of the path
+[[headers]]
+  for = "/vendor/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Files uploaded through the CMS are only ever shown as images. Opened directly,
+# an uploaded SVG must not run script on this origin, where the CMS keeps the
+# editor's GitHub token.
+[[headers]]
+  for = "/uploads/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox"
 
 [[headers]]
   for = "/content/*"
