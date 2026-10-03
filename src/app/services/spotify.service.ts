@@ -4,6 +4,8 @@ import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SpotifyEpisode, SpotifyEpisodesResponse, Episode } from '../models/spotify.models';
 
+const NAMED_REFERENCES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+
 @Injectable({
   providedIn: 'root'
 })
@@ -70,14 +72,18 @@ export class SpotifyService {
 
   /**
    * The description is plain text (Spotify strips HTML from it, html_description
-   * has the markup), but may contain character references such as &amp;. The
-   * content of a <textarea> is parsed as text only: references are decoded,
-   * anything that looks like a tag stays text and nothing is loaded or run.
+   * has the markup), but may contain character references such as &amp;. Only
+   * complete references with a semicolon are decoded, so text like
+   * "?a=1&reg=2" in a link stays as it is; tags are never interpreted.
    */
   private decodeEntities(text: string): string {
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    return text.replace(/&(?:(amp|lt|gt|quot|apos)|#(\d{1,7})|#x([\da-f]{1,6}));/gi, (reference, name: string | undefined, decimal: string | undefined, hex: string | undefined) => {
+      if (name) {
+        return NAMED_REFERENCES[name.toLowerCase()];
+      }
+      const codePoint = decimal ? Number(decimal) : parseInt(hex!, 16);
+      return codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : reference;
+    });
   }
 
   /**

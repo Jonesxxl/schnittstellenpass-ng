@@ -14,3 +14,8 @@ quote_type = single
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
+
+# Unmodified copy of the Decap CMS package, keep byte-identical
+[public/vendor/**]
+insert_final_newline = false
+trim_trailing_whitespace = false

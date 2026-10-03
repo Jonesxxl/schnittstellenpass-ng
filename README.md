@@ -113,6 +113,8 @@ Decap CMS itself is served from this site (`public/vendor/decap-cms-<version>/`)
 2. Start Decap local backend with `npx decap-server`. Without it, Decap falls back to the GitHub login of its demo site; do not authorize that.
 3. Open `http://localhost:4200/admin/` (with the trailing slash).
 
+`npm start` does not send the headers from `netlify.toml`. To test the CMS with its Content Security Policy, run `npx netlify dev` instead of `npm start` (together with `npx decap-server`) and open `http://localhost:8888/admin/`.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

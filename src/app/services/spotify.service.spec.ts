@@ -77,17 +77,19 @@ describe('SpotifyService', () => {
     expect(latest![0].date).toMatch(/^\d{2}\.\d{2}\.2026$/);
   });
 
-  it('should treat the description as plain text and only decode character references', () => {
+  it('should treat the description as plain text and only decode complete character references', () => {
     let latest: Episode[] | null | undefined;
     service.getLatestEpisodes(6).subscribe(episodes => latest = episodes);
 
     httpMock.expectOne(r => r.params.get('resource') === 'episodes').flush({
       ...episodesResponse,
-      items: [{ ...episodesResponse.items[0]!, description: 'Q&amp;A: Taktik <Pressing> <img src="x" onerror="alert(1)">' }]
+      items: [{
+        ...episodesResponse.items[0]!,
+        description: 'Q&amp;A &#8211; Taktik <Pressing> <img src="x" onerror="alert(1)"> https://x.de/?a=1&reg=2&copy=3 Kabine&notizen &#0; &bogus;'
+      }]
     });
 
-    // Tags stay text: had they been parsed, they would not appear in the result
-    expect(latest![0].description).toBe('Q&A: Taktik <Pressing> <img src="x" onerror="alert(1)">');
+    expect(latest![0].description).toBe('Q&A – Taktik <Pressing> <img src="x" onerror="alert(1)"> https://x.de/?a=1&reg=2&copy=3 Kabine&notizen &#0; &bogus;');
   });
 
   it('should move the season and episode number from the title into a code', () => {

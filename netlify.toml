@@ -20,9 +20,14 @@
   to = "/admin/index.html"
   status = 200
 
-# Missing CMS files and uploads are a plain 404. Without these rules the SPA
-# rewrite below would answer with index.html, which then gets the immutable
-# cache of /vendor or the sandbox CSP of /uploads.
+# Missing static files are a plain 404. Without these rules the SPA rewrite
+# below would answer with index.html, which then gets the cache headers of
+# /assets and /vendor or the sandbox CSP of /uploads.
+[[redirects]]
+  from = "/assets/*"
+  to = "/404.html"
+  status = 404
+
 [[redirects]]
   from = "/vendor/*"
   to = "/404.html"
@@ -85,11 +90,12 @@
     Cache-Control = "no-store"
     Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob: http://localhost:8081; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
 
-# Decap CMS files, the version is part of the path
+# Decap CMS files. Cached for a day only: the 404 for a missing file gets the
+# same header, and must not outlive a deploy that adds the file.
 [[headers]]
   for = "/vendor/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=86400"
 
 # Files uploaded through the CMS are only ever shown as images. Opened directly,
 # an uploaded SVG must not run script on this origin, where the CMS keeps the
