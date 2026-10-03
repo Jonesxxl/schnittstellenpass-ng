@@ -98,15 +98,18 @@ One-time setup:
    - Authorization callback URL: `https://api.netlify.com/auth/done`
    - Register, then *Generate a new client secret*; keep the Client ID and the client secret at hand.
 2. **Netlify:** Project configuration → Access & security → OAuth → Authentication providers → *Install provider* → GitHub, enter Client ID and client secret.
-3. Open `https://schnittstellenpass.de/admin` and click *Login with GitHub*.
+3. Open `https://schnittstellenpass.de/admin/` and click *Login with GitHub*.
+4. **Switch off the old login** once the GitHub login works: in Netlify, disable Git Gateway (Identity → Services) and then Identity, and delete its users. Otherwise Git Gateway keeps its own write access to the repository, and Identity users could still commit through it.
 
-Further editors are added as collaborators of the GitHub repository. The CMS only requests the `public_repo` scope; if the repository is ever made private, change `auth_scope` in `public/admin/config.yml` to `repo`.
+Further editors are added as collaborators of the GitHub repository.
+
+**About the login token:** after logging in, the browser keeps a GitHub token in its local storage for schnittstellenpass.de. The CMS requests the `public_repo` scope, the smallest GitHub offers for this, but the token is then valid for *all* public repositories the editor can push to, not just this one, and logging out of the CMS does not revoke it. Editors should log out after editing and can revoke the access at any time under GitHub → Settings → Applications → *Authorized OAuth Apps*. If the repository is ever made private, change `auth_scope` in `public/admin/config.yml` to `repo`.
 
 ### Local testing
 
 1. Start the app with `npm start`.
-2. Start Decap local backend with `npx decap-server`.
-3. Open `http://localhost:4200/admin`.
+2. Start Decap local backend with `npx decap-server`. Without it, Decap falls back to the GitHub login of its demo site; do not authorize that.
+3. Open `http://localhost:4200/admin/` (with the trailing slash).
 
 ## Code scaffolding
 

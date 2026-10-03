@@ -5,13 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Schnittstellenpass CMS</title>
+  <!-- Absolute path, so the config is found at /admin as well as /admin/ -->
+  <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url">
+  <style>
+    .cms-loading {
+      max-width: 420px;
+      margin: 20vh auto;
+      padding: 0 24px;
+      font: 16px/1.5 system-ui, sans-serif;
+      color: #374151;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
+  <!-- Decap renders into this element and replaces the notice once it has loaded -->
+  <div id="nc-root">
+    <p class="cms-loading">
+      Das CMS wird geladen …<br>
+      Bleibt diese Meldung stehen, konnte es nicht geladen werden. Bitte die Seite neu laden und gegebenenfalls Werbe- oder Skriptblocker für diese Seite deaktivieren.
+    </p>
+  </div>
   <!--
     Decap CMS with login via GitHub (backend in config.yml). Netlify handles the
     OAuth handshake; the GitHub OAuth app is installed under Project configuration
-    > Access & security > OAuth (see README). The integrity hash pins the exact
-    file; update it together with the version.
+    > Access & security > OAuth (see README).
+    Loaded from unpkg in an exact version: the npm package would pull its whole
+    dependency tree into every build. The integrity hash is the sha384 of
+    dist/decap-cms.js from the npm package; update it together with the version
+    (and the version in the CSP in netlify.toml).
   -->
   <script
     src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"

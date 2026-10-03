@@ -77,6 +77,22 @@ describe('SpotifyService', () => {
     expect(latest![0].date).toMatch(/^\d{2}\.\d{2}\.2026$/);
   });
 
+  it('should strip HTML from the description without running any of it', async () => {
+    const win = window as unknown as { strippedHtmlRan?: boolean };
+    let latest: Episode[] | null | undefined;
+    service.getLatestEpisodes(6).subscribe(episodes => latest = episodes);
+
+    httpMock.expectOne(r => r.params.get('resource') === 'episodes').flush({
+      ...episodesResponse,
+      items: [{ ...episodesResponse.items[0]!, description: '<img src="/missing.png" onerror="window.strippedHtmlRan = true">Taktik &amp; <b>Analyse</b>' }]
+    });
+    // Give a loaded image time to fail
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    expect(latest![0].description).toBe('Taktik & Analyse');
+    expect(win.strippedHtmlRan).toBeUndefined();
+  });
+
   it('should move the season and episode number from the title into a code', () => {
     const named = (id: string, name: string) => ({ ...episodesResponse.items[0]!, id, name });
     let latest: Episode[] | null | undefined;

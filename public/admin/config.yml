@@ -7,6 +7,9 @@ backend:
   branch: main
   # Enough for a public repository; use "repo" if it ever becomes private
   auth_scope: public_repo
+  # Netlify site that holds the OAuth provider, also when the CMS is opened on
+  # a deploy preview (Decap itself always uses its demo site on localhost)
+  site_domain: schnittstellenpass.de
 
 local_backend: true
 

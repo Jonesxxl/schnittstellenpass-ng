@@ -72,9 +72,9 @@ export class SpotifyService {
    * Strip HTML tags from description
    */
   private stripHtml(html: string): string {
-    const tmp = document.createElement('DIV');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+    // DOMParser creates an inert document: unlike innerHTML on an element of the
+    // page, it loads no images and runs no handlers such as <img onerror>
+    return new DOMParser().parseFromString(html, 'text/html').body.textContent || '';
   }
 
   /**
