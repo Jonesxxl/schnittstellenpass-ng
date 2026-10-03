@@ -77,25 +77,43 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 ## Decap CMS (Admin UI)
 
-The project now includes a Decap CMS admin interface at `/admin`.
+Texts and photos of the start page can be edited at `/admin`. Changes are saved as drafts (a branch with a pull request) and go live once they are published in the CMS.
 
 ### Editable content files
 
 - `public/content/home-hero.json` – headline and text of the hero section
-- `public/content/ueber-uns.json` – name and text of the host section
+- `public/content/live.json` – live section, banner and live photo
+- `public/content/folgen.json` – texts of the episode section (the episodes themselves come from Spotify)
+- `public/content/ueber-uns.json` – host section, portrait and facts
+- `public/content/social.json` – headline of the Instagram section
 
-### Netlify setup for login
+### Login with GitHub
 
-1. Enable **Identity** in Netlify.
-2. Enable **Git Gateway** in Netlify Identity settings.
-3. Invite editors via Netlify Identity.
-4. Open `https://<your-domain>/admin` and log in via invite link.
+Editors log in with their GitHub account; everyone with write access to the repository can edit. Netlify handles the OAuth handshake, so no secret is stored in this repository.
+
+One-time setup:
+
+1. **GitHub OAuth app:** GitHub → Settings → Developer settings → OAuth Apps → *New OAuth App*
+   - Homepage URL: `https://schnittstellenpass.de`
+   - Authorization callback URL: `https://api.netlify.com/auth/done`
+   - Register, then *Generate a new client secret*; keep the Client ID and the client secret at hand.
+2. **Netlify:** Project configuration → Access & security → OAuth → Authentication providers → *Install provider* → GitHub, enter Client ID and client secret.
+3. Open `https://schnittstellenpass.de/admin/` and click *Login with GitHub*.
+4. **Switch off the old login** once the GitHub login works: in Netlify, disable Git Gateway (Identity → Services) and then Identity, and delete its users. Otherwise Git Gateway keeps its own write access to the repository, and Identity users could still commit through it.
+
+Further editors are added as collaborators of the GitHub repository.
+
+Decap CMS itself is served from this site (`public/vendor/decap-cms-<version>/`), not from a CDN; that folder's README describes how to update it.
+
+**About the login token:** after logging in, the browser keeps a GitHub token in its local storage for schnittstellenpass.de. The CMS requests the `public_repo` scope, the smallest GitHub offers for this, but the token is then valid for *all* public repositories the editor can push to, not just this one, and logging out of the CMS does not revoke it. Editors should log out after editing and can revoke the access at any time under GitHub → Settings → Applications → *Authorized OAuth Apps*. If the repository is ever made private, change `auth_scope` in `public/admin/config.yml` to `repo`.
 
 ### Local testing
 
 1. Start the app with `npm start`.
-2. Start Decap local backend with `npx decap-server`.
-3. Open `http://localhost:4200/admin`.
+2. Start Decap local backend with `npx decap-server`. Without it, Decap falls back to the GitHub login of its demo site; do not authorize that.
+3. Open `http://localhost:4200/admin/` (with the trailing slash).
+
+`npm start` does not send the headers from `netlify.toml`. To test the CMS with its Content Security Policy, run `npx netlify dev` instead of `npm start` (together with `npx decap-server`) and open `http://localhost:8888/admin/`.
 
 ## Code scaffolding
 

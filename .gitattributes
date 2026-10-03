@@ -1,0 +1,5 @@
+# Unmodified copy of the Decap CMS package: keep byte-identical (no line ending
+# conversion), no diffs, not counted as project code. The README there is ours.
+public/vendor/**/*.js -text -diff linguist-vendored
+public/vendor/**/*.wasm -text -diff linguist-vendored
+public/vendor/**/*.LICENSE.txt -text -diff linguist-vendored

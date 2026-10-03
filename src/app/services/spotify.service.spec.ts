@@ -12,7 +12,7 @@ describe('SpotifyService', () => {
     items: [{
       id: 'ep1',
       name: 'Folge 1',
-      description: '<p>Taktik &amp; Analyse</p>',
+      description: 'Taktik & Analyse',
       release_date: '2026-09-01',
       duration_ms: 3_725_000,
       external_urls: { spotify: 'https://open.spotify.com/episode/ep1' },
@@ -75,6 +75,19 @@ describe('SpotifyService', () => {
       audioPreviewUrl: null
     }));
     expect(latest![0].date).toMatch(/^\d{2}\.\d{2}\.2026$/);
+  });
+
+  it('should show the plain-text description as it is, without parsing it', () => {
+    let latest: Episode[] | null | undefined;
+    service.getLatestEpisodes(6).subscribe(episodes => latest = episodes);
+
+    const description = 'Taktik <Pressing> & mehr: https://x.de/?a=1&reg=2';
+    httpMock.expectOne(r => r.params.get('resource') === 'episodes').flush({
+      ...episodesResponse,
+      items: [{ ...episodesResponse.items[0]!, description }, { ...episodesResponse.items[0]!, id: 'ep2', description: null }]
+    });
+
+    expect(latest!.map(episode => episode.description)).toEqual([description, '']);
   });
 
   it('should move the season and episode number from the title into a code', () => {

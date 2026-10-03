@@ -4,18 +4,14 @@
   <meta charset="utf-8">
   <title>Schnittstellenpass</title>
   <base href="/">
+  <!--
+    Content Security Policy of the website. As a meta tag rather than a header on
+    /*, which Netlify would also add to /admin and /uploads. Pictures may come from
+    Spotify (episode covers); everything else from this site.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script>
-    (function() {
-      var hash = window.location.hash || '';
-      var hasIdentityToken = /(invite_token|confirmation_token|recovery_token|email_change_token)=/.test(hash);
-
-      if (hasIdentityToken && !window.location.pathname.startsWith('/admin')) {
-        window.location.replace('/admin/' + hash);
-      }
-    })();
-  </script>
 </head>
 <body>
   <app-root></app-root>

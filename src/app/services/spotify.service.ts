@@ -47,7 +47,9 @@ export class SpotifyService {
     return {
       id: spotifyEpisode.id,
       ...this.splitEpisodeCode(spotifyEpisode.name),
-      description: this.stripHtml(spotifyEpisode.description),
+      // Plain text: Spotify strips HTML from this field (html_description has the
+      // markup), so it is shown as it is and never parsed
+      description: spotifyEpisode.description ?? '',
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       spotifyUrl: spotifyEpisode.external_urls.spotify,
@@ -66,15 +68,6 @@ export class SpotifyService {
       return { title: name.trim(), code: null };
     }
     return { title, code: `S${match[1]} · ${match[2]}` };
-  }
-
-  /**
-   * Strip HTML tags from description
-   */
-  private stripHtml(html: string): string {
-    const tmp = document.createElement('DIV');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
   }
 
   /**
