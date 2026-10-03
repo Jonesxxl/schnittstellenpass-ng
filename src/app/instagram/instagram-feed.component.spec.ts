@@ -112,16 +112,45 @@ describe('InstagramFeedComponent', () => {
     finish();
   }));
 
+  it('should stop carousel and ticker with the pause button until continued', fakeAsync(() => {
+    const root = render(of(fourPosts));
+    const toggle = () => root.querySelector<HTMLButtonElement>('button:not([aria-pressed])')!;
+    tick(2000);
+
+    expect(text(toggle())).toContain('Pause');
+    toggle().click();
+    // Leaving the module does not lift a pause the user asked for
+    module(root).dispatchEvent(new MouseEvent('mouseleave'));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.stopped()).toBeTrue();
+    expect(text(toggle())).toContain('Weiter');
+    expect(root.querySelector<HTMLElement>('.animate-fillbar')!.style.animationPlayState).toBe('paused');
+    expect(root.querySelector<HTMLElement>('.motion-safe\\:animate-marquee')!.style.animationPlayState).toBe('paused');
+    tick(SLIDE_DURATION * 4);
+    expect(active()).toBe(0);
+
+    // Continuing also lifts the pause from hovering the module
+    module(root).dispatchEvent(new MouseEvent('mouseenter'));
+    toggle().click();
+    fixture.detectChanges();
+    expect(root.querySelector<HTMLElement>('.motion-safe\\:animate-marquee')!.style.animationPlayState).toBe('');
+    tick(SLIDE_DURATION - 2000);
+    expect(active()).toBe(1);
+    finish();
+  }));
+
   it('should not advance automatically if the user prefers reduced motion', fakeAsync(() => {
     spyOn(window, 'matchMedia').and.returnValue({
       matches: true,
       addEventListener: () => undefined,
       removeEventListener: () => undefined
     } as unknown as MediaQueryList);
-    render(of(fourPosts));
+    const root = render(of(fourPosts));
 
     tick(SLIDE_DURATION * 3);
     expect(active()).toBe(0);
+    // Nothing moves, so there is nothing to pause
+    expect(root.querySelector('button:not([aria-pressed])')).toBeNull();
     finish();
   }));
 

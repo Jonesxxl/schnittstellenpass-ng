@@ -1,5 +1,5 @@
 <div class="group/ticker overflow-hidden bg-ink py-3.5 text-pitch">
-  <div class="flex w-max motion-safe:animate-marquee group-hover/ticker:[animation-play-state:paused]">
+  <div class="flex w-max motion-safe:animate-marquee group-hover/ticker:[animation-play-state:paused]" [style.animation-play-state]="stopped() ? 'paused' : null">
     @for (copy of [0, 1]; track copy) {
       <ul class="m-0 flex shrink-0 list-none items-center gap-7 p-0 pr-7 font-display text-[26px] font-extrabold uppercase leading-none" [attr.aria-hidden]="copy === 1 ? 'true' : null">
         @for (item of tickerItems; track item) {
@@ -108,9 +108,12 @@
         <div class="flex items-center justify-between gap-3 whitespace-nowrap border-b border-paper/[.18] px-4 py-[18px] font-mono text-[12px] font-medium uppercase tracking-[.1em] text-pitch sm:px-6">
           <span class="flex items-center gap-2.5">
             <span aria-hidden="true" class="inline-block size-2.5 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse"></span>
-            Live aus dem Feed
+            <span>Live<span class="max-[400px]:hidden"> aus dem Feed</span></span>
           </span>
-          <span><span class="sr-only">Beitrag </span>{{ pad(active() + 1) }} / {{ pad(slides().length) }}</span>
+          <span class="flex items-center gap-3">
+            <ng-container [ngTemplateOutlet]="motionToggle" />
+            <span><span class="sr-only">Beitrag </span>{{ pad(active() + 1) }} / {{ pad(slides().length) }}</span>
+          </span>
         </div>
         <div class="flex flex-col" role="group" aria-label="Neueste Instagram-Beiträge" (keydown)="onListKeydown($event)">
           @for (slide of slides(); track slide.id; let i = $index) {
@@ -146,6 +149,7 @@
       <div class="flex min-h-[clamp(420px,48vw,600px)] w-full flex-col items-center justify-center gap-7 px-6 py-12 text-center">
         <p class="m-0 font-display text-[clamp(36px,5vw,64px)] font-black uppercase leading-[.92]">Feed gerade im Abseits</p>
         <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full bg-pitch px-[22px] py-3.5 font-semibold text-ink hover:bg-paper">Direkt auf Instagram →</a>
+        <ng-container [ngTemplateOutlet]="motionToggle" />
       </div>
     }
   </div>
@@ -155,4 +159,22 @@
   <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="mt-auto flex items-center justify-between gap-4 bg-pitch px-6 py-5 font-display text-[22px] font-extrabold uppercase leading-none text-ink transition-colors hover:bg-paper focus-visible:[outline-offset:-4px] focus-visible:[outline:2px_solid_#16261B]">
     Zum kompletten Feed <span aria-hidden="true">→</span>
   </a>
+</ng-template>
+
+<!-- Stops carousel and ticker (WCAG 2.2.2); not needed when the user prefers reduced motion -->
+<ng-template #motionToggle>
+  @if (!reducedMotion()) {
+    <button
+      type="button"
+      (click)="toggleMotion()"
+      class="-my-1.5 inline-flex min-h-[28px] min-w-[28px] cursor-pointer items-center justify-center gap-1.5 rounded-full border border-pitch/50 bg-transparent px-2 font-mono text-[12px] font-medium uppercase tracking-[.1em] text-pitch hover:bg-pitch hover:text-ink focus-visible:[outline:2px_solid_#CFE3C4] focus-visible:[outline-offset:2px]">
+      @if (stopped()) {
+        <svg aria-hidden="true" viewBox="0 0 10 10" width="10" height="10" fill="currentColor"><path d="M2 1l7 4-7 4z" /></svg>
+        <span class="max-sm:sr-only">Weiter</span><span class="sr-only"> – Karussell und Laufband abspielen</span>
+      } @else {
+        <svg aria-hidden="true" viewBox="0 0 10 10" width="10" height="10" fill="currentColor"><path d="M2 1h2v8H2zM6 1h2v8H6z" /></svg>
+        <span class="max-sm:sr-only">Pause</span><span class="sr-only"> – Karussell und Laufband anhalten</span>
+      }
+    </button>
+  }
 </ng-template>
