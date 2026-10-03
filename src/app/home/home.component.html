@@ -3,7 +3,7 @@
     <a routerLink="/" fragment="live" class="block bg-ink font-mono text-[11px] uppercase tracking-[.08em] text-paper hover:text-pitch sm:text-[13px]">
       <div class="mx-auto box-content flex max-w-[1280px] items-center gap-2 px-4 py-1.5 sm:gap-3 sm:px-6 sm:py-2.5">
         <span aria-hidden="true" class="inline-block size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
-        <span class="min-w-0 truncate">{{ live.value().bannerText }}</span>
+        <span class="line-clamp-2 min-w-0 sm:line-clamp-1">{{ live.value().bannerText }}</span>
         <span class="ml-auto shrink-0">Mehr →</span>
       </div>
     </a>
@@ -21,7 +21,7 @@
     }
     <div class="relative mx-auto box-content grid max-w-[1280px] grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] items-center gap-12 px-6 pb-[clamp(40px,6vw,80px)] pt-[clamp(48px,8vw,104px)]">
       <div class="flex flex-col gap-7">
-        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-forest">Der Fußball-Podcast · Seit 2021</div>
+        <div class="font-mono text-[12px] uppercase tracking-[.1em] text-forest sm:text-[13px] sm:tracking-[.12em]">Der Fußball-Podcast · Seit 2021</div>
         <img appReveal src="assets/brand/logo-black.webp" alt="Schnittstellenpass" width="1200" height="656" class="block h-auto w-full max-w-[600px]" />
         <h1 appReveal class="m-0 font-display text-[clamp(34px,4.4vw,56px)] font-black uppercase leading-[.95] tracking-[.01em]">
           @for (line of hero.value().titleLines; track $index) {
@@ -32,10 +32,10 @@
           }
         </h1>
         <p appReveal class="m-0 max-w-[520px] text-pretty text-[clamp(17px,1.4vw,20px)] leading-normal">{{ hero.value().subtitle }}</p>
-        <div class="flex flex-wrap gap-3">
-          <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="rounded-full bg-ink px-[22px] py-3.5 font-semibold text-paper hover:bg-moss">Spotify</a>
-          <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Apple Podcasts</a>
-          <a [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">YouTube</a>
+        <div class="grid grid-cols-2 gap-3 text-center sm:flex sm:flex-wrap">
+          <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="col-span-2 rounded-full bg-ink px-[22px] py-3.5 font-semibold text-paper hover:bg-moss">Spotify</a>
+          <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-4 py-3 font-semibold hover:bg-ink hover:text-paper max-[359px]:col-span-2 sm:px-5">Apple Podcasts</a>
+          <a [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-4 py-3 font-semibold hover:bg-ink hover:text-paper max-[359px]:col-span-2 sm:px-5">YouTube</a>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
           <span class="font-mono text-[12px] uppercase tracking-[.1em] text-pitch">{{ live.value().jubileeLabel }}</span>
           <p class="m-0 text-pretty text-[17px] leading-normal">{{ live.value().jubileeText }}</p>
         </div>
-        <div class="flex flex-wrap gap-3">
+        <div class="grid gap-3 text-center sm:flex sm:flex-wrap">
           <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="rounded-full bg-pitch px-[22px] py-3.5 font-semibold text-ink hover:bg-paper">Termine auf Instagram</a>
           <a [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-pitch px-5 py-3 font-semibold text-pitch hover:bg-pitch hover:text-ink">Live-Mitschnitte</a>
         </div>
@@ -142,7 +142,7 @@
           }
         }
       </div>
-      <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="self-start rounded-full border-2 border-ink px-5 py-3 font-semibold hover:bg-ink hover:text-paper">Alle Folgen anhören →</a>
+      <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="self-stretch rounded-full border-2 border-ink px-5 py-3 text-center font-semibold hover:bg-ink hover:text-paper sm:self-start">Alle Folgen anhören →</a>
     </div>
   </section>
 
@@ -157,8 +157,8 @@
         <p class="m-0 max-w-[560px] text-pretty text-[19px] leading-[1.55]">{{ host.value().body }}</p>
         <div class="box-content grid max-w-[560px] grid-cols-3 divide-x-2 divide-ink rounded-md border-2 border-ink bg-paper">
           @for (fact of host.value().facts; track $index) {
-            <div class="flex flex-col gap-1 p-4">
-              <span class="whitespace-nowrap font-display text-[clamp(26px,3vw,40px)] font-black leading-none">{{ fact.value }}</span>
+            <div class="flex min-w-0 flex-col gap-1 p-3 sm:p-4">
+              <span class="whitespace-nowrap font-display text-[clamp(21px,6.5vw,26px)] font-black leading-none sm:text-[clamp(26px,3vw,40px)]">{{ fact.value }}</span>
               <span class="text-[13px] text-forest">{{ fact.label }}</span>
             </div>
           }
@@ -168,45 +168,9 @@
   </section>
 
   <section id="social" class="bg-paper">
-    <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(56px,8vw,112px)]">
-      <div appReveal class="flex flex-col items-center gap-3 text-center">
-        <div class="font-mono text-[13px] uppercase tracking-[.12em] text-moss">{{ social.value().eyebrow }}</div>
-        <h2 class="m-0 font-display text-[clamp(48px,6vw,80px)] font-black uppercase leading-[.9]">{{ social.value().headline }}</h2>
-      </div>
+    <app-instagram-feed [eyebrow]="social.value().eyebrow" [headline]="social.value().headline" />
 
-      <div appReveal class="mx-auto flex w-full max-w-[880px] flex-col gap-5">
-        <div class="flex items-center gap-4">
-          <span aria-hidden="true" class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-ink p-[3px] ring-2 ring-pitch ring-offset-2 ring-offset-paper">
-            <span class="font-display text-[26px] font-black leading-none text-pitch">SP</span>
-          </span>
-          <div class="flex min-w-0 flex-1 flex-col">
-            <span class="truncate text-[17px] font-bold leading-tight">schnittstellenpass</span>
-            <span class="text-[14px] leading-tight text-forest">Podcast · zwischen Profi und Amateur</span>
-          </div>
-          <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="shrink-0 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper hover:bg-moss">Folgen</a>
-        </div>
-
-        <div class="grid grid-cols-2 gap-1 sm:grid-cols-4 sm:gap-1.5" [attr.aria-busy]="instagramPosts.isLoading()">
-          @let posts = instagramPosts.value();
-          @for (placeholder of instagramTiles; track placeholder; let i = $index) {
-            <div class="relative aspect-[4/5] overflow-hidden rounded-sm bg-chalk">
-              @if (posts[i]; as post) {
-                <a [href]="post.permalink" target="_blank" rel="noopener noreferrer" class="group absolute inset-0 block focus-visible:[outline-offset:-4px]">
-                  <app-image-slot [src]="post.image" [alt]="post.caption ? 'Instagram-Beitrag: ' + post.caption : 'Instagram-Beitrag von Schnittstellenpass'" class="motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04]" />
-                  <span class="absolute inset-0 flex items-end bg-gradient-to-t from-ink/85 via-ink/10 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                    <span class="line-clamp-3 text-[13px] font-medium leading-snug text-paper">{{ post.caption || 'Auf Instagram ansehen' }}</span>
-                  </span>
-                </a>
-              } @else {
-                <app-image-slot [placeholder]="placeholder" />
-              }
-            </div>
-          }
-        </div>
-
-        <a [href]="links.instagram" target="_blank" rel="noopener noreferrer" class="self-center text-[15px] font-semibold underline decoration-2 underline-offset-4 hover:text-moss">Mehr auf Instagram →</a>
-      </div>
-
+    <div class="mx-auto box-content max-w-[1280px] px-6 pb-[clamp(56px,8vw,112px)]">
       <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-4">
         <a appReveal [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md bg-ink p-6 text-paper hover:bg-moss">
           <div class="flex flex-col gap-1">
