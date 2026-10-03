@@ -4,8 +4,6 @@ import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SpotifyEpisode, SpotifyEpisodesResponse, Episode } from '../models/spotify.models';
 
-const NAMED_REFERENCES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
-
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +47,9 @@ export class SpotifyService {
     return {
       id: spotifyEpisode.id,
       ...this.splitEpisodeCode(spotifyEpisode.name),
-      description: this.decodeEntities(spotifyEpisode.description),
+      // Plain text: Spotify strips HTML from this field (html_description has the
+      // markup), so it is shown as it is and never parsed
+      description: spotifyEpisode.description ?? '',
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       spotifyUrl: spotifyEpisode.external_urls.spotify,
@@ -68,22 +68,6 @@ export class SpotifyService {
       return { title: name.trim(), code: null };
     }
     return { title, code: `S${match[1]} · ${match[2]}` };
-  }
-
-  /**
-   * The description is plain text (Spotify strips HTML from it, html_description
-   * has the markup), but may contain character references such as &amp;. Only
-   * complete references with a semicolon are decoded, so text like
-   * "?a=1&reg=2" in a link stays as it is; tags are never interpreted.
-   */
-  private decodeEntities(text: string): string {
-    return text.replace(/&(?:(amp|lt|gt|quot|apos)|#(\d{1,7})|#x([\da-f]{1,6}));/gi, (reference, name: string | undefined, decimal: string | undefined, hex: string | undefined) => {
-      if (name) {
-        return NAMED_REFERENCES[name.toLowerCase()];
-      }
-      const codePoint = decimal ? Number(decimal) : parseInt(hex!, 16);
-      return codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : reference;
-    });
   }
 
   /**

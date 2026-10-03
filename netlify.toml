@@ -90,12 +90,13 @@
     Cache-Control = "no-store"
     Content-Security-Policy = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: wss: blob: http://localhost:8081; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
 
-# Decap CMS files. Cached for a day only: the 404 for a missing file gets the
-# same header, and must not outlive a deploy that adds the file.
+# Decap CMS files (the .js files are also matched by /*.js above). Safe to
+# cache for good: the folder name contains the version, and a new version is
+# deployed together with the admin page that loads it.
 [[headers]]
   for = "/vendor/*"
   [headers.values]
-    Cache-Control = "public, max-age=86400"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 # Files uploaded through the CMS are only ever shown as images. Opened directly,
 # an uploaded SVG must not run script on this origin, where the CMS keeps the
