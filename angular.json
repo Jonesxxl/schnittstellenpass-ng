@@ -32,6 +32,21 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "big-shoulders-display-latin-900-normal.woff2",
+                "input": "node_modules/@fontsource/big-shoulders-display/files",
+                "output": "admin/fonts"
+              },
+              {
+                "glob": "familjen-grotesk-latin-{400,600}-normal.woff2",
+                "input": "node_modules/@fontsource/familjen-grotesk/files",
+                "output": "admin/fonts"
+              },
+              {
+                "glob": "jetbrains-mono-latin-500-normal.woff2",
+                "input": "node_modules/@fontsource/jetbrains-mono/files",
+                "output": "admin/fonts"
               }
             ],
             "styles": [

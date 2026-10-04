@@ -5,26 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Schnittstellenpass CMS</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <!-- Absolute path, so the config is found at /admin as well as /admin/ -->
   <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url">
   <style>
+    body {
+      margin: 0;
+    }
+
+    /* Shown until Decap has loaded, in the colours of the website */
     .cms-loading {
-      max-width: 420px;
-      margin: 20vh auto;
-      padding: 0 24px;
-      font: 16px/1.5 system-ui, sans-serif;
-      color: #374151;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #CFE3C4;
+      color: #16261B;
+      font: 16px/1.5 system-ui, -apple-system, sans-serif;
       text-align: center;
+    }
+
+    .cms-loading img {
+      width: min(70vw, 280px);
+      height: auto;
+    }
+
+    .cms-loading-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(22, 38, 27, .2);
+      border-top-color: #16261B;
+      border-radius: 50%;
+      animation: cms-spin .8s linear infinite;
+    }
+
+    .cms-loading-hint {
+      max-width: 360px;
+      margin: 0;
+      color: #2E4A33;
+      font-size: 14px;
+      opacity: 0;
+      /* Only appears if loading takes unusually long */
+      animation: cms-appear .3s ease 8s forwards;
+    }
+
+    @keyframes cms-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes cms-appear {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cms-loading-spinner {
+        animation-duration: 3s;
+      }
+
+      .cms-loading-hint {
+        animation-delay: 0s;
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Decap renders into this element and replaces the notice once it has loaded -->
   <div id="nc-root">
-    <p class="cms-loading">
-      Das CMS wird geladen …<br>
-      Bleibt diese Meldung stehen, konnte es nicht geladen werden. Bitte die Seite neu laden und gegebenenfalls Werbe- oder Skriptblocker für diese Seite deaktivieren.
-    </p>
+    <div class="cms-loading" role="status">
+      <img src="/assets/brand/logo-black.webp" alt="Schnittstellenpass" width="1200" height="656">
+      <div class="cms-loading-spinner" aria-hidden="true"></div>
+      <strong>Das CMS wird geladen …</strong>
+      <p class="cms-loading-hint">
+        Dauert es zu lange, konnte das CMS nicht geladen werden. Bitte die Seite neu laden und gegebenenfalls Werbe- oder Skriptblocker für diese Seite deaktivieren.
+      </p>
+    </div>
   </div>
   <!--
     Decap CMS with login via GitHub (backend in config.yml). Netlify handles the
@@ -33,5 +96,7 @@
     its lazily loaded chunks, see public/vendor/decap-cms-3.16.3/README.md.
   -->
   <script src="/vendor/decap-cms-3.16.3/decap-cms.js"></script>
+  <!-- Live preview of each section, styled like the website -->
+  <script src="/admin/preview.js"></script>
 </body>
 </html>
