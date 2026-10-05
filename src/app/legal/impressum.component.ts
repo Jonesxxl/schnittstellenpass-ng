@@ -63,7 +63,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">Urheberrecht</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung der jeweiligen Urheberin bzw. des jeweiligen Urhebers.
+              Die von mir erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung der jeweiligen Urheberin bzw. des jeweiligen Urhebers.
             </p>
           </article>
 
@@ -75,7 +75,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
         </section>
 
-        <p class="mt-8 text-[14px] text-forest">Stand: 2. Oktober 2026</p>
+        <p class="mt-8 text-[14px] text-forest">Stand: 5. Oktober 2026</p>
       </main>
 
     </div>

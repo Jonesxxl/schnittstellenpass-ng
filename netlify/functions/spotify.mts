@@ -7,6 +7,10 @@
  * so the function cannot be used to query arbitrary Spotify resources.
  *
  *   GET /.netlify/functions/spotify?resource=episodes&limit=5&offset=0
+ *   GET /.netlify/functions/spotify?image=<id>  -> episode cover from i.scdn.co
+ *
+ * Covers are served through this function as well, so visitors never load
+ * anything from Spotify's servers. Only i.scdn.co can be requested.
  *
  * Environment variables (Netlify site settings, scope must include Functions):
  *   SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_SHOW_ID (optional)
@@ -14,6 +18,8 @@
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_API_BASE = 'https://api.spotify.com/v1';
+const SPOTIFY_IMAGE_BASE = 'https://i.scdn.co/image/';
+const RASTER_IMAGE = /^image\/(jpeg|png|webp|gif|avif)\b/;
 const DEFAULT_SHOW_ID = '4gpxvhJ8WyrGAnba5A6LQc';
 
 // Spotify caps the page size of the episodes endpoint at 50.
@@ -78,9 +84,45 @@ function jsonResponse(body: unknown, status: number, headers: Record<string, str
   });
 }
 
+/**
+ * Episode cover, passed through from Spotify's image server
+ */
+async function coverImage(id: string): Promise<Response> {
+  if (!/^[0-9a-f]{16,64}$/.test(id)) {
+    return jsonResponse({ error: 'Invalid image id' }, 400);
+  }
+  try {
+    const image = await fetch(`${SPOTIFY_IMAGE_BASE}${id}`);
+    const contentType = image.headers.get('content-type') ?? '';
+    // Never serve anything but raster images from this origin (an SVG could run script)
+    if (!image.ok || !RASTER_IMAGE.test(contentType)) {
+      return jsonResponse({ error: 'Image not found' }, image.status === 404 ? 404 : 502);
+    }
+    return new Response(image.body, {
+      status: 200,
+      headers: {
+        'Content-Type': contentType,
+        'X-Content-Type-Options': 'nosniff',
+        // Spotify never changes the image behind an id
+        'Cache-Control': 'public, max-age=604800, immutable',
+        'Netlify-CDN-Cache-Control': 'public, durable, s-maxage=31536000'
+      }
+    });
+  } catch (error) {
+    console.error('Spotify image proxy error:', error);
+    return jsonResponse({ error: 'Spotify request failed' }, 502);
+  }
+}
+
 export default async (req: Request): Promise<Response> => {
   if (req.method !== 'GET') {
     return jsonResponse({ error: 'Method not allowed' }, 405, { 'Allow': 'GET' });
+  }
+
+  const params = new URL(req.url).searchParams;
+  const imageId = params.get('image');
+  if (imageId !== null) {
+    return coverImage(imageId);
   }
 
   const clientId = process.env['SPOTIFY_CLIENT_ID'];
@@ -91,7 +133,6 @@ export default async (req: Request): Promise<Response> => {
   }
   const showId = encodeURIComponent(process.env['SPOTIFY_SHOW_ID'] || DEFAULT_SHOW_ID);
 
-  const params = new URL(req.url).searchParams;
   let path: string;
   switch (params.get('resource')) {
     case 'episodes': {

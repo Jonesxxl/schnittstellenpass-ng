@@ -16,7 +16,7 @@ describe('SpotifyService', () => {
       release_date: '2026-09-01',
       duration_ms: 3_725_000,
       external_urls: { spotify: 'https://open.spotify.com/episode/ep1' },
-      images: [{ url: 'https://i.scdn.co/image/ep1', height: 640, width: 640 }],
+      images: [{ url: 'https://i.scdn.co/image/ab6765630000ba8a0123456789abcdef01234567', height: 640, width: 640 }],
       audio_preview_url: null,
       html_description: '<p>Taktik &amp; Analyse</p>',
       language: 'de',
@@ -71,10 +71,20 @@ describe('SpotifyService', () => {
       description: 'Taktik & Analyse',
       duration: '1:02:05',
       spotifyUrl: 'https://open.spotify.com/episode/ep1',
-      imageUrl: 'https://i.scdn.co/image/ep1',
+      imageUrl: '/.netlify/functions/spotify?image=ab6765630000ba8a0123456789abcdef01234567',
       audioPreviewUrl: null
     }));
     expect(latest![0].date).toMatch(/^\d{2}\.\d{2}\.2026$/);
+  });
+
+  it('should only load covers from Spotify through the proxy', () => {
+    for (const url of ['https://example.com/image/ab67656300000123', 'https://i.scdn.co/image/../x', 'javascript:alert(1)']) {
+      let latest: Episode[] | null | undefined;
+      service.getLatestEpisodes(1).subscribe(episodes => latest = episodes);
+      httpMock.expectOne(r => r.url === '/.netlify/functions/spotify')
+        .flush({ ...episodesResponse, items: [{ ...episodesResponse.items[0]!, images: [{ url, height: 640, width: 640 }] }] });
+      expect(latest![0].imageUrl).withContext(url).toBe('');
+    }
   });
 
   it('should show the plain-text description as it is, without parsing it', () => {
