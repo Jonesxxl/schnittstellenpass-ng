@@ -38,6 +38,12 @@ describe('ContentService', () => {
     expect(live.text).toBe(DEFAULT_LIVE.text);
   });
 
+  it('should read headline lines as plain strings, as the CMS list widget saves them', () => {
+    const live = loadLive({ headlineLines: ['Jetzt', '', 'auch live.'] });
+
+    expect(live.headlineLines).toEqual(['Jetzt', 'auch live.']);
+  });
+
   it('should only accept pictures from the upload folder or the assets', () => {
     for (const photo of ['https://example.com/x.jpg', '//example.com/x.jpg', 'javascript:alert(1)', '/uploads/../x.jpg', 'data:image/png;base64,AAAA', 42]) {
       TestBed.resetTestingModule();

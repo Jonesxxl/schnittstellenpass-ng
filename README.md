@@ -87,6 +87,12 @@ Texts and photos of the start page can be edited at `/admin`. Changes are saved 
 - `public/content/ueber-uns.json` – host section, portrait and facts
 - `public/content/social.json` – headline of the Instagram section
 
+### Editor interface
+
+- `public/admin/config.yml` sets up the German interface, the logo, the link to the website and the sections in the order of the start page, with a hint and length limits for every field. The `name` of the collection and its files are part of the draft branch names (`cms/site_texts/live`): change labels and hints only, otherwise open drafts are lost.
+- `public/admin/preview.js` and `preview.css` render the live preview next to the form in the colours and fonts of the website (fonts are copied to `admin/fonts` at build time, see `angular.json`). When the design of a section changes, update its preview too.
+- Lists with a single field (the headline lines) are stored as plain strings, e.g. `"headlineLines": ["Jetzt", "auch live."]`.
+
 ### Login with GitHub
 
 Editors log in with their GitHub account; everyone with write access to the repository can edit. Netlify handles the OAuth handshake, so no secret is stored in this repository.
@@ -98,7 +104,7 @@ One-time setup:
    - Authorization callback URL: `https://api.netlify.com/auth/done`
    - Register, then *Generate a new client secret*; keep the Client ID and the client secret at hand.
 2. **Netlify:** Project configuration → Access & security → OAuth → Authentication providers → *Install provider* → GitHub, enter Client ID and client secret.
-3. Open `https://schnittstellenpass.de/admin/` and click *Login with GitHub*.
+3. Open `https://schnittstellenpass.de/admin/` and click *Mit GitHub einloggen*.
 4. **Switch off the old login** once the GitHub login works: in Netlify, disable Git Gateway (Identity → Services) and then Identity, and delete its users. Otherwise Git Gateway keeps its own write access to the repository, and Identity users could still commit through it.
 
 Further editors are added as collaborators of the GitHub repository.

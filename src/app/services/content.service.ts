@@ -55,7 +55,7 @@ export const DEFAULT_ABOUT_INTRO: AboutIntroContent = {
   body: 'Agy kennt beide Seiten: Nachwuchs beim VfB Stuttgart, später Amateurfußball. Genau an dieser Schnittstelle setzt der Podcast an. Was verbindet die Bundesliga mit dem Sportplatz um die Ecke, und was trennt sie?',
   portrait: 'assets/host-portrait.webp',
   facts: [
-    { value: '45\'', label: 'pro Folge' },
+    { value: '45 min', label: 'pro Folge' },
     { value: '14-tägig', label: 'neue Folgen' },
     { value: 'Live', label: 'seit 09/2026' }
   ]
