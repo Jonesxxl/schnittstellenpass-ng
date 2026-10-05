@@ -16,7 +16,7 @@ describe('HomeComponent', () => {
     date: `${22 - n}.09.2026`,
     duration: '45:00',
     spotifyUrl: 'https://open.spotify.com/episode/e' + n,
-    imageUrl: 'https://i.scdn.co/image/e' + n,
+    imageUrl: '/.netlify/functions/spotify?image=e' + n,
     audioPreviewUrl: null
   });
   const episode = episodeNumber(1);
@@ -85,7 +85,7 @@ describe('HomeComponent', () => {
     expect(card.textContent).toContain('Die Zukunft des Amateurfußballs');
     expect(card.textContent).toContain('45:00');
     expect(card.textContent).toContain('Folge vom 21.09.2026');
-    expect(card.querySelector('img')!.getAttribute('src')).toBe('https://i.scdn.co/image/e1');
+    expect(card.querySelector('img')!.getAttribute('src')).toBe('/.netlify/functions/spotify?image=e1');
   });
 
   it('should show a loading state until Spotify has answered', async () => {

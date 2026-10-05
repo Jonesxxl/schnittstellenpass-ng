@@ -4,6 +4,9 @@ import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { SpotifyEpisode, SpotifyEpisodesResponse, Episode } from '../models/spotify.models';
 
+// Cover URLs as Spotify returns them; the id is passed to the proxy
+const SPOTIFY_IMAGE_URL = /^https:\/\/i\.scdn\.co\/image\/([0-9a-f]{16,64})$/;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -53,9 +56,18 @@ export class SpotifyService {
       date: this.formatDate(spotifyEpisode.release_date),
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       spotifyUrl: spotifyEpisode.external_urls.spotify,
-      imageUrl: spotifyEpisode.images[0]?.url || '',
+      imageUrl: this.proxiedImageUrl(spotifyEpisode.images[0]?.url),
       audioPreviewUrl: spotifyEpisode.audio_preview_url
     };
+  }
+
+  /**
+   * Covers are loaded through the proxy so that visitors' browsers never
+   * contact Spotify; any other image URL is dropped (the default cover is shown)
+   */
+  private proxiedImageUrl(url: string | undefined): string {
+    const id = url ? SPOTIFY_IMAGE_URL.exec(url)?.[1] : undefined;
+    return id ? `${this.SPOTIFY_PROXY_URL}?image=${id}` : '';
   }
 
   /**

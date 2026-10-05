@@ -20,7 +20,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
         <section class="space-y-5">
           <article class="rounded-md border-2 border-ink bg-paper p-6">
-            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">1. Verantwortliche Stelle</h2>
+            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">1. Verantwortlicher</h2>
             <div class="mt-4 space-y-1 leading-relaxed text-forest">
               <p><strong>Marc Agyemang</strong></p>
               <p>Schnittstellenpass Podcast</p>
@@ -34,7 +34,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">2. Hosting und Server-Logfiles</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Diese Website wird bei Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, USA, gehostet. Beim Aufruf werden technisch notwendige Daten in Server-Logfiles verarbeitet (IP-Adresse, Datum und Uhrzeit, angeforderte Ressource, Referrer, Browsertyp und Betriebssystem). Die Verarbeitung dient der Bereitstellung, Stabilität und Sicherheit der Website.
+              Diese Website wird bei Netlify, Inc., 44 Montgomery Street, Suite 300, San Francisco, CA 94104, USA, gehostet. Beim Aufruf werden technisch notwendige Daten in Server-Logfiles verarbeitet (IP-Adresse, Datum und Uhrzeit, angeforderte Ressource, Referrer, Browsertyp und Betriebssystem). Das gilt auch für die kleinen Serverfunktionen bei Netlify, über die die Folgen von Spotify und die Beiträge von Instagram abgerufen werden (siehe Abschnitt 5). Die Verarbeitung dient der Bereitstellung, Stabilität und Sicherheit der Website. Ohne diese Daten kann die Website nicht ausgeliefert werden.
             </p>
             <p class="mt-3 leading-relaxed text-forest">
               Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und funktionsfähigen Betrieb). Mit Netlify besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Soweit Daten in die USA übermittelt werden, stützt sich die Übermittlung auf den EU-US Data Privacy Framework-Angemessenheitsbeschluss bzw. auf Standardvertragsklauseln der EU-Kommission. Die Logfiles werden nur kurzzeitig gespeichert und anschließend gelöscht.
@@ -54,7 +54,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">4. Kontaktaufnahme</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Wenn du per E-Mail mit mir in Verbindung trittst, verarbeite ich die von dir mitgeteilten Angaben (z. B. Name, E-Mail-Adresse, Nachrichtentext) ausschließlich zur Bearbeitung deiner Anfrage. Für den E-Mail-Empfang nutze ich Google Mail (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland).
+              Wenn du per E-Mail mit mir in Verbindung trittst, verarbeite ich die von dir mitgeteilten Angaben (z. B. Name, E-Mail-Adresse, Nachrichtentext) ausschließlich zur Bearbeitung deiner Anfrage. Für den E-Mail-Empfang nutze ich Google Mail (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Dabei kann eine Übermittlung an die Google LLC in den USA nicht ausgeschlossen werden; die Google LLC ist unter dem EU-US Data Privacy Framework zertifiziert, auf dessen Angemessenheitsbeschluss sich die Übermittlung stützt.
             </p>
             <p class="mt-3 leading-relaxed text-forest">
               Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, sofern die Anfrage mit einem Vertrag oder vorvertraglichen Maßnahmen zusammenhängt, sonst Art. 6 Abs. 1 lit. f DSGVO (effiziente Bearbeitung von Anfragen). Die Daten werden gelöscht, sobald die Anfrage erledigt ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
@@ -62,12 +62,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
 
           <article class="rounded-md border-2 border-ink bg-paper p-6">
-            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">5. Eingebundene Inhalte von Spotify und Instagram</h2>
+            <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">5. Inhalte von Spotify und Instagram</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Die aktuelle Podcast-Folge (Titel, Datum, Dauer) wird serverseitig über die Spotify-Schnittstelle abgerufen; dabei werden keine personenbezogenen Daten von dir an Spotify übermittelt. Das Cover der Folge wird jedoch direkt von den Servern von Spotify (Spotify AB, Regeringsgatan 19, 111 53 Stockholm, Schweden) geladen. Dabei wird deine IP-Adresse an Spotify übertragen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (attraktive Darstellung des Podcasts).
+              Die neuesten Podcast-Folgen (Titel, Beschreibung, Datum, Dauer und Cover) werden über die Spotify-Schnittstelle abgerufen, die Vorschaubilder und Texte der letzten Instagram-Beiträge über die Instagram-Schnittstelle. Beides erledigt eine Serverfunktion bei meinem Hoster Netlify (siehe Abschnitt 2); auch die Bilder werden von dort ausgeliefert. Dein Browser stellt dabei keine Verbindung zu Spotify oder Instagram bzw. Meta her, und es werden keine personenbezogenen Daten von dir an diese Anbieter übermittelt.
             </p>
             <p class="mt-3 leading-relaxed text-forest">
-              Die Vorschaubilder der letzten Instagram-Beiträge werden über meinen eigenen Server bzw. Hoster ausgeliefert. Beim Aufruf dieser Website werden dabei keine Daten an Instagram bzw. Meta übermittelt; erst ein Klick auf einen Beitrag öffnet Instagram.
+              Erst wenn du auf eine Folge, einen Beitrag oder einen der Links klickst, öffnet sich die Seite des jeweiligen Anbieters (siehe Abschnitt 6).
             </p>
           </article>
 
@@ -93,15 +93,17 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
               <li>Löschung deiner Daten (Art. 17 DSGVO)</li>
               <li>Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
               <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-              <li>Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21 DSGVO)</li>
               <li>Widerruf erteilter Einwilligungen (Art. 7 Abs. 3 DSGVO)</li>
             </ul>
+            <p class="mt-4 leading-relaxed text-forest">
+              <strong>Widerspruchsrecht (Art. 21 DSGVO):</strong> Soweit ich Daten auf Grundlage berechtigter Interessen (Art. 6 Abs. 1 lit. f DSGVO) verarbeite, kannst du dieser Verarbeitung aus Gründen, die sich aus deiner besonderen Situation ergeben, jederzeit widersprechen. Eine formlose Nachricht an die oben genannte E-Mail-Adresse genügt.
+            </p>
           </article>
 
           <article class="rounded-md border-2 border-ink bg-paper p-6">
             <h2 class="font-display text-[28px] font-extrabold uppercase leading-none">9. Beschwerderecht</h2>
             <p class="mt-4 leading-relaxed text-forest">
-              Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren, z. B. bei der für meinen Wohnort zuständigen Landesdatenschutzbehörde, wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen Datenschutzrecht verstößt (Art. 77 DSGVO).
+              Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren, insbesondere in dem Mitgliedstaat deines Aufenthaltsorts, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes, wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen Datenschutzrecht verstößt (Art. 77 DSGVO). Für mich zuständig ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Lautenschlagerstraße 20, 70173 Stuttgart.
             </p>
           </article>
 
@@ -113,7 +115,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </article>
         </section>
 
-        <p class="mt-8 text-[14px] text-forest">Stand: 2. Oktober 2026</p>
+        <p class="mt-8 text-[14px] text-forest">Stand: 5. Oktober 2026</p>
       </main>
 
     </div>

@@ -16,6 +16,7 @@ import { getCurrentToken } from '../lib/instagram-token.mts';
 const GRAPH_API = 'https://graph.instagram.com';
 const POST_COUNT = 4;
 const CAPTION_LENGTH = 200;
+const RASTER_IMAGE = /^image\/(jpeg|png|webp|gif|avif)\b/;
 
 interface InstagramMedia {
   id: string;
@@ -108,8 +109,8 @@ async function postImage(token: string, id: string): Promise<Response> {
 
   const image = await fetch(source);
   const contentType = image.headers.get('content-type') ?? '';
-  // Never serve anything but images from this origin
-  if (!image.ok || !contentType.startsWith('image/')) {
+  // Never serve anything but raster images from this origin (an SVG could run script)
+  if (!image.ok || !RASTER_IMAGE.test(contentType)) {
     console.error(`Instagram image download failed with status ${image.status} (${contentType || 'no content type'})`);
     return jsonResponse({ error: 'Instagram request failed' }, 502);
   }
