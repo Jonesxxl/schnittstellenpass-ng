@@ -164,7 +164,7 @@ collections:
             name: "facts"
             widget: "list"
             label_singular: "Fakt"
-            hint: "Bis zu drei Kacheln unter dem Text, zum Beispiel „45'“ / „pro Folge“."
+            hint: "Bis zu drei Kacheln unter dem Text, zum Beispiel „45 min“ / „pro Folge“."
             max: 3
             collapsed: false
             summary: "{{fields.value}} – {{fields.label}}"
