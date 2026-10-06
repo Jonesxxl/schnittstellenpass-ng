@@ -164,13 +164,14 @@ collections:
             name: "facts"
             widget: "list"
             label_singular: "Fakt"
-            hint: "Bis zu drei Kacheln unter dem Text, zum Beispiel „45 min“ / „pro Folge“."
+            hint: "Bis zu drei Spalten der Anzeigetafel unter dem Text, zum Beispiel „45 min“ / „pro Folge“. Zahlen am Anfang werden beim Hineinscrollen hochgezählt."
             max: 3
             collapsed: false
             summary: "{{fields.value}} – {{fields.label}}"
             fields:
               - { label: "Wert (groß)", name: "value", widget: "string", pattern: ["^.{1,10}$", "Bitte höchstens 10 Zeichen."] }
               - { label: "Beschriftung (klein)", name: "label", widget: "string" }
+              - { label: "Zusatz-Tafel (optional)", name: "extra", widget: "string", required: false, hint: "Kleine Tafel unter dem Wert wie die Nachspielzeit-Anzeige im Stadion, zum Beispiel „Nachspielzeit“. Ein „+“ wird davor gesetzt.", pattern: ["^.{0,14}$", "Bitte höchstens 14 Zeichen."] }
 
       - name: "social"
         label: "5 · Instagram"

@@ -52,6 +52,15 @@ module.exports = {
         drawline: {
           from: { transform: 'scaleX(0)' },
           to: { transform: 'scaleX(1)' }
+        },
+        // Scoreboard: added-time board is raised and its LEDs flicker on
+        boardup: {
+          '0%': { opacity: '0', transform: 'translateY(70%)' },
+          '50%': { opacity: '1', transform: 'none' },
+          '62%': { opacity: '.3' },
+          '74%': { opacity: '1' },
+          '86%': { opacity: '.3' },
+          '100%': { opacity: '1', transform: 'none' }
         }
       },
       animation: {
@@ -61,7 +70,8 @@ module.exports = {
         capin: 'capin .6s cubic-bezier(.2,.7,.2,1) both',
         marquee: 'marquee 38s linear infinite',
         flipin: 'flipin .6s cubic-bezier(.2,.7,.2,1) both',
-        drawline: 'drawline .9s cubic-bezier(.6,0,.2,1) both'
+        drawline: 'drawline .9s cubic-bezier(.6,0,.2,1) both',
+        boardup: 'boardup .9s ease-out both'
       }
     },
   },

@@ -15,11 +15,13 @@ interface BoardFact {
   target: number | null;
   rest: string;
   live: boolean;
+  extra: string;
 }
 
 /**
  * Facts about the podcast as a stadium scoreboard. When it scrolls into view,
- * numbers count up, text flips in and a line is drawn under each column.
+ * numbers count up, text flips in and a line is drawn under each column;
+ * an extra like "Nachspielzeit" is then held up like the added-time board.
  * Without IntersectionObserver or with reduced motion the final values are
  * shown right away; screen readers always get the final values.
  */
@@ -38,21 +40,32 @@ interface BoardFact {
           <circle cx="15" cy="10" r="3.5" />
         </svg>
       </div>
-      <dl class="relative m-0 grid grid-cols-3 divide-x-2 divide-paper/10">
+      <dl class="relative m-0 grid divide-x-2 divide-paper/10" [style.grid-template-columns]="columns()">
         @for (item of items(); track $index) {
-          <div class="relative flex min-w-0 flex-col-reverse justify-end gap-1 px-3 pb-4 pt-3 sm:px-4 sm:pt-4">
+          <div class="relative flex min-w-0 flex-col-reverse justify-end gap-1 px-2.5 pb-4 pt-3 sm:px-4 sm:pt-4">
             <dt class="font-mono text-[10px] uppercase leading-snug tracking-[.08em] text-chalk/75 sm:text-[11px]">{{ item.label }}</dt>
-            <dd class="m-0 flex items-center gap-2 overflow-hidden pb-[.12em] font-display text-[clamp(21px,6.5vw,26px)] font-black leading-none text-pitch sm:text-[clamp(26px,3vw,40px)]">
-              <span class="sr-only">{{ item.value }}</span>
-              <span
-                aria-hidden="true"
-                class="block whitespace-nowrap tabular-nums"
-                [class.animate-flipin]="armed() && item.target === null"
-                [style.animation-delay.ms]="startDelay + $index * stagger"
-                [style.animation-play-state]="started() ? 'running' : 'paused'"
-              >{{ shown()[$index] }}</span>
-              @if (item.live) {
-                <span aria-hidden="true" class="size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
+            <dd class="m-0 flex flex-col items-start gap-2">
+              <span class="sr-only">{{ item.value }}{{ item.extra ? ' + ' + item.extra : '' }}</span>
+              <span aria-hidden="true" class="flex max-w-full items-center gap-2 overflow-hidden pb-[.12em] font-display text-[clamp(21px,6.5vw,26px)] font-black leading-none text-pitch sm:text-[clamp(26px,3vw,40px)]">
+                <span
+                  class="block whitespace-nowrap tabular-nums"
+                  [class.animate-flipin]="armed() && item.target === null"
+                  [style.animation-delay.ms]="startDelay + $index * stagger"
+                  [style.animation-play-state]="started() ? 'running' : 'paused'"
+                >{{ shown()[$index] }}</span>
+                @if (item.live) {
+                  <span class="size-2 shrink-0 rounded-full bg-signal motion-safe:animate-livepulse sm:size-2.5"></span>
+                }
+              </span>
+              @if (item.extra) {
+                <!-- Added-time board of the fourth official: held up once the count is done -->
+                <span
+                  aria-hidden="true"
+                  class="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-[3px] border-2 border-signal bg-[#0D1710] px-1.5 py-1 font-mono text-[9px] font-medium uppercase leading-none tracking-[.06em] text-paper sm:text-[10px]"
+                  [class.animate-boardup]="armed()"
+                  [style.animation-delay.ms]="startDelay + $index * stagger + countDuration"
+                  [style.animation-play-state]="started() ? 'running' : 'paused'"
+                ><span class="text-[1.4em] font-bold leading-none text-signal">+</span>{{ item.extra }}</span>
               }
             </dd>
             <span
@@ -72,6 +85,7 @@ export class FactBoardComponent {
   readonly facts = input.required<AboutFact[]>();
 
   protected readonly startDelay = START_DELAY;
+  protected readonly countDuration = COUNT_DURATION;
   protected readonly stagger = STAGGER;
 
   protected readonly items = computed<BoardFact[]>(() => this.facts().map(fact => {
@@ -81,9 +95,13 @@ export class FactBoardComponent {
       label: fact.label,
       target: match ? Number(match[1]) : null,
       rest: match?.[2] ?? '',
-      live: /\blive\b/i.test(fact.value)
+      live: /\blive\b/i.test(fact.value),
+      extra: fact.extra
     };
   }));
+
+  // A column with an extra board gets more room, so the board fits on phones
+  protected readonly columns = computed(() => this.items().map(item => `minmax(0, ${item.extra ? 1.4 : 1}fr)`).join(' '));
 
   // The animation will run: values wait at their start until the board is in view
   protected readonly armed = signal(false);

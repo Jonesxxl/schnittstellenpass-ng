@@ -4,9 +4,9 @@ import { AboutFact } from '../services/content.service';
 
 describe('FactBoardComponent', () => {
   const facts: AboutFact[] = [
-    { value: '45 min', label: 'pro Folge' },
-    { value: '14-tägig', label: 'neue Folgen' },
-    { value: 'Live', label: 'seit 09/2026' }
+    { value: '45 min', label: 'pro Folge', extra: 'Nachspielzeit' },
+    { value: '14 Tage', label: 'zwischen zwei Folgen', extra: '' },
+    { value: 'Live', label: 'seit 09/2026', extra: '' }
   ];
 
   let reducedMotion: boolean;
@@ -42,34 +42,34 @@ describe('FactBoardComponent', () => {
     return fixture;
   }
 
-  const shown = (root: HTMLElement) => Array.from(root.querySelectorAll('dd span[aria-hidden="true"]:not(.rounded-full)')).map(span => span.textContent);
+  const shown = (root: HTMLElement) => Array.from(root.querySelectorAll('dd .tabular-nums')).map(span => span.textContent);
 
   it('should give screen readers each label with its final value', async () => {
     const root = (await render()).nativeElement as HTMLElement;
 
-    expect(Array.from(root.querySelectorAll('dt')).map(dt => dt.textContent)).toEqual(['pro Folge', 'neue Folgen', 'seit 09/2026']);
-    expect(Array.from(root.querySelectorAll('dd .sr-only')).map(span => span.textContent)).toEqual(['45 min', '14-tägig', 'Live']);
+    expect(Array.from(root.querySelectorAll('dt')).map(dt => dt.textContent)).toEqual(['pro Folge', 'zwischen zwei Folgen', 'seit 09/2026']);
+    expect(Array.from(root.querySelectorAll('dd .sr-only')).map(span => span.textContent)).toEqual(['45 min + Nachspielzeit', '14 Tage', 'Live']);
   });
 
   it('should count the numbers up once the board scrolls into view', async () => {
     const fixture = await render();
     const root = fixture.nativeElement as HTMLElement;
-    expect(shown(root)).toEqual(['0 min', '0-tägig', 'Live']);
+    expect(shown(root)).toEqual(['0 min', '0 Tage', 'Live']);
 
     intersect!();
     // Angular's scheduler queues frames too: run all of them, well after the count-up
     frames.splice(0).forEach(frame => frame(performance.now() + 10_000));
     fixture.detectChanges();
 
-    expect(shown(root)).toEqual(['45 min', '14-tägig', 'Live']);
+    expect(shown(root)).toEqual(['45 min', '14 Tage', 'Live']);
   });
 
   it('should show the final values right away with reduced motion', async () => {
     reducedMotion = true;
     const root = (await render()).nativeElement as HTMLElement;
 
-    expect(shown(root)).toEqual(['45 min', '14-tägig', 'Live']);
-    expect(root.querySelector('.animate-flipin, .animate-drawline')).toBeNull();
+    expect(shown(root)).toEqual(['45 min', '14 Tage', 'Live']);
+    expect(root.querySelector('.animate-flipin, .animate-drawline, .animate-boardup')).toBeNull();
   });
 
   it('should mark live facts with the pulsing dot', async () => {
@@ -77,5 +77,12 @@ describe('FactBoardComponent', () => {
     const dots = Array.from(root.querySelectorAll('dd')).map(dd => dd.querySelector('.bg-signal') !== null);
 
     expect(dots).toEqual([false, false, true]);
+  });
+
+  it('should hold up the added-time board only for facts with an extra', async () => {
+    const root = (await render()).nativeElement as HTMLElement;
+    const boards = Array.from(root.querySelectorAll('dd')).map(dd => dd.querySelector('.border-signal')?.textContent?.trim() ?? null);
+
+    expect(boards).toEqual(['+Nachspielzeit', null, null]);
   });
 });

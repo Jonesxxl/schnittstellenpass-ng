@@ -10,6 +10,8 @@ export interface HomeHeroContent {
 export interface AboutFact {
   value: string;
   label: string;
+  // Small board below the value like the added-time board in football, e.g. "Nachspielzeit"; '' for none
+  extra: string;
 }
 
 export interface AboutIntroContent {
@@ -55,9 +57,9 @@ export const DEFAULT_ABOUT_INTRO: AboutIntroContent = {
   body: 'Agy kennt beide Seiten: Nachwuchs beim VfB Stuttgart, später Amateurfußball. Genau an dieser Schnittstelle setzt der Podcast an. Was verbindet die Bundesliga mit dem Sportplatz um die Ecke, und was trennt sie?',
   portrait: 'assets/host-portrait.webp',
   facts: [
-    { value: '45 min', label: 'pro Folge' },
-    { value: '14-tägig', label: 'neue Folgen' },
-    { value: 'Live', label: 'seit 09/2026' }
+    { value: '45 min', label: 'pro Folge', extra: 'Nachspielzeit' },
+    { value: '14 Tage', label: 'zwischen zwei Folgen', extra: '' },
+    { value: 'Live', label: 'seit 09/2026', extra: '' }
   ]
 };
 
@@ -105,7 +107,8 @@ export class ContentService {
         portrait: this.asImagePath(payload.portrait, DEFAULT_ABOUT_INTRO.portrait),
         facts: this.asList(payload.facts, DEFAULT_ABOUT_INTRO.facts, 3, (entry) => ({
           value: this.asNonEmptyString(entry['value'], ''),
-          label: this.asNonEmptyString(entry['label'], '')
+          label: this.asNonEmptyString(entry['label'], ''),
+          extra: this.asNonEmptyString(entry['extra'], '')
         }), (fact) => fact.value.length > 0)
       })),
       catchError(() => of(DEFAULT_ABOUT_INTRO))

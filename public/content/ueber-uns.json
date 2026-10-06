@@ -5,11 +5,12 @@
   "facts": [
     {
       "value": "45 min",
-      "label": "pro Folge"
+      "label": "pro Folge",
+      "extra": "Nachspielzeit"
     },
     {
-      "value": "14-tägig",
-      "label": "neue Folgen"
+      "value": "14 Tage",
+      "label": "zwischen zwei Folgen"
     },
     {
       "value": "Live",
