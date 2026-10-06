@@ -6,11 +6,12 @@ import { SpotifyService } from '../services/spotify.service';
 import { ImageSlotComponent } from '../shared/image-slot.component';
 import { InstagramFeedComponent } from '../instagram/instagram-feed.component';
 import { RevealDirective } from '../shared/reveal.directive';
+import { FactBoardComponent } from './fact-board.component';
 import { LINKS } from '../shared/links';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ImageSlotComponent, InstagramFeedComponent, RevealDirective],
+  imports: [RouterLink, ImageSlotComponent, InstagramFeedComponent, RevealDirective, FactBoardComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
