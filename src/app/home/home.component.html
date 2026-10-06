@@ -142,7 +142,7 @@
           }
         }
       </div>
-      <a [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="self-stretch rounded-full border-2 border-ink px-5 py-3 text-center font-semibold hover:bg-ink hover:text-paper sm:self-start">Alle Folgen anhören →</a>
+      <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="self-stretch rounded-full border-2 border-ink px-5 py-3 text-center font-semibold hover:bg-ink hover:text-paper sm:self-start">Alle Folgen anhören →</a>
     </div>
   </section>
 
@@ -171,7 +171,7 @@
     <app-instagram-feed [eyebrow]="social.value().eyebrow" [headline]="social.value().headline" />
 
     <div class="mx-auto box-content max-w-[1280px] px-6 pb-[clamp(56px,8vw,112px)]">
-      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-4">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <a appReveal [href]="links.youtube" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md bg-ink p-6 text-paper hover:bg-moss">
           <div class="flex flex-col gap-1">
             <span class="font-display text-[30px] font-extrabold uppercase leading-none">YouTube</span>
@@ -188,8 +188,15 @@
         </a>
         <a appReveal [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md border-2 border-ink p-6 hover:bg-ink hover:text-paper">
           <div class="flex flex-col gap-1">
-            <span class="font-display text-[30px] font-extrabold uppercase leading-none">Spotify &amp; Apple</span>
+            <span class="font-display text-[30px] font-extrabold uppercase leading-none">Spotify</span>
             <span class="text-[15px]">Abonnieren, nichts verpassen</span>
+          </div>
+          <span aria-hidden="true" class="text-[24px]">→</span>
+        </a>
+        <a appReveal [href]="links.applePodcasts" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-4 rounded-md border-2 border-ink p-6 hover:bg-ink hover:text-paper">
+          <div class="flex flex-col gap-1">
+            <span class="font-display text-[30px] font-extrabold uppercase leading-none">Apple Podcasts</span>
+            <span class="text-[15px]">Alle Folgen in der Podcast-App</span>
           </div>
           <span aria-hidden="true" class="text-[24px]">→</span>
         </a>
