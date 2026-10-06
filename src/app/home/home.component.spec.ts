@@ -117,7 +117,7 @@ describe('HomeComponent', () => {
     expect(rows[0].textContent).toContain('S4 · 9');
     expect(rows[0].textContent).toContain('21.09.2026');
     expect(rows[0].textContent).toContain('Beschreibung 1');
-    expect(root.querySelector('#folgen a[href*="open.spotify.com/show"]')).toBeNull();
+    expect(root.querySelector('#folgen [aria-busy] a[href*="open.spotify.com/show"]')).toBeNull();
   });
 
   it('should show placeholder rows while the episodes are loading', async () => {
@@ -142,5 +142,12 @@ describe('HomeComponent', () => {
 
     expect(text(root, '#social app-instagram-feed h2')).toBe(DEFAULT_SOCIAL.headline);
     expect(root.querySelector('#social a[href="https://www.instagram.com/p/1/"]')).not.toBeNull();
+  });
+
+  it('should link "Alle Folgen anhören" to Spotify like the other listen buttons', async () => {
+    const root = await render(of(latestSix));
+    const allEpisodes = Array.from(root.querySelectorAll<HTMLAnchorElement>('#folgen a')).find(link => link.textContent?.includes('Alle Folgen anhören'))!;
+
+    expect(allEpisodes.getAttribute('href')).toBe('https://open.spotify.com/show/4gpxvhJ8WyrGAnba5A6LQc');
   });
 });

@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject } from '@angular/core';
+import { Component, DOCUMENT, ElementRef, inject } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LINKS } from './links';
@@ -9,6 +9,7 @@ import { LINKS } from './links';
   // Sticky on the host: a sticky <header> inside an equally tall host would scroll away with it
   host: { class: 'sticky top-0 z-20 block' },
   template: `
+    <a href="#inhalt" (click)="skipToMain($event)" class="sr-only rounded-full bg-ink px-5 py-3 font-semibold text-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-30 sm:focus:left-6">Zum Inhalt springen</a>
     <header class="border-b-2 border-ink bg-paper">
       <!-- Phones: logo and button in one row, the navigation below; one row from md -->
       <div class="mx-auto box-content flex max-w-[1280px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6 md:py-3">
@@ -34,10 +35,25 @@ export class SiteHeaderComponent {
     { fragment: 'social', label: 'Social' }
   ];
 
+  private readonly document = inject(DOCUMENT);
+
   constructor() {
     // The router's anchor scrolling ignores CSS scroll-margin; keep section
     // headings clear of the sticky header, which wraps on narrow screens
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     inject(ViewportScroller).setOffset(() => [0, host.offsetHeight]);
+  }
+
+  // Moves keyboard focus past the header; a plain #inhalt link would resolve
+  // against <base href="/"> and leave the current page
+  protected skipToMain(event: Event): void {
+    event.preventDefault();
+    const main = this.document.querySelector('main');
+    if (!main) {
+      return;
+    }
+    main.setAttribute('tabindex', '-1');
+    main.classList.add('outline-none');
+    main.focus();
   }
 }
