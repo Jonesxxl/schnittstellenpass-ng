@@ -167,7 +167,10 @@ export default async (req: Request): Promise<Response> => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300'
+        'Cache-Control': 'public, max-age=300',
+        // Netlify's CDN answers repeated requests, so page views do not each
+        // start the function and call the Spotify API
+        'Netlify-CDN-Cache-Control': 'public, durable, s-maxage=900, stale-while-revalidate=86400'
       }
     });
   } catch (error) {
