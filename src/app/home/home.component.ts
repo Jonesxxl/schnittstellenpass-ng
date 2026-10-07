@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, PLATFORM_ID, computed, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_HOME_HERO, DEFAULT_LIVE, DEFAULT_SOCIAL } from '../services/content.service';
@@ -17,6 +18,7 @@ import { LINKS } from '../shared/links';
 export class HomeComponent {
   private readonly spotifyService = inject(SpotifyService);
   private readonly contentService = inject(ContentService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   // Switch off the live announcement banner / the pitch markings in the hero
   protected readonly showLive = true;
@@ -53,8 +55,13 @@ export class HomeComponent {
   // Rows of the episode list, also shown as placeholders while loading
   protected readonly episodeRows = [0, 1, 2, 3, 4, 5];
 
-  // Newest first, for the "Aktuelle Folge" card and the episode list; null if Spotify cannot be reached
+  // Newest first, for the "Aktuelle Folge" card and the episode list; null if Spotify cannot be reached.
+  // Loaded in the browser only: the Netlify function does not exist while prerendering, so the
+  // prerendered page shows the loading state, exactly like the first render in the browser.
   protected readonly episodes = rxResource({
+    params: () => isPlatformBrowser(this.platformId) || undefined,
     stream: () => this.spotifyService.getLatestEpisodes(this.episodeRows.length)
   });
+
+  protected readonly episodesLoading = computed(() => this.episodes.status() === 'idle' || this.episodes.isLoading());
 }

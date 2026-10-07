@@ -57,6 +57,10 @@ export class RevealDirective implements OnInit, OnDestroy {
     if (typeof IntersectionObserver === 'undefined' || matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
+    // The page is prerendered: what is already on screen stays visible instead of blinking out
+    if (this.element.getBoundingClientRect().top < innerHeight) {
+      return;
+    }
     this.element.style.opacity = '0';
     this.element.style.transform = 'translateY(28px)';
     this.observer.observe(this.element);

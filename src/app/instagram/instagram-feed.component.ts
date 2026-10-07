@@ -1,5 +1,5 @@
-import { Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, computed, effect, inject, input, signal, viewChildren } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, DOCUMENT, DestroyRef, PLATFORM_ID, ElementRef, afterNextRender, computed, effect, inject, input, signal, viewChildren } from '@angular/core';
+import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { InstagramFeedService } from '../services/instagram-feed.service';
 import { LINKS } from '../shared/links';
@@ -33,6 +33,7 @@ export class InstagramFeedComponent {
   private readonly instagramFeedService = inject(InstagramFeedService);
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
 
   readonly eyebrow = input('Instagram');
   readonly headline = input('Aus der Kabine');
@@ -47,11 +48,13 @@ export class InstagramFeedComponent {
     '@schnittstellenpass'
   ];
 
+  // Loaded in the browser only, like the Spotify episodes (see HomeComponent)
   private readonly feed = rxResource({
+    params: () => isPlatformBrowser(this.platformId) || undefined,
     stream: () => this.instagramFeedService.getLatestPosts()
   });
 
-  protected readonly loading = this.feed.isLoading;
+  protected readonly loading = computed(() => this.feed.status() === 'idle' || this.feed.isLoading());
 
   protected readonly slides = computed<Slide[]>(() =>
     (this.feed.hasValue() ? this.feed.value() : []).slice(0, SLIDE_COUNT).map(post => {
