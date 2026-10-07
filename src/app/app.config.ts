@@ -5,6 +5,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { provideAnchorScrolling } from './shared/anchor-scrolling';
+import { provideCanonicalLink } from './shared/canonical-link';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     // Router emits scroll events only; provideAnchorScrolling() handles them
     provideRouter(routes, withInMemoryScrolling()),
     provideAnchorScrolling(),
+    provideCanonicalLink(),
     // Fetch, so prerendering can load the CMS files in public/content from the build
     provideHttpClient(withFetch())
   ]

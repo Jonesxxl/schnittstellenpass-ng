@@ -29,29 +29,45 @@
   to = "/admin/index.html"
   status = 200
 
-# Missing static files are a plain 404. Without these rules the SPA rewrite
-# below would answer with index.html, which then gets the cache headers of
-# /assets and /vendor or the sandbox CSP of /uploads.
+# Pages are prerendered (src/app/app.routes.server.ts) into <page>/index.html.
+# Served under the URL without trailing slash, as in the canonical links and
+# public/sitemap.xml. Netlify ignores trailing slashes when matching rules.
 [[redirects]]
-  from = "/assets/*"
-  to = "/404.html"
-  status = 404
-
-[[redirects]]
-  from = "/vendor/*"
-  to = "/404.html"
-  status = 404
-
-[[redirects]]
-  from = "/uploads/*"
-  to = "/404.html"
-  status = 404
-
-# Redirect all requests to index.html for Angular routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/impressum"
+  to = "/impressum/index.html"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/datenschutz"
+  to = "/datenschutz/index.html"
+  status = 200
+  force = true
+
+# Former sub pages of the old website, still linked and indexed elsewhere
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/episodes"
+  to = "/#folgen"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/#ueber"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/#social"
+  status = 301
+
+# Everything else is a real 404 with public/404.html (Netlify's default for a
+# missing file). There is no SPA fallback: a 200 for unknown URLs would make
+# search engines index copies of the start page.
 
 # Headers for security and performance
 [[headers]]
