@@ -104,9 +104,12 @@
         text(value(props.entry, 'headline'), 'sp-big-title', 'h2'),
         text(value(props.entry, 'body'), 'sp-body'),
         facts.length
-          ? h('div', { className: 'sp-facts' }, facts.map((fact, index) => h('div', { key: index, className: 'sp-fact' },
-            h('span', { className: 'sp-fact-value' }, fact.value || '…'),
-            h('span', { className: 'sp-fact-label' }, fact.label || ''))))
+          ? h('div', { className: 'sp-board' },
+            h('div', { className: 'sp-board-head' }, 'Der Podcast in Zahlen'),
+            h('div', { className: 'sp-facts' }, facts.map((fact, index) => h('div', { key: index, className: 'sp-fact' },
+              h('span', { className: 'sp-fact-value' }, fact.value || '…'),
+              fact.extra ? h('span', { className: 'sp-fact-extra' }, h('b', null, '+'), fact.extra) : null,
+              h('span', { className: 'sp-fact-label' }, fact.label || '')))))
           : null)));
   }
 

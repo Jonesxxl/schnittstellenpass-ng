@@ -75,4 +75,16 @@ describe('ContentService', () => {
     http.expectOne('/content/ueber-uns.json').flush({ facts: [{ value: '', label: 'leer' }] });
     expect(facts).toEqual(DEFAULT_ABOUT_INTRO.facts);
   });
+
+  it('should read the optional extra board of a fact', () => {
+    let facts: AboutFact[] | undefined;
+    service.getAboutIntroContent().subscribe(content => (facts = content.facts));
+    http.expectOne('/content/ueber-uns.json').flush({
+      facts: [{ value: '45 min', label: 'pro Folge', extra: ' Nachspielzeit ' }, { value: 'Live', label: 'seit 09/2026' }]
+    });
+    expect(facts).toEqual([
+      { value: '45 min', label: 'pro Folge', extra: 'Nachspielzeit' },
+      { value: 'Live', label: 'seit 09/2026', extra: '' }
+    ]);
+  });
 });
