@@ -27,7 +27,8 @@ This application integrates with the Spotify Web API to fetch podcast episode da
 
 4. **Configure the Netlify Function**
    - The credentials are used only by the Netlify function `netlify/functions/spotify.mts`. The browser talks to that function at `/.netlify/functions/spotify` and never sees the credentials.
-   - In the Netlify site settings under *Environment variables*, set `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`. Their scope must include **Functions**.
+   - In the Netlify site settings under *Environment variables*, set `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`. Their scope must include **Functions** and **Builds**.
+   - Builds: `scripts/fetch-episodes.mjs` calls the same function before `ng build` and writes the latest episodes to `public/generated/episodes.json`. Prerendering puts them into the HTML of the start page, so search engines see them. Without the Builds scope the build still succeeds, the page then only loads the episodes in the browser.
    - `SPOTIFY_SHOW_ID` is optional; it defaults to the Schnittstellenpass podcast.
 
 ### Important Notes

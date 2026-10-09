@@ -52,4 +52,7 @@ environment.*.local.ts
 # Local state of the Netlify CLI (netlify dev)
 .netlify
 
+# Written by scripts/fetch-episodes.mjs during the build
+/public/generated/
+
 /src/environments/environment.development.ts

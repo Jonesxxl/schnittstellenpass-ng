@@ -35,13 +35,14 @@ describe('HomeComponent', () => {
   async function render(
     latestEpisodes: Observable<Episode[] | null>,
     settle = true,
-    instagramPosts: Observable<InstagramPost[]> = of([])
+    instagramPosts: Observable<InstagramPost[]> = of([]),
+    episodeSnapshot: Observable<Episode[] | null> = of(null)
   ): Promise<HTMLElement> {
     TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
         provideRouter([]),
-        { provide: SpotifyService, useValue: { getLatestEpisodes: () => latestEpisodes } },
+        { provide: SpotifyService, useValue: { getLatestEpisodes: () => latestEpisodes, getEpisodeSnapshot: () => episodeSnapshot } },
         { provide: InstagramFeedService, useValue: { getLatestPosts: () => instagramPosts } },
         {
           provide: ContentService,
@@ -71,7 +72,7 @@ describe('HomeComponent', () => {
     const root = await render(of(latestSix));
 
     expect(root.querySelector('#top h1')!.innerHTML).toContain('<br>');
-    expect(text(root, '#top h1')).toBe('Erste Zeile Zweite Zeile');
+    expect(text(root, '#top h1')).toBe('Schnittstellenpass – der Fußball-Podcast Erste Zeile Zweite Zeile');
     expect(text(root, '#top p')).toBe('Unterzeile aus dem CMS');
     expect(text(root, '#ueber h2')).toBe('Gastgeber aus dem CMS');
     expect(text(root, '#ueber p')).toBe('Text aus dem CMS');
@@ -117,6 +118,32 @@ describe('HomeComponent', () => {
     expect(rows[0].textContent).toContain('S4 · 9');
     expect(rows[0].textContent).toContain('21.09.2026');
     expect(rows[0].textContent).toContain('Beschreibung 1');
+    expect(root.querySelector('#folgen [aria-busy] a[href*="open.spotify.com/show"]')).toBeNull();
+  });
+
+  // Episodes as of the last build, older than the live list
+  const snapshotTwo = [7, 8].map(episodeNumber);
+  const rowLinks = (root: HTMLElement) =>
+    Array.from(root.querySelectorAll<HTMLAnchorElement>('#folgen a[href*="open.spotify.com/episode/"]')).map(row => row.getAttribute('href'));
+
+  it('should show the episodes from the build until Spotify has answered', async () => {
+    const root = await render(new Subject<Episode[] | null>(), false, of([]), of(snapshotTwo));
+
+    expect(rowLinks(root)).toEqual(snapshotTwo.map(item => item.spotifyUrl));
+    expect(root.querySelector('#folgen [aria-busy]')!.getAttribute('aria-busy')).toBe('false');
+    expect(episodeCard(root).getAttribute('href')).toBe(snapshotTwo[0].spotifyUrl);
+  });
+
+  it('should replace the episodes from the build with the current ones', async () => {
+    const root = await render(of(latestSix), true, of([]), of(snapshotTwo));
+
+    expect(rowLinks(root)).toEqual(latestSix.map(item => item.spotifyUrl));
+  });
+
+  it('should keep the episodes from the build if Spotify is unavailable', async () => {
+    const root = await render(of(null), true, of([]), of(snapshotTwo));
+
+    expect(rowLinks(root)).toEqual(snapshotTwo.map(item => item.spotifyUrl));
     expect(root.querySelector('#folgen [aria-busy] a[href*="open.spotify.com/show"]')).toBeNull();
   });
 

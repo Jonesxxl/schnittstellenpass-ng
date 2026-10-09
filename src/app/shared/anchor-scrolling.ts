@@ -1,5 +1,5 @@
-import { ApplicationRef, EnvironmentProviders, NgZone, inject, provideEnvironmentInitializer } from '@angular/core';
-import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { ApplicationRef, EnvironmentProviders, NgZone, PLATFORM_ID, inject, provideEnvironmentInitializer } from '@angular/core';
+import { DOCUMENT, ViewportScroller, isPlatformBrowser } from '@angular/common';
 import { Router, Scroll } from '@angular/router';
 
 /**
@@ -13,6 +13,10 @@ import { Router, Scroll } from '@angular/router';
  */
 export function provideAnchorScrolling(): EnvironmentProviders {
   return provideEnvironmentInitializer(() => {
+    // Nothing to scroll while prerendering
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+      return;
+    }
     const scroller = inject(ViewportScroller);
     const appRef = inject(ApplicationRef);
     const zone = inject(NgZone);

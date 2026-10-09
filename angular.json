@@ -57,7 +57,9 @@
               "node_modules/@fontsource/jetbrains-mono/500.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "server": "src/main.server.ts",
+            "outputMode": "static"
           },
           "configurations": {
             "production": {
