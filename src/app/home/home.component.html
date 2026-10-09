@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      @let episode = episodes.value()?.[0];
+      @let episode = episodes()?.[0];
       @let loading = episodesLoading();
       <a appReveal [href]="episode?.spotifyUrl || links.spotify" target="_blank" rel="noopener noreferrer" [attr.aria-busy]="loading" class="box-content flex w-full max-w-[520px] flex-col justify-self-center rounded-md border-2 border-ink bg-paper shadow-block">
         <div class="flex items-center justify-between border-b-2 border-ink px-4 py-3 font-mono text-[12px] uppercase tracking-[.1em]">
@@ -119,7 +119,7 @@
             </div>
           }
         } @else {
-          @for (item of episodes.value() ?? []; track item.id) {
+          @for (item of episodes() ?? []; track item.id) {
             <a appReveal [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
               <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
                 {{ item.code }}<span class="sm:hidden">{{ item.code ? ' · ' : '' }}{{ item.date }}</span>

@@ -136,4 +136,22 @@ describe('SpotifyService', () => {
     expect(latest).toBeNull();
     expect(consoleError).toHaveBeenCalled();
   });
+
+  it('should read the episodes written at build time', () => {
+    let snapshot: Episode[] | null | undefined;
+    service.getEpisodeSnapshot(6).subscribe(episodes => snapshot = episodes);
+
+    httpMock.expectOne('/generated/episodes.json').flush({ items: episodesResponse.items });
+
+    expect(snapshot!.map(episode => episode.spotifyUrl)).toEqual(['https://open.spotify.com/episode/ep1']);
+  });
+
+  it('should resolve the build-time episodes to null when the build wrote none', () => {
+    let snapshot: Episode[] | null | undefined;
+    service.getEpisodeSnapshot(6).subscribe(episodes => snapshot = episodes);
+
+    httpMock.expectOne('/generated/episodes.json').flush('Not found', { status: 404, statusText: 'Not Found' });
+
+    expect(snapshot).toBeNull();
+  });
 });

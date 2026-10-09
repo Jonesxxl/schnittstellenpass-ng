@@ -23,7 +23,7 @@ Commit freely; push only when the user says so.
 - After a pull or branch switch that changed `package-lock.json`, run `npm ci` first. Stale `node_modules` show up as TypeScript errors about `@angular/core` exports.
 - Checks, as in CI (`.github/workflows/ci.yml`): `npx ng test --watch=false --browsers=ChromeHeadless`, then `npm run build`.
 - `ng serve` has no Netlify functions: Spotify and Instagram requests fail locally with JSON parse errors.
-- Pages are prerendered at build time (`src/app/app.routes.server.ts`), so components also run in Node: browser APIs (`window`, `matchMedia`, observers, timers) belong in `afterNextRender` or behind `isPlatformBrowser`. Data from the Netlify functions loads in the browser only; the prerendered HTML shows its loading state.
+- Pages are prerendered at build time (`src/app/app.routes.server.ts`), so components also run in Node: browser APIs (`window`, `matchMedia`, observers, timers) belong in `afterNextRender` or behind `isPlatformBrowser`. Data from the Netlify functions loads in the browser only; the prerendered HTML shows its loading state, except for the episodes written at build time by `scripts/fetch-episodes.mjs`.
 
 
 ## Secrets

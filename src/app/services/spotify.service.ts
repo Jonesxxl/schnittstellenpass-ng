@@ -16,6 +16,7 @@ export class SpotifyService {
   // Netlify function (netlify/functions/spotify.mts) that holds the Spotify
   // credentials server-side and forwards requests for the configured show
   private readonly SPOTIFY_PROXY_URL = '/.netlify/functions/spotify';
+  private readonly SNAPSHOT_URL = '/generated/episodes.json';
 
   /**
    * Get podcast episodes
@@ -36,11 +37,27 @@ export class SpotifyService {
    */
   getLatestEpisodes(count: number): Observable<Episode[] | null> {
     return this.getEpisodes(count, 0).pipe(
-      map(response => response.items
-        .filter((item): item is SpotifyEpisode => item !== null)
-        .map(item => this.transformSpotifyEpisode(item))),
+      map(response => this.toEpisodes(response, count)),
       catchError(() => of(null))
     );
+  }
+
+  /**
+   * The latest episodes as of the last build (scripts/fetch-episodes.mjs), so
+   * prerendering can put them into the HTML; null if the build had none
+   */
+  getEpisodeSnapshot(count: number): Observable<Episode[] | null> {
+    return this.http.get<SpotifyEpisodesResponse>(this.SNAPSHOT_URL).pipe(
+      map(response => this.toEpisodes(response, count)),
+      catchError(() => of(null))
+    );
+  }
+
+  private toEpisodes(response: SpotifyEpisodesResponse, count: number): Episode[] {
+    return response.items
+      .filter((item): item is SpotifyEpisode => item !== null)
+      .slice(0, count)
+      .map(item => this.transformSpotifyEpisode(item));
   }
 
   /**
