@@ -14,7 +14,9 @@ describe('HomeComponent', () => {
     code: n === 1 ? 'S4 · 9' : null,
     description: `Beschreibung ${n}`,
     date: `${22 - n}.09.2026`,
+    releaseDate: `2026-09-${22 - n}`,
     duration: '45:00',
+    durationMs: 2_700_000,
     spotifyUrl: 'https://open.spotify.com/episode/e' + n,
     imageUrl: '/.netlify/functions/spotify?image=e' + n,
     audioPreviewUrl: null
@@ -145,6 +147,19 @@ describe('HomeComponent', () => {
 
     expect(rowLinks(root)).toEqual(snapshotTwo.map(item => item.spotifyUrl));
     expect(root.querySelector('#folgen [aria-busy] a[href*="open.spotify.com/show"]')).toBeNull();
+  });
+
+  it('should describe the podcast and its episodes as structured data while the page is open', async () => {
+    const root = await render(of(latestSix));
+    const script = document.getElementById('podcast-structured-data')!;
+    const nodes = JSON.parse(script.textContent!)['@graph'] as { '@type': string, url?: string }[];
+
+    expect(root).toBeTruthy();
+    expect(script.getAttribute('type')).toBe('application/ld+json');
+    expect(nodes.filter(node => node['@type'] === 'PodcastEpisode').map(node => node.url)).toEqual(latestSix.map(item => item.spotifyUrl));
+
+    TestBed.resetTestingModule();
+    expect(document.getElementById('podcast-structured-data')).toBeNull();
   });
 
   it('should show placeholder rows while the episodes are loading', async () => {

@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, computed, inject } from '@angular/core';
+import { Component, DOCUMENT, DestroyRef, PLATFORM_ID, computed, effect, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -10,6 +10,7 @@ import { InstagramFeedComponent } from '../instagram/instagram-feed.component';
 import { RevealDirective } from '../shared/reveal.directive';
 import { FactBoardComponent } from './fact-board.component';
 import { LINKS } from '../shared/links';
+import { podcastStructuredData, setJsonLd } from '../shared/structured-data';
 
 @Component({
   selector: 'app-home',
@@ -83,4 +84,16 @@ export class HomeComponent {
   });
 
   protected readonly episodesLoading = computed(() => this.episodes() === undefined);
+
+  constructor() {
+    // Structured data for search engines, written into the prerendered HTML and kept current
+    // in the browser; it describes this page only, so it goes when another page opens
+    const document = inject(DOCUMENT);
+    effect(() => setJsonLd(document, 'podcast-structured-data', podcastStructuredData({
+      description: this.hero.value().subtitle,
+      hostImage: this.host.value().portrait,
+      episodes: this.episodes() ?? []
+    })));
+    inject(DestroyRef).onDestroy(() => setJsonLd(document, 'podcast-structured-data', null));
+  }
 }

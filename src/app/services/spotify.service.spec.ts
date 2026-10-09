@@ -69,7 +69,9 @@ describe('SpotifyService', () => {
       title: 'Folge 1',
       code: null,
       description: 'Taktik & Analyse',
+      releaseDate: '2026-09-01',
       duration: '1:02:05',
+      durationMs: 3_725_000,
       spotifyUrl: 'https://open.spotify.com/episode/ep1',
       imageUrl: '/.netlify/functions/spotify?image=ab6765630000ba8a0123456789abcdef01234567',
       audioPreviewUrl: null
