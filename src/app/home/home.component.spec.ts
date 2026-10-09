@@ -71,7 +71,7 @@ describe('HomeComponent', () => {
     const root = await render(of(latestSix));
 
     expect(root.querySelector('#top h1')!.innerHTML).toContain('<br>');
-    expect(text(root, '#top h1')).toBe('Erste Zeile Zweite Zeile');
+    expect(text(root, '#top h1')).toBe('Schnittstellenpass – der Fußball-Podcast Erste Zeile Zweite Zeile');
     expect(text(root, '#top p')).toBe('Unterzeile aus dem CMS');
     expect(text(root, '#ueber h2')).toBe('Gastgeber aus dem CMS');
     expect(text(root, '#ueber p')).toBe('Text aus dem CMS');
