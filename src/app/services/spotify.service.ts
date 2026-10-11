@@ -71,7 +71,9 @@ export class SpotifyService {
       // markup), so it is shown as it is and never parsed
       description: spotifyEpisode.description ?? '',
       date: this.formatDate(spotifyEpisode.release_date),
+      releaseDate: spotifyEpisode.release_date,
       duration: this.formatDuration(spotifyEpisode.duration_ms),
+      durationMs: spotifyEpisode.duration_ms,
       spotifyUrl: spotifyEpisode.external_urls.spotify,
       imageUrl: this.proxiedImageUrl(spotifyEpisode.images[0]?.url),
       audioPreviewUrl: spotifyEpisode.audio_preview_url

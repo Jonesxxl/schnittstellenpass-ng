@@ -47,7 +47,10 @@ export interface Episode {
   code: string | null;
   description: string;
   date: string;
+  // Release date as Spotify returns it (YYYY-MM-DD), for structured data
+  releaseDate: string;
   duration: string;
+  durationMs: number;
   spotifyUrl: string;
   imageUrl: string;
   audioPreviewUrl: string | null;
