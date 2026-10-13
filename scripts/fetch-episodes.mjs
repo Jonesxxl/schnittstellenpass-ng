@@ -8,8 +8,12 @@
  * SPOTIFY_CLIENT_SECRET (local builds, CI, Netlify variables not scoped to
  * Builds) nothing is written and the page shows its loading state as before.
  * Never fails the build.
+ *
+ * Each episode gets the slug of its page under /folgen, from the list that
+ * scripts/fetch-feed.mjs wrote just before (matched by title), so the start
+ * page links to the episode pages.
  */
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,11 +22,23 @@ const COUNT = 6;
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const target = path.join(root, 'public/generated/episodes.json');
+const feedIndex = path.join(root, 'public/generated/folgen/index.json');
 
 // Fields the site reads (SpotifyEpisode in src/app/models/spotify.models.ts); the
 // rest only makes the HTML larger, as the data is embedded for hydration
 const pick = ({ id, name, description, release_date, duration_ms, external_urls, images, audio_preview_url }) =>
   ({ id, name, description, release_date, duration_ms, external_urls, images, audio_preview_url });
+
+// Letters and digits only: Spotify and the feed differ in spaces and punctuation
+const normalize = title => title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+
+/** Slug of the episode page; Spotify titles may still carry the episode code at the end */
+async function slugFinder() {
+  const pages = JSON.parse(await readFile(feedIndex, 'utf8').catch(() => '[]'))
+    .map(page => ({ slug: page.slug, title: normalize(page.title) }))
+    .sort((a, b) => b.title.length - a.title.length);
+  return name => pages.find(page => normalize(name).startsWith(page.title))?.slug ?? null;
+}
 
 async function main() {
   // A list from an earlier build must not outlive a failed fetch
@@ -41,10 +57,11 @@ async function main() {
   }
 
   const { items = [] } = await response.json();
-  const episodes = items.filter(Boolean).map(pick);
+  const slugOf = await slugFinder();
+  const episodes = items.filter(Boolean).map(item => ({ ...pick(item), slug: slugOf(item.name) }));
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, JSON.stringify({ items: episodes }));
-  console.log(`Episodes: ${episodes.length} written to public/generated/episodes.json`);
+  console.log(`Episodes: ${episodes.length} written to public/generated/episodes.json, ${episodes.filter(item => item.slug).length} linked to their page`);
 }
 
 main().catch(error => console.warn('Episodes: skipped,', error.message));

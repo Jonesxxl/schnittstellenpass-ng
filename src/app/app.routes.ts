@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { episodeDescription, episodeResolver, episodeTitle } from './folgen/folgen.resolvers';
 
 // Title and description of each page for search results and link previews (see shared/page-meta.ts);
 // the start page repeats the defaults of src/index.html
@@ -9,6 +10,19 @@ export const routes: Routes = [
     component: HomeComponent,
     title: 'Schnittstellenpass – Der Fußball-Podcast zwischen Profi & Amateur',
     data: { description: 'Gespräche mit Menschen aus Bundesliga, Kreisliga und allem dazwischen. Der Fußball-Podcast zwischen Profi & Amateur – auf Spotify, Apple Podcasts und YouTube.' }
+  },
+  {
+    path: 'folgen',
+    loadComponent: () => import('./folgen/folgen-archive.component').then(m => m.FolgenArchiveComponent),
+    title: 'Alle Folgen – Schnittstellenpass',
+    data: { description: 'Alle Folgen des Fußball-Podcasts Schnittstellenpass: Gespräche mit Menschen aus Bundesliga, Kreisliga und allem dazwischen, mit Shownotes zum Nachlesen.' }
+  },
+  {
+    // Title and description from the episode's show notes
+    path: 'folgen/:slug',
+    loadComponent: () => import('./folgen/folge.component').then(m => m.FolgeComponent),
+    title: episodeTitle,
+    resolve: { episode: episodeResolver, description: episodeDescription }
   },
   {
     path: 'impressum',

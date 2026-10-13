@@ -83,9 +83,10 @@ describe('providePageMeta', () => {
     const pages = routes.filter(route => route.redirectTo === undefined);
 
     expect(pages.length).toBeGreaterThan(0);
+    // Fixed texts, or resolvers for pages built from data (e.g. folgen/:slug)
     for (const page of pages) {
-      expect(page.title).withContext(page.path!).toEqual(jasmine.any(String));
-      expect(page.data?.['description']).withContext(page.path!).toEqual(jasmine.any(String));
+      expect(typeof page.title).withContext(page.path!).toMatch(/^(string|function)$/);
+      expect(page.data?.['description'] ?? page.resolve?.['description']).withContext(page.path!).toBeDefined();
     }
   });
 });

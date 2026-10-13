@@ -1,0 +1,60 @@
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { FeedEpisodeSummary, FolgenService, formatDate } from './folgen.service';
+import { LINKS } from '../shared/links';
+
+/** /folgen: every episode, newest first, each linking to its page */
+@Component({
+  selector: 'app-folgen-archive',
+  imports: [RouterLink],
+  template: `
+    <main class="bg-paper">
+      <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(48px,6vw,80px)]">
+        <div class="flex flex-col gap-4">
+          <p class="m-0 font-mono text-[13px] uppercase tracking-[.12em] text-moss">Archiv</p>
+          <h1 class="m-0 font-display text-[clamp(48px,8vw,104px)] font-black uppercase leading-[.9]">Alle Folgen</h1>
+          <p class="m-0 max-w-[640px] text-pretty text-[19px] leading-[1.55] text-forest">
+            @if (episodes().length) {
+              {{ episodes().length }} Gespräche über Fußball zwischen Profi und Amateur, von der Kreisliga bis in die Bundesliga. Jede Folge mit Shownotes zum Nachlesen.
+            } @else {
+              Gespräche über Fußball zwischen Profi und Amateur, von der Kreisliga bis in die Bundesliga.
+            }
+          </p>
+        </div>
+
+        @if (episodes().length) {
+          <ol class="m-0 flex list-none flex-col border-t-2 border-ink p-0">
+            @for (episode of episodes(); track episode.slug) {
+              <li>
+                <a [routerLink]="['/folgen', episode.slug]" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch sm:grid-cols-[minmax(0,96px)_minmax(0,1fr)_auto] sm:gap-5">
+                  <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
+                    {{ episode.code }}<span class="sm:hidden">{{ episode.code ? ' · ' : '' }}{{ date(episode) }}</span>
+                  </div>
+                  <div class="flex min-w-0 flex-col gap-1">
+                    <h2 class="m-0 line-clamp-2 hyphens-auto font-display text-[clamp(22px,2.4vw,30px)] font-extrabold uppercase leading-[1.15]">{{ episode.title }}</h2>
+                    <p class="m-0 line-clamp-2 text-pretty text-[15px] text-forest">{{ episode.summary }}</p>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ date(episode) }}</span>
+                    <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[16px] text-paper">→</span>
+                  </div>
+                </a>
+              </li>
+            }
+          </ol>
+        } @else {
+          <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="self-start rounded-full bg-ink px-[22px] py-3.5 font-semibold text-paper hover:bg-moss">Alle Folgen auf Spotify</a>
+        }
+      </div>
+    </main>
+  `
+})
+export class FolgenArchiveComponent {
+  protected readonly links = LINKS;
+  protected readonly episodes = toSignal(inject(FolgenService).episodes(), { initialValue: [] as FeedEpisodeSummary[] });
+
+  protected date(episode: FeedEpisodeSummary): string {
+    return formatDate(episode.date);
+  }
+}

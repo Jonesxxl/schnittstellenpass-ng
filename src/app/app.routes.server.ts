@@ -1,4 +1,7 @@
+import { inject } from '@angular/core';
 import { RenderMode, ServerRoute } from '@angular/ssr';
+import { firstValueFrom } from 'rxjs';
+import { FolgenService } from './folgen/folgen.service';
 
 /**
  * Pages written as HTML at build time (outputMode "static" in angular.json),
@@ -7,6 +10,13 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
  */
 export const serverRoutes: ServerRoute[] = [
   { path: '', renderMode: RenderMode.Prerender },
+  { path: 'folgen', renderMode: RenderMode.Prerender },
+  {
+    // One page per episode in the feed (scripts/fetch-feed.mjs); none if the build could not read it
+    path: 'folgen/:slug',
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: async () => (await firstValueFrom(inject(FolgenService).episodes())).map(episode => ({ slug: episode.slug }))
+  },
   { path: 'impressum', renderMode: RenderMode.Prerender },
   { path: 'datenschutz', renderMode: RenderMode.Prerender },
   // Unknown URLs: the router redirects to the one-pager in the browser

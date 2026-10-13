@@ -44,6 +44,19 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/folgen"
+  to = "/folgen/index.html"
+  status = 200
+  force = true
+
+# Episode pages; an unknown slug finds no file and gets the 404 page
+[[redirects]]
+  from = "/folgen/*"
+  to = "/folgen/:splat/index.html"
+  status = 200
+  force = true
+
 # Former sub pages of the old website, still linked and indexed elsewhere
 [[redirects]]
   from = "/home"
