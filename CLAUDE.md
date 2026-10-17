@@ -24,6 +24,7 @@ Commit freely; push only when the user says so.
 - Checks, as in CI (`.github/workflows/ci.yml`): `npx ng test --watch=false --browsers=ChromeHeadless`, then `npm run build`.
 - `ng serve` has no Netlify functions: Spotify and Instagram requests fail locally with JSON parse errors.
 - Pages are prerendered at build time (`src/app/app.routes.server.ts`), so components also run in Node: browser APIs (`window`, `matchMedia`, observers, timers) belong in `afterNextRender` or behind `isPlatformBrowser`. Data from the Netlify functions loads in the browser only; the prerendered HTML shows its loading state, except for the episodes written at build time by `scripts/fetch-episodes.mjs`.
+- Episode pages (`/folgen`, `/folgen/<slug>`) and `public/sitemap.xml` are generated from the podcast's RSS feed by `scripts/fetch-feed.mjs` before `ng build`; slugs come from the episode titles. A Netlify build stops if the feed cannot be read, so the last deploy stays online.
 
 
 ## Secrets

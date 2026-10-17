@@ -162,6 +162,21 @@ describe('HomeComponent', () => {
     expect(document.getElementById('podcast-structured-data')).toBeNull();
   });
 
+  it('should link episodes with a page to it and the others to Spotify', async () => {
+    const withPage = [{ ...episodeNumber(7), slug: 'folge-7' }, episodeNumber(8)];
+    const root = await render(new Subject<Episode[] | null>(), false, of([]), of(withPage));
+    const links = Array.from(root.querySelectorAll('#folgen [aria-busy] a')).map(link => [link.getAttribute('href'), link.getAttribute('target')]);
+
+    expect(links).toEqual([['/folgen/folge-7', null], [withPage[1].spotifyUrl, '_blank']]);
+    expect(root.querySelector('#folgen a[href="/folgen"]')).not.toBeNull();
+  });
+
+  it('should keep the page links of the build when the current episodes arrive', async () => {
+    const root = await render(of(latestSix), true, of([]), of([{ ...episodeNumber(1), slug: 'folge-1' }]));
+
+    expect(root.querySelector('#folgen [aria-busy] a')!.getAttribute('href')).toBe('/folgen/folge-1');
+  });
+
   it('should show placeholder rows while the episodes are loading', async () => {
     const root = await render(new Subject<Episode[] | null>(), false);
 

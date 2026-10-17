@@ -31,6 +31,10 @@ This application integrates with the Spotify Web API to fetch podcast episode da
    - Builds: `scripts/fetch-episodes.mjs` calls the same function before `ng build` and writes the latest episodes to `public/generated/episodes.json`. Prerendering puts them into the HTML of the start page, so search engines see them. Without the Builds scope the build still succeeds, the page then only loads the episodes in the browser.
    - `SPOTIFY_SHOW_ID` is optional; it defaults to the Schnittstellenpass podcast.
 
+### Episode pages
+
+`scripts/fetch-feed.mjs` reads the podcast's public RSS feed (`LINKS.rssFeed`) before every build and writes one page per episode under `/folgen/<slug>`, the archive `/folgen` and `public/sitemap.xml`. No credentials needed. New episodes get their page with the next build (any deploy, e.g. after a CMS change). If the feed cannot be read, the Netlify build stops and the last deploy stays online.
+
 ### Important Notes
 
 - **Never put the Client Secret into `src/environments/*` or any other frontend file.** Everything under `src/` is shipped to the browser. The Client Credentials flow is server-to-server only.
