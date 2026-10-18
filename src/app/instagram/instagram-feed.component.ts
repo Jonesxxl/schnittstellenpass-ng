@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, DestroyRef, PLATFORM_ID, ElementRef, afterNextRender, computed, effect, inject, input, signal, viewChildren } from '@angular/core';
+import { Component, DOCUMENT, DestroyRef, PLATFORM_ID, ElementRef, NgZone, afterNextRender, computed, effect, inject, input, signal, viewChildren } from '@angular/core';
 import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { InstagramFeedService } from '../services/instagram-feed.service';
@@ -34,6 +34,7 @@ export class InstagramFeedComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly zone = inject(NgZone);
 
   readonly eyebrow = input('Instagram');
   readonly headline = input('Aus der Kabine');
@@ -195,7 +196,9 @@ export class InstagramFeedComponent {
     clearTimeout(this.timer);
     this.remaining = delay;
     this.timerStartedAt = Date.now();
-    this.timer = setTimeout(() => this.advance(), delay);
+    // Outside Angular's zone: a pending timer keeps the app from ever becoming
+    // stable, and until it is, the router ignores links to a section (#folgen)
+    this.timer = this.zone.runOutsideAngular(() => setTimeout(() => this.zone.run(() => this.advance()), delay));
   }
 
   private resumeTimer(): void {
