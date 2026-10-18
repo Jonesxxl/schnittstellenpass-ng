@@ -8,7 +8,7 @@
       <link>https://open.spotify.com/episode/testfolge9</link>
       <pubDate>Mon, 21 Sep 2026 06:00:00 GMT</pubDate>
       <itunes:duration>00:55:03</itunes:duration>
-      <description><![CDATA[<p>Shownotes der Testfolge: <strong>Nachwuchs</strong>, Amateurfußball und alles dazwischen.</p><ul><li>Erster Punkt</li><li>Zweiter Punkt</li></ul><p><a href="https://example.com/mehr">Mehr zum Gast</a></p><script>window.__shownotesScript = true;</script><p onclick="window.__shownotesClick = true">Absatz mit Klick-Handler</p><a href="javascript:window.__shownotesLink = true">Link mit Skript</a>]]></description>
+      <description><![CDATA[<p>Shownotes der Testfolge: <strong>Nachwuchs</strong>, Amateurfußball und alles dazwischen.</p><ul><li>Erster Punkt</li><li>Zweiter Punkt</li></ul><p><a href="https://example.com/mehr">Mehr zum Gast</a></p>]]></description>
     </item>
     <item>
       <title><![CDATA[Zweiter Testgast: Vom Bolzplatz in die Bundesliga – Saison 4 Folge #8]]></title>
@@ -23,6 +23,13 @@
       <pubDate>Mon, 24 Aug 2026 06:00:00 GMT</pubDate>
       <itunes:duration>48:10</itunes:duration>
       <itunes:summary>Nur eine Zusammenfassung, keine Beschreibung.</itunes:summary>
+    </item>
+    <item>
+      <title>Folge mit Skript in den Shownotes - Folge #1</title>
+      <link>https://open.spotify.com/episode/testfolge1</link>
+      <pubDate>Mon, 03 Aug 2026 06:00:00 GMT</pubDate>
+      <itunes:duration>30:00</itunes:duration>
+      <description><![CDATA[<p>Shownotes mit Code, der nie ausgeführt werden darf:</p><script>window.__shownotesScript = true;</script><p onclick="window.__shownotesClick = true">Absatz mit Klick-Handler</p><a href="javascript:window.__shownotesLink = true">Link mit Skript</a>]]></description>
     </item>
   </channel>
 </rss>

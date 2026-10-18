@@ -50,7 +50,7 @@ test.describe('Vorgerenderte Seiten', () => {
     const sitemap = await (await request.get('/sitemap.xml')).text();
     const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
     expect(urls).toEqual(expect.arrayContaining(PAGES.map(page => `https://schnittstellenpass.de${page.path}`)));
-    expect(urls).toHaveLength(7);
+    expect(urls).toHaveLength(8);
     const robots = readFileSync(path.join(__dirname, '../dist/schnittstellenpass/browser/robots.txt'), 'utf8');
     expect(robots).toContain('Sitemap: https://schnittstellenpass.de/sitemap.xml');
   });
