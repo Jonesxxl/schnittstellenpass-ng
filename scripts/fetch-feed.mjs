@@ -10,11 +10,14 @@
  * build fails: the last deploy, with its episode pages, stays online instead of
  * being replaced by one without them. Elsewhere (local, CI) it only warns.
  */
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const FEED_URL = 'https://anchor.fm/s/fead9f68/podcast/rss';
+// The end-to-end tests build from a fixed feed (e2e/fixtures/feed.xml, see e2e/build.mjs)
+const FEED_FILE = process.env.FEED_FILE;
+const source = FEED_FILE || FEED_URL;
 const SITE_URL = 'https://schnittstellenpass.de';
 // Pages that always exist (src/app/app.routes.ts)
 const PAGES = ['/', '/folgen', '/impressum', '/datenschutz'];
@@ -134,26 +137,30 @@ function writeSitemap(episodes) {
   ].join('\n'));
 }
 
+async function download(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`status ${response.status}`);
+  }
+  return response.text();
+}
+
 async function main() {
   // Files from an earlier build must not outlive a failed fetch
   await rm(folder, { recursive: true, force: true });
 
   let episodes = [];
   try {
-    const response = await fetch(FEED_URL);
-    if (!response.ok) {
-      throw new Error(`status ${response.status}`);
-    }
-    episodes = parseFeed(await response.text());
+    episodes = parseFeed(FEED_FILE ? await readFile(FEED_FILE, 'utf8') : await download(FEED_URL));
     if (episodes.length === 0) {
       throw new Error('no episodes in the feed');
     }
   } catch (error) {
     if (process.env.NETLIFY === 'true') {
-      console.error(`Feed: cannot read ${FEED_URL} (${error.message}); stopping, the last deploy stays online`);
+      console.error(`Feed: cannot read ${source} (${error.message}); stopping, the last deploy stays online`);
       process.exit(1);
     }
-    console.warn(`Feed: cannot read ${FEED_URL} (${error.message}); building without episode pages`);
+    console.warn(`Feed: cannot read ${source} (${error.message}); building without episode pages`);
   }
 
   if (episodes.length) {

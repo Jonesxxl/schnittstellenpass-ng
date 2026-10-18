@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "node scripts/set-env.js && node scripts/fetch-feed.mjs && node scripts/fetch-episodes.mjs && ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "e2e": "node e2e/build.mjs && playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:cms": "playwright test --project=cms-editor"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +32,8 @@
     "@angular/build": "^22.2.1",
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.1",
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.22",
     "istanbul-lib-instrument": "^6.0.3",
@@ -40,6 +45,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.6",
     "sharp": "^0.35.5",
+    "smol-toml": "^1.9.1",
     "tailwindcss": "^3.4.18",
     "typescript": "~6.0.3"
   },

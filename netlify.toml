@@ -12,12 +12,12 @@
 
 # Every production deploy costs Netlify credits. Skip the build when the changes
 # since the last production build only touch files that are not part of the
-# site: documentation, tests, editor settings and the CI workflow. Exit code 0 skips the build;
+# site: documentation, unit and end-to-end tests, editor settings and the CI workflow. Exit code 0 skips the build;
 # any other result builds as usual. Always builds when there is no earlier build
 # to compare with or nothing new was pushed, e.g. "Trigger deploy" in the
 # Netlify UI after changing an environment variable.
 [context.production]
-  ignore = "test -n \"$CACHED_COMMIT_REF\" && test \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" && git diff --quiet \"$CACHED_COMMIT_REF\" \"$COMMIT_REF\" -- . ':(exclude)*.md' ':(exclude)*.spec.ts' ':(exclude).editorconfig' ':(exclude).gitattributes' ':(exclude).vscode' ':(exclude).claude' ':(exclude).github'"
+  ignore = "test -n \"$CACHED_COMMIT_REF\" && test \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" && git diff --quiet \"$CACHED_COMMIT_REF\" \"$COMMIT_REF\" -- . ':(exclude)*.md' ':(exclude)*.spec.ts' ':(exclude).editorconfig' ':(exclude).gitattributes' ':(exclude).vscode' ':(exclude).claude' ':(exclude).github' ':(exclude)e2e' ':(exclude)playwright.config.ts'"
 
 [functions]
   # Serverless functions, e.g. the Spotify API proxy (netlify/functions/spotify.mts)
