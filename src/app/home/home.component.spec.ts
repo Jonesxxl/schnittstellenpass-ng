@@ -162,12 +162,13 @@ describe('HomeComponent', () => {
     expect(document.getElementById('podcast-structured-data')).toBeNull();
   });
 
-  it('should link episodes with a page to it and the others to Spotify', async () => {
+  it('should link episodes with a page to it, with a play button to Spotify, and the others to Spotify', async () => {
     const withPage = [{ ...episodeNumber(7), slug: 'folge-7' }, episodeNumber(8)];
     const root = await render(new Subject<Episode[] | null>(), false, of([]), of(withPage));
     const links = Array.from(root.querySelectorAll('#folgen [aria-busy] a')).map(link => [link.getAttribute('href'), link.getAttribute('target')]);
 
-    expect(links).toEqual([['/folgen/folge-7', null], [withPage[1].spotifyUrl, '_blank']]);
+    expect(links).toEqual([['/folgen/folge-7', null], [withPage[0].spotifyUrl, '_blank'], [withPage[1].spotifyUrl, '_blank']]);
+    expect(root.querySelector(`#folgen a[href="${withPage[0].spotifyUrl}"] .sr-only`)!.textContent!.trim()).toBe(`Auf Spotify anhören: ${withPage[0].title}`);
     expect(root.querySelector('#folgen a[href="/folgen"]')).not.toBeNull();
   });
 

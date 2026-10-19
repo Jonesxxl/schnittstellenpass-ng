@@ -22,6 +22,26 @@ test.describe('Startseite', () => {
     await expect(list.getByRole('link', { name: 'Alle Folgen im Archiv' })).toHaveAttribute('href', '/folgen');
   });
 
+  test('verlinkt Folgen mit eigener Seite dorthin und der Play-Knopf direkt zu Spotify', async ({ page }) => {
+    // The build attaches the page to an episode in its snapshot (scripts/fetch-episodes.mjs)
+    const slug = 'testgast-eins-ueber-kabine-und-kreisliga';
+    await page.route('**/generated/episodes.json', route => route.fulfill({ json: { items: [{ ...SPOTIFY_EPISODES[0], slug }] } }));
+    await page.goto('/');
+    const list = page.locator('#folgen');
+    const title = list.getByRole('link', { name: 'Testgast 1 im Gespräch', exact: true });
+    await expect(title).toHaveAttribute('href', `/folgen/${slug}`);
+    const play = list.getByRole('link', { name: 'Auf Spotify anhören: Testgast 1 im Gespräch (öffnet in neuem Tab)' });
+    await expect(play).toHaveAttribute('href', SPOTIFY_EPISODES[0].external_urls.spotify);
+    await expect(play).toHaveAttribute('target', '_blank');
+    // The play button is not covered by the row link
+    await play.click({ trial: true });
+
+    // The rest of the row opens the episode page: the title link covers it, so click where the text is
+    const text = await list.getByText('Beschreibung der Testfolge 1.').boundingBox();
+    await page.mouse.click(text!.x + 10, text!.y + text!.height / 2);
+    await expect(page).toHaveURL(`/folgen/${slug}`);
+  });
+
   test.describe('wenn Spotify nicht erreichbar ist', () => {
     test.use({ allowErrors: /^502 .*functions\/spotify|Failed to fetch episodes/ });
 
