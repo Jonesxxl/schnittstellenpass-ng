@@ -11,11 +11,15 @@ test.describe('Folgen-Archiv und Folgen-Seiten', () => {
     await expect(links).toHaveCount(4);
     await expect(links.first()).toContainText(NEWEST.title);
     await expect(links.nth(2)).toContainText('Ältere Folge mit Ümläuten & Sonderzeichen');
+    // Each row also has a play button straight to the episode on Spotify, not covered by the row link
+    const play = page.getByRole('link', { name: `Auf Spotify anhören: ${NEWEST.title} (öffnet in neuem Tab)` });
+    await expect(play).toHaveAttribute('href', 'https://open.spotify.com/episode/testfolge9');
+    await play.click({ trial: true });
   });
 
   test('öffnet eine Folge mit ihren Shownotes', async ({ page }) => {
     await page.goto('/folgen');
-    await page.getByRole('link', { name: new RegExp(NEWEST.title) }).click();
+    await page.getByRole('link', { name: NEWEST.title, exact: true }).click();
     await expect(page).toHaveURL(`/folgen/${NEWEST.slug}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(NEWEST.title);
     await expect(page.getByText('S4 · 9')).toBeVisible();

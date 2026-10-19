@@ -85,11 +85,15 @@ describe('Folgen pages', () => {
       return fixture.nativeElement as HTMLElement;
     }
 
-    it('should link every episode to its page', async () => {
+    it('should link every episode to its page, with a play button to Spotify', async () => {
       const root = await render([summary, { ...summary, slug: 'zweite-folge', title: 'Zweite Folge' }]);
-      const links = Array.from(root.querySelectorAll('ol a')).map(link => link.getAttribute('href'));
+      const links = Array.from(root.querySelectorAll('ol a')).map(link => [link.getAttribute('href'), link.getAttribute('target')]);
 
-      expect(links).toEqual(['/folgen/die-woelfe-von-morgen-mit-johannes-meyer', '/folgen/zweite-folge']);
+      expect(links).toEqual([
+        ['/folgen/die-woelfe-von-morgen-mit-johannes-meyer', null], [summary.listenUrl, '_blank'],
+        ['/folgen/zweite-folge', null], [summary.listenUrl, '_blank']
+      ]);
+      expect(root.querySelector('ol a[target="_blank"] .sr-only')!.textContent!.trim()).toBe('Auf Spotify anhören: Die Wölfe von Morgen mit Johannes Meyer');
       expect(text(root, 'h1')).toBe('Alle Folgen');
       expect(text(root, 'ol h2')).toBe('Die Wölfe von Morgen mit Johannes Meyer');
     });

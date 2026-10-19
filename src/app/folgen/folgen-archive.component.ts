@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FeedEpisodeSummary, FolgenService, formatDate } from './folgen.service';
 import { LINKS } from '../shared/links';
 
-/** /folgen: every episode, newest first, each linking to its page */
+/** /folgen: every episode, newest first, each linking to its page, with a play button to Spotify */
 @Component({
   selector: 'app-folgen-archive',
   imports: [RouterLink],
@@ -26,20 +26,25 @@ import { LINKS } from '../shared/links';
         @if (episodes().length) {
           <ol class="m-0 flex list-none flex-col border-t-2 border-ink p-0">
             @for (episode of episodes(); track episode.slug) {
-              <li>
-                <a [routerLink]="['/folgen', episode.slug]" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch sm:grid-cols-[minmax(0,96px)_minmax(0,1fr)_auto] sm:gap-5">
-                  <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
-                    {{ episode.code }}<span class="sm:hidden">{{ episode.code ? ' · ' : '' }}{{ date(episode) }}</span>
-                  </div>
-                  <div class="flex min-w-0 flex-col gap-1">
-                    <h2 class="m-0 line-clamp-2 hyphens-auto font-display text-[clamp(22px,2.4vw,30px)] font-extrabold uppercase leading-[1.15]">{{ episode.title }}</h2>
-                    <p class="m-0 line-clamp-2 text-pretty text-[15px] text-forest">{{ episode.summary }}</p>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ date(episode) }}</span>
-                    <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[16px] text-paper">→</span>
-                  </div>
-                </a>
+              <!-- The title links to the episode page and covers the row, the play button opens Spotify -->
+              <li class="relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch sm:grid-cols-[minmax(0,96px)_minmax(0,1fr)_auto] sm:gap-5">
+                <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
+                  {{ episode.code }}<span class="sm:hidden">{{ episode.code ? ' · ' : '' }}{{ date(episode) }}</span>
+                </div>
+                <div class="flex min-w-0 flex-col gap-1">
+                  <h2 class="m-0 line-clamp-2 hyphens-auto font-display text-[clamp(22px,2.4vw,30px)] font-extrabold uppercase leading-[1.15]">
+                    <a [routerLink]="['/folgen', episode.slug]" class="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-ink focus-visible:after:[outline-offset:-4px]">{{ episode.title }}</a>
+                  </h2>
+                  <p class="m-0 line-clamp-2 text-pretty text-[15px] text-forest">{{ episode.summary }}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ date(episode) }}</span>
+                  <!-- Name as hidden text, not aria-label, which would drop the new-tab hint from styles.scss -->
+                  <a [href]="episode.listenUrl" target="_blank" rel="noopener noreferrer" title="Auf Spotify anhören" class="relative z-[1] flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper hover:bg-moss">
+                    <span aria-hidden="true">▶</span>
+                    <span class="sr-only">Auf Spotify anhören: {{ episode.title }}</span>
+                  </a>
+                </div>
               </li>
             }
           </ol>
