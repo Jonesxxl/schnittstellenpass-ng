@@ -48,6 +48,16 @@ test.describe('Folgen-Archiv und Folgen-Seiten', () => {
     });
   });
 
+  test('zeigt verschachtelte Listen aus dem Feed mit einem Punkt pro Eintrag', async ({ page }) => {
+    await page.goto('/folgen/zweiter-testgast-vom-bolzplatz-in-die-bundesliga');
+    const notes = page.getByRole('region', { name: 'Shownotes' });
+    // A list item holding nothing but a list would show two bullets
+    await expect(notes.locator('ul').first().locator(':scope > li')).toHaveCount(5);
+    await expect(notes.getByRole('listitem').filter({ hasText: /^Verschachtelt eins$/ })).toHaveCount(1);
+    // A real sub-list under an item with text stays
+    await expect(notes.getByRole('listitem').filter({ hasText: /^Thema mit Unterpunkt/ }).getByRole('listitem')).toHaveText('Echter Unterpunkt');
+  });
+
   test('zeigt eine Folge ohne Beschreibung mit ihrer Zusammenfassung', async ({ page }) => {
     await page.goto('/folgen/aeltere-folge-mit-uemlaeuten-sonderzeichen');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ältere Folge mit Ümläuten & Sonderzeichen');

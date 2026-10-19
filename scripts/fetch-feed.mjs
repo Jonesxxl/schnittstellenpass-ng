@@ -58,6 +58,22 @@ function plainText(html) {
   return decode(html.replace(/<(br|\/p|\/li)\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * The show notes editor sometimes wraps a list in a list item of its own
+ * (<li><ul><li>…</li></ul></li>), which browsers show with two bullets. Such an
+ * item, holding nothing but the list, is replaced by the list's items; a sub-list
+ * under an item with text stays as it is.
+ */
+function flattenLists(html) {
+  const wrapped = /<li(?:\s[^>]*)?>(?:\s|<br\s*\/?>|<p>\s*<\/p>)*<(ul|ol)(?:\s[^>]*)?>((?:(?!<\/?(?:ul|ol)[\s>])[\s\S])*)<\/\1>(?:\s|<br\s*\/?>|<p>\s*<\/p>)*<\/li>/g;
+  let flat = html;
+  for (let previous = ''; previous !== flat;) {
+    previous = flat;
+    flat = flat.replace(wrapped, '$2');
+  }
+  return flat;
+}
+
 /** Cut by characters (emoji stay whole) at a word boundary */
 function shorten(text, length) {
   const characters = Array.from(text);
@@ -108,7 +124,7 @@ function parseFeed(xml) {
       slug = `${slugify(title)}-${n}`;
     }
     slugs.add(slug);
-    const descriptionHtml = field(item, 'description') || field(item, 'itunes:summary');
+    const descriptionHtml = flattenLists(field(item, 'description') || field(item, 'itunes:summary'));
     return {
       slug,
       title,
