@@ -23,10 +23,14 @@ describe('Folgen pages', () => {
   const text = (root: HTMLElement, selector: string) => root.querySelector(selector)?.textContent?.replace(/\s+/g, ' ').trim();
 
   describe('FolgeComponent', () => {
-    async function render(value: FeedEpisode | null) {
+    async function render(value: FeedEpisode | null, list: FeedEpisodeSummary[] = [summary]) {
       TestBed.configureTestingModule({
         imports: [FolgeComponent],
-        providers: [provideRouter([]), { provide: ActivatedRoute, useValue: { data: new BehaviorSubject({ episode: value }) } }]
+        providers: [
+          provideRouter([]),
+          { provide: ActivatedRoute, useValue: { data: new BehaviorSubject({ episode: value }) } },
+          { provide: FolgenService, useValue: { episodes: () => of(list) } }
+        ]
       });
       const fixture = TestBed.createComponent(FolgeComponent);
       fixture.detectChanges();
@@ -38,10 +42,24 @@ describe('Folgen pages', () => {
       const root = await render(episode);
 
       expect(text(root, 'h1')).toBe('Die Wölfe von Morgen mit Johannes Meyer');
-      expect(text(root, 'article p')).toBe('S4 · 9 · 07.11.2024 · 52 Min.');
+      expect(Array.from(root.querySelectorAll('ul[aria-label="Über die Folge"] li')).map(item => item.textContent!.trim())).toEqual(['S4 · 9', '07.11.2024', '52 Min.']);
       expect(root.querySelector('section[aria-label="Shownotes"] strong')?.textContent).toBe('Nachwuchsarbeit');
       expect(root.querySelector('section[aria-label="Shownotes"] li')?.textContent).toBe('Kapitel 1');
       expect(root.querySelector('a[href^="https://podcasters.spotify.com"]')?.textContent).toContain('Auf Spotify anhören');
+    });
+
+    it('should link to the episodes released before and after it', async () => {
+      const newer = { ...summary, slug: 'neuere-folge', title: 'Neuere Folge', code: 'S4 · 10' };
+      const older = { ...summary, slug: 'aeltere-folge', title: 'Ältere Folge', code: null };
+      const root = await render(episode, [newer, summary, older]);
+      const links = Array.from(root.querySelectorAll('nav[aria-label="Weitere Folgen"] a'))
+        .map(link => [link.getAttribute('href'), link.textContent!.replace(/\s+/g, ' ').trim()]);
+
+      expect(links).toEqual([
+        ['/folgen/neuere-folge', 'Neuere Folge · S4 · 10 Neuere Folge'],
+        ['/folgen/aeltere-folge', 'Ältere Folge Ältere Folge'],
+        ['/folgen', 'Alle Folgen ansehen →']
+      ]);
     });
 
     it('should strip scripts from the show notes', async () => {

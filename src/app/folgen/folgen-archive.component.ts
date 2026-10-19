@@ -10,9 +10,15 @@ import { LINKS } from '../shared/links';
   imports: [RouterLink],
   template: `
     <main class="bg-paper">
-      <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 py-[clamp(48px,6vw,80px)]">
-        <div class="flex flex-col gap-4">
-          <p class="m-0 font-mono text-[13px] uppercase tracking-[.12em] text-moss">Archiv</p>
+      <header class="relative overflow-hidden border-b-2 border-ink bg-pitch">
+        <!-- Pitch markings as on the start page -->
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+          <div class="absolute bottom-0 left-[70%] top-0 border-l-2 border-ink/[.12] max-md:hidden"></div>
+          <div class="absolute left-[70%] top-1/2 aspect-square w-[min(40vw,380px)] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink/[.12] max-md:hidden"></div>
+          <div class="absolute -right-0.5 bottom-[16%] top-[16%] w-[10%] border-2 border-ink/[.12]"></div>
+        </div>
+        <div class="relative mx-auto box-content flex max-w-[1280px] flex-col gap-4 px-6 pb-[clamp(40px,6vw,72px)] pt-[clamp(48px,6vw,80px)]">
+          <p class="m-0 font-mono text-[13px] uppercase tracking-[.12em] text-forest">Archiv</p>
           <h1 class="m-0 font-display text-[clamp(48px,8vw,104px)] font-black uppercase leading-[.9]">Alle Folgen</h1>
           <p class="m-0 max-w-[640px] text-pretty text-[19px] leading-[1.55] text-forest">
             @if (episodes().length) {
@@ -22,7 +28,9 @@ import { LINKS } from '../shared/links';
             }
           </p>
         </div>
+      </header>
 
+      <div class="mx-auto box-content flex max-w-[1280px] flex-col gap-10 px-6 pb-[clamp(48px,6vw,80px)] pt-[clamp(32px,4vw,56px)]">
         @if (episodes().length) {
           <ol class="m-0 flex list-none flex-col border-t-2 border-ink p-0">
             @for (episode of episodes(); track episode.slug) {

@@ -70,9 +70,11 @@ function plainText(html) {
  *   follows the list inside it moves behind the outer list
  * - an item holding only one paragraph holds its text directly, so all items
  *   have the same spacing
- * A sub-list under an item with text stays as it is.
+ * A sub-list under an item with text stays as it is. Also drops empty
+ * paragraphs (<p><br></p>, used as spacers) and marks paragraphs that are a
+ * quote as a whole („…“) as quotes, so the episode page can set them apart.
  */
-function normalizeLists(html) {
+function normalizeShownotes(html) {
   const fragment = parseFragment(html);
   const isList = node => node.nodeName === 'ul' || node.nodeName === 'ol';
   const isBlank = node => node.nodeName === '#text' ? !node.value.trim()
@@ -147,8 +149,30 @@ function normalizeLists(html) {
     }
   }
 
+  // Spacer paragraphs
+  for (const paragraph of all(fragment, 'p')) {
+    if (isBlank(paragraph)) {
+      detach(paragraph);
+    }
+  }
+
+  // Quotes: a paragraph of plain text in quotation marks
+  for (const paragraph of all(fragment, 'p')) {
+    const text = (paragraph.childNodes ?? []).every(node => node.nodeName === '#text')
+      ? paragraph.childNodes.map(node => node.value).join('').trim() : '';
+    if (QUOTE.test(text) && paragraph.parentNode.nodeName !== 'li') {
+      const quote = { nodeName: 'blockquote', tagName: 'blockquote', attrs: [], namespaceURI: paragraph.namespaceURI, childNodes: [], parentNode: null };
+      insertAfter(paragraph, [quote]);
+      detach(paragraph);
+      append(quote, paragraph);
+    }
+  }
+
   return serialize(fragment);
 }
+
+// „…“, “…”, "…" or »…« around the whole paragraph, with nothing outside
+const QUOTE = /^(?:„[^„“]+“|“[^“”]+”|"[^"]+"|»[^»«]+«)$/;
 
 /** Cut by characters (emoji stay whole) at a word boundary */
 function shorten(text, length) {
@@ -200,7 +224,7 @@ function parseFeed(xml) {
       slug = `${slugify(title)}-${n}`;
     }
     slugs.add(slug);
-    const descriptionHtml = normalizeLists(field(item, 'description') || field(item, 'itunes:summary'));
+    const descriptionHtml = normalizeShownotes(field(item, 'description') || field(item, 'itunes:summary'));
     return {
       slug,
       title,

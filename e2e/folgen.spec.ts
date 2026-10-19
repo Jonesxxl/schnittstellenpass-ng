@@ -22,11 +22,23 @@ test.describe('Folgen-Archiv und Folgen-Seiten', () => {
     await page.getByRole('link', { name: NEWEST.title, exact: true }).click();
     await expect(page).toHaveURL(`/folgen/${NEWEST.slug}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(NEWEST.title);
-    await expect(page.getByText('S4 · 9')).toBeVisible();
+    await expect(page.getByRole('list', { name: 'Über die Folge' }).getByRole('listitem')).toHaveText(['S4 · 9', '21.09.2026', '55 Min.']);
     const notes = page.getByRole('region', { name: 'Shownotes' });
     await expect(notes.getByRole('listitem')).toHaveCount(2);
     await expect(notes.getByRole('link', { name: 'Mehr zum Gast' })).toHaveAttribute('href', 'https://example.com/mehr');
     await expect(page.getByRole('link', { name: 'Auf Spotify anhören' })).toHaveAttribute('href', 'https://open.spotify.com/episode/testfolge9');
+
+    // A quote of its own is set apart, the empty spacer paragraph is gone
+    await expect(notes.locator('blockquote')).toHaveText('„Fehler macht jeder. Wichtig ist, dass man aus Fehlern lernt.“');
+    await expect(notes.locator('p:empty, p:has(> br:only-child)')).toHaveCount(0);
+
+    // Neighbouring episodes: the newest has only an older one
+    const more = page.getByRole('navigation', { name: 'Weitere Folgen' });
+    await expect(more.getByRole('link', { name: /^Neuere Folge/ })).toHaveCount(0);
+    await more.getByRole('link', { name: /^Ältere Folge · S4 · 8 Zweiter Testgast/ }).click();
+    await expect(page).toHaveURL('/folgen/zweiter-testgast-vom-bolzplatz-in-die-bundesliga');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Zweiter Testgast: Vom Bolzplatz in die Bundesliga');
+    await expect(more.getByRole('link', { name: /^Neuere Folge · S4 · 9 Testgast Eins/ })).toHaveAttribute('href', `/folgen/${NEWEST.slug}`);
 
     await page.getByRole('link', { name: '← Alle Folgen' }).click();
     await expect(page).toHaveURL('/folgen');
