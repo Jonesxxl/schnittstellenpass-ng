@@ -15,7 +15,7 @@
       <link>https://open.spotify.com/episode/testfolge8</link>
       <pubDate>Mon, 07 Sep 2026 06:00:00 GMT</pubDate>
       <itunes:duration>3120</itunes:duration>
-      <description><![CDATA[<p>Die zweite Testfolge.</p><ul><li>Erstes Thema</li><li><ul><li>Verschachtelt eins</li><li>Verschachtelt zwei</li></ul></li><li><ul><li>Verschachtelt drei</li></ul></li><li>Thema mit Unterpunkt<ul><li>Echter Unterpunkt</li></ul></li></ul>]]></description>
+      <description><![CDATA[<p>Die zweite Testfolge.</p><ul><li><p>Erstes Thema</p></li><li><ul><li>Verschachtelt eins</li><li>Verschachtelt zwei</li></ul></li><li>Thema mit Unterpunkt<ul><li>Echter Unterpunkt</li></ul></li></ul><li><ul><li>Außerhalb der Liste</li></ul></li><li><ul><li>Letzter Punkt</li></ul><p><br></p><p>Begriffe aus der Folge</p><p><strong>Silent Check</strong><br>Eine Überprüfung im Hintergrund.</p></li>]]></description>
     </item>
     <item>
       <title>Ältere Folge mit Ümläuten &amp; Sonderzeichen - Folge #7</title>

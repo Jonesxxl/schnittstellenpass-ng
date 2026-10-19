@@ -13,6 +13,7 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseFragment, serialize } from 'parse5';
 
 const FEED_URL = 'https://anchor.fm/s/fead9f68/podcast/rss';
 // The end-to-end tests build from a fixed feed (e2e/fixtures/feed.xml, see e2e/build.mjs)
@@ -59,19 +60,94 @@ function plainText(html) {
 }
 
 /**
- * The show notes editor sometimes wraps a list in a list item of its own
- * (<li><ul><li>…</li></ul></li>), which browsers show with two bullets. Such an
- * item, holding nothing but the list, is replaced by the list's items; a sub-list
- * under an item with text stays as it is.
+ * The show notes editor of Spotify for Creators writes broken lists: items after
+ * the list's end (</ul><li>…</li>), an item that wraps a whole list
+ * (<li><ul><li>…</li></ul></li>) and an item that wraps all text after it.
+ * Browsers show these with two bullets or out of line. The HTML is read the way a
+ * browser reads it (parse5) and the lists are put back in order:
+ * - an item outside a list joins the list before it, or gets a list of its own
+ * - an item that starts with a list is replaced by that list's items; whatever
+ *   follows the list inside it moves behind the outer list
+ * - an item holding only one paragraph holds its text directly, so all items
+ *   have the same spacing
+ * A sub-list under an item with text stays as it is.
  */
-function flattenLists(html) {
-  const wrapped = /<li(?:\s[^>]*)?>(?:\s|<br\s*\/?>|<p>\s*<\/p>)*<(ul|ol)(?:\s[^>]*)?>((?:(?!<\/?(?:ul|ol)[\s>])[\s\S])*)<\/\1>(?:\s|<br\s*\/?>|<p>\s*<\/p>)*<\/li>/g;
-  let flat = html;
-  for (let previous = ''; previous !== flat;) {
-    previous = flat;
-    flat = flat.replace(wrapped, '$2');
+function normalizeLists(html) {
+  const fragment = parseFragment(html);
+  const isList = node => node.nodeName === 'ul' || node.nodeName === 'ol';
+  const isBlank = node => node.nodeName === '#text' ? !node.value.trim()
+    : node.nodeName === 'br' || (node.nodeName === 'p' && (node.childNodes ?? []).every(isBlank));
+  const elements = node => (node.childNodes ?? []).filter(child => !isBlank(child));
+  const detach = node => {
+    const siblings = node.parentNode.childNodes;
+    siblings.splice(siblings.indexOf(node), 1);
+  };
+  const append = (parent, node) => {
+    node.parentNode = parent;
+    parent.childNodes.push(node);
+  };
+  const insertAfter = (reference, nodes) => {
+    const siblings = reference.parentNode.childNodes;
+    siblings.splice(siblings.indexOf(reference) + 1, 0, ...nodes);
+    nodes.forEach(node => (node.parentNode = reference.parentNode));
+  };
+  const all = (node, name, found = []) => {
+    for (const child of node.childNodes ?? []) {
+      if (child.nodeName === name) {
+        found.push(child);
+      }
+      all(child, name, found);
+    }
+    return found;
+  };
+
+  // Items outside a list
+  for (const item of all(fragment, 'li')) {
+    if (isList(item.parentNode)) {
+      continue;
+    }
+    const siblings = item.parentNode.childNodes;
+    const before = siblings.slice(0, siblings.indexOf(item)).filter(node => !isBlank(node)).at(-1);
+    if (before && isList(before)) {
+      detach(item);
+      append(before, item);
+    } else {
+      const list = { nodeName: 'ul', tagName: 'ul', attrs: [], namespaceURI: item.namespaceURI, childNodes: [], parentNode: null };
+      insertAfter(item, [list]);
+      detach(item);
+      append(list, item);
+    }
   }
-  return flat;
+
+  // Items that start with a list
+  for (let changed = true; changed;) {
+    changed = false;
+    for (const item of all(fragment, 'li')) {
+      const [first, ...rest] = elements(item);
+      if (!first || !isList(first) || !isList(item.parentNode)) {
+        continue;
+      }
+      const outer = item.parentNode;
+      insertAfter(item, first.childNodes);
+      detach(item);
+      if (rest.length) {
+        insertAfter(outer, rest);
+      }
+      changed = true;
+      break;
+    }
+  }
+
+  // Items holding a single paragraph
+  for (const item of all(fragment, 'li')) {
+    const content = elements(item);
+    if (content.length === 1 && content[0].nodeName === 'p') {
+      item.childNodes = content[0].childNodes;
+      item.childNodes.forEach(node => (node.parentNode = item));
+    }
+  }
+
+  return serialize(fragment);
 }
 
 /** Cut by characters (emoji stay whole) at a word boundary */
@@ -124,7 +200,7 @@ function parseFeed(xml) {
       slug = `${slugify(title)}-${n}`;
     }
     slugs.add(slug);
-    const descriptionHtml = flattenLists(field(item, 'description') || field(item, 'itunes:summary'));
+    const descriptionHtml = normalizeLists(field(item, 'description') || field(item, 'itunes:summary'));
     return {
       slug,
       title,

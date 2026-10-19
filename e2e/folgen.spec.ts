@@ -48,14 +48,18 @@ test.describe('Folgen-Archiv und Folgen-Seiten', () => {
     });
   });
 
-  test('zeigt verschachtelte Listen aus dem Feed mit einem Punkt pro Eintrag', async ({ page }) => {
+  // The show notes editor writes items after the list's end and items that wrap a list
+  // or the rest of the text (e2e/fixtures/feed.xml, as in the VAR episode)
+  test('zeigt kaputte Listen aus dem Feed als eine Liste mit einem Punkt pro Eintrag', async ({ page }) => {
     await page.goto('/folgen/zweiter-testgast-vom-bolzplatz-in-die-bundesliga');
     const notes = page.getByRole('region', { name: 'Shownotes' });
-    // A list item holding nothing but a list would show two bullets
-    await expect(notes.locator('ul').first().locator(':scope > li')).toHaveCount(5);
-    await expect(notes.getByRole('listitem').filter({ hasText: /^Verschachtelt eins$/ })).toHaveCount(1);
+    const items = notes.locator(':scope > ul > li');
+    await expect(items).toHaveText(['Erstes Thema', 'Verschachtelt eins', 'Verschachtelt zwei', /^Thema mit Unterpunkt/, 'Außerhalb der Liste', 'Letzter Punkt']);
+    await expect(notes.locator(':scope > li, li > p')).toHaveCount(0);
     // A real sub-list under an item with text stays
-    await expect(notes.getByRole('listitem').filter({ hasText: /^Thema mit Unterpunkt/ }).getByRole('listitem')).toHaveText('Echter Unterpunkt');
+    await expect(items.filter({ hasText: /^Thema mit Unterpunkt/ }).getByRole('listitem')).toHaveText('Echter Unterpunkt');
+    // The text the last item wrapped follows the list
+    await expect(notes.locator(':scope > ul + p')).toHaveText('Begriffe aus der Folge');
   });
 
   test('zeigt eine Folge ohne Beschreibung mit ihrer Zusammenfassung', async ({ page }) => {
