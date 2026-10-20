@@ -120,19 +120,17 @@
           }
         } @else {
           @for (item of episodes() ?? []; track item.id) {
-            <a appReveal [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
-              <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
-                {{ item.code }}<span class="sm:hidden">{{ item.code ? ' · ' : '' }}{{ item.date }}</span>
+            <!-- Episode page if the build knew it (internal links help search engines), with the play
+                 button straight to Spotify; else the whole row opens Spotify -->
+            @if (item.slug) {
+              <div appReveal class="relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
+                <ng-container *ngTemplateOutlet="episodeRow; context: { $implicit: item, page: true }" />
               </div>
-              <div class="flex min-w-0 flex-col gap-1">
-                <div class="line-clamp-2 font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-[1.15]">{{ item.title }}</div>
-                <div class="line-clamp-2 text-pretty text-[15px] text-forest">{{ item.description }}</div>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ item.date }}</span>
-                <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
-              </div>
-            </a>
+            } @else {
+              <a appReveal [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
+                <ng-container *ngTemplateOutlet="episodeRow; context: { $implicit: item }" />
+              </a>
+            }
           } @empty {
             <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between gap-5 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink">
               <div class="flex min-w-0 flex-col gap-1">
@@ -144,7 +142,10 @@
           }
         }
       </div>
-      <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="self-stretch rounded-full border-2 border-ink px-5 py-3 text-center font-semibold hover:bg-ink hover:text-paper sm:self-start">Alle Folgen anhören →</a>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a routerLink="/folgen" class="rounded-full bg-ink px-[22px] py-3.5 text-center font-semibold text-paper hover:bg-moss">Alle Folgen im Archiv</a>
+        <a [href]="links.spotify" target="_blank" rel="noopener noreferrer" class="rounded-full border-2 border-ink px-5 py-3 text-center font-semibold hover:bg-ink hover:text-paper">Alle Folgen anhören →</a>
+      </div>
     </div>
   </section>
 
@@ -199,3 +200,31 @@
     </div>
   </section>
 </main>
+
+<!-- Content of a row in the episode list, shared by the links to the episode page and to Spotify -->
+<!-- With page: the title links to the episode page and covers the row, the play button opens Spotify -->
+<ng-template #episodeRow let-item let-page="page">
+  <div class="col-span-2 font-mono text-[13px] text-moss sm:col-span-1">
+    {{ item.code }}<span class="sm:hidden">{{ item.code ? ' · ' : '' }}{{ item.date }}</span>
+  </div>
+  <div class="flex min-w-0 flex-col gap-1">
+    @if (page) {
+      <a [routerLink]="['/folgen', item.slug]" class="line-clamp-2 hyphens-auto font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-[1.15] after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-ink focus-visible:after:[outline-offset:-4px]">{{ item.title }}</a>
+    } @else {
+      <div class="line-clamp-2 hyphens-auto font-display text-[clamp(24px,2.6vw,34px)] font-extrabold uppercase leading-[1.15]">{{ item.title }}</div>
+    }
+    <div class="line-clamp-2 text-pretty text-[15px] text-forest">{{ item.description }}</div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="whitespace-nowrap rounded-full border-[1.5px] border-ink px-2.5 py-[5px] font-mono text-[11px] uppercase tracking-[.1em] max-sm:hidden">{{ item.date }}</span>
+    @if (page) {
+      <!-- Name as hidden text, not aria-label, which would drop the new-tab hint from styles.scss -->
+      <a [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" title="Auf Spotify anhören" class="relative z-[1] flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper hover:bg-moss">
+        <span aria-hidden="true">▶</span>
+        <span class="sr-only">Auf Spotify anhören: {{ item.title }}</span>
+      </a>
+    } @else {
+      <span aria-hidden="true" class="flex size-10 items-center justify-center rounded-full bg-ink text-[14px] text-paper">▶</span>
+    }
+  </div>
+</ng-template>

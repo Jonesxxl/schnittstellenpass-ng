@@ -15,6 +15,8 @@ export interface SpotifyEpisode {
   };
   images: SpotifyImage[];
   audio_preview_url: string | null;
+  // Only in the list written at build time (scripts/fetch-episodes.mjs): page under /folgen
+  slug?: string | null;
   html_description: string;
   language: string;
   explicit: boolean;
@@ -52,6 +54,8 @@ export interface Episode {
   duration: string;
   durationMs: number;
   spotifyUrl: string;
+  // Page of the episode under /folgen, if it was in the feed at build time
+  slug?: string | null;
   imageUrl: string;
   audioPreviewUrl: string | null;
 }

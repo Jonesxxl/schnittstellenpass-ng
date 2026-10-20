@@ -31,6 +31,10 @@ This application integrates with the Spotify Web API to fetch podcast episode da
    - Builds: `scripts/fetch-episodes.mjs` calls the same function before `ng build` and writes the latest episodes to `public/generated/episodes.json`. Prerendering puts them into the HTML of the start page, so search engines see them. Without the Builds scope the build still succeeds, the page then only loads the episodes in the browser.
    - `SPOTIFY_SHOW_ID` is optional; it defaults to the Schnittstellenpass podcast.
 
+### Episode pages
+
+`scripts/fetch-feed.mjs` reads the podcast's public RSS feed (`LINKS.rssFeed`) before every build and writes one page per episode under `/folgen/<slug>`, the archive `/folgen` and `public/sitemap.xml`. No credentials needed. New episodes get their page with the next build (any deploy, e.g. after a CMS change). If the feed cannot be read, the Netlify build stops and the last deploy stays online.
+
 ### Important Notes
 
 - **Never put the Client Secret into `src/environments/*` or any other frontend file.** Everything under `src/` is shipped to the browser. The Client Credentials flow is server-to-server only.
@@ -136,7 +140,33 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The end-to-end tests run the site in a real browser (Chromium, through [Playwright](https://playwright.dev)), at desktop (1440 px) and phone width (390 px). They live in `e2e/` and run in CI on every pull request.
+
+```bash
+npx playwright install chromium   # once, downloads the browser
+npm run e2e                       # builds the site with the test feed, then runs all tests
+npx playwright test               # runs the tests again on the last build
+npm run e2e:ui                    # interactive mode: pick tests, watch them, inspect each step
+npx playwright show-report        # report of the last run, with traces of failed tests
+```
+
+How they work:
+
+- They test the **production build**, served by `e2e/serve.mjs` with the redirects and headers from `netlify.toml`, so they also catch Content Security Policy violations and broken routes.
+- `e2e/build.mjs` builds the episode pages from the fixed feed in `e2e/fixtures/feed.xml` instead of the live podcast feed, so the tests know which pages exist.
+- The Netlify functions are not called: `e2e/fixtures.ts` answers Spotify and Instagram with test data. No secrets are needed.
+- Every test fails on console errors, uncaught exceptions, CSP violations, failed requests and **requests to other hosts** (the privacy policy promises that visitors' browsers only talk to this site). A test that expects one of these sets `allowErrors` or `allowRequests`.
+- `a11y.spec.ts` checks accessibility with axe-core and fails on serious and critical findings; `seo.spec.ts` reads the prerendered pages with JavaScript switched off.
+
+**CMS editor tests** need a local Decap backend and run on request only, not in CI:
+
+```bash
+npm run e2e:cms
+```
+
+They start `decap-server` on a throwaway clone of the repository in the temp folder, so nothing is saved to the working copy or GitHub. The clone contains the last commit: commit changes to the CMS configuration before running them. In CI, `cms.spec.ts` only checks that the CMS loads under its CSP and shows the GitHub login.
+
+In Claude Code on the web, Chromium is preinstalled: set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to its path (for example `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`) instead of running `playwright install`.
 
 ## Further help
 

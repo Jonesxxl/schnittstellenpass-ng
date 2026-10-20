@@ -75,6 +75,7 @@ export class SpotifyService {
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       durationMs: spotifyEpisode.duration_ms,
       spotifyUrl: spotifyEpisode.external_urls.spotify,
+      slug: spotifyEpisode.slug ?? null,
       imageUrl: this.proxiedImageUrl(spotifyEpisode.images[0]?.url),
       audioPreviewUrl: spotifyEpisode.audio_preview_url
     };

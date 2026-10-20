@@ -41,6 +41,12 @@ describe('structured data', () => {
     expect(entry['partOfSeries']).toEqual({ '@id': 'https://schnittstellenpass.de/#podcast' });
   });
 
+  it('should point episodes with a page on this site to that page', () => {
+    const [entry] = ofType('PodcastEpisode', [{ ...episode, slug: 'hat-der-var' }]);
+
+    expect(entry['url']).toBe('https://schnittstellenpass.de/folgen/hat-der-var');
+  });
+
   it('should write hours and full minutes in ISO durations', () => {
     const durations = [3_725_000, 3_600_000, 45_000].map(durationMs => ofType('PodcastEpisode', [{ ...episode, durationMs }])[0]['timeRequired']);
 
