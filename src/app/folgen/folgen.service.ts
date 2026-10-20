@@ -14,7 +14,8 @@ export interface FeedEpisodeSummary {
   durationSeconds: number;
   // Plain-text teaser of the show notes
   summary: string;
-  // Episode on Spotify for Creators, with player and links to the apps
+  // Episode on Spotify (open.spotify.com), matched at build time by scripts/fetch-episodes.mjs;
+  // else the link from the feed, to Spotify for Creators
   listenUrl: string;
 }
 
