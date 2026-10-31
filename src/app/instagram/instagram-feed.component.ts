@@ -17,6 +17,8 @@ interface Slide {
   chip: string;
   caption: string;
   short: string;
+  // Reels have an upright cover: shown whole in front of a blurred copy, not cropped to the stage
+  upright: boolean;
 }
 
 /**
@@ -66,7 +68,8 @@ export class InstagramFeedComponent {
         image: post.image,
         chip: chipLabel(post),
         caption: caption || 'Auf Instagram ansehen',
-        short: caption ? shorten(caption) : 'Instagram-Beitrag von Schnittstellenpass'
+        short: caption ? shorten(caption) : 'Instagram-Beitrag von Schnittstellenpass',
+        upright: post.mediaType === 'VIDEO'
       };
     })
   );
