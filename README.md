@@ -73,6 +73,7 @@ The four tiles in the "Aus der Kabine" section show the latest Instagram posts. 
 ### Important Notes
 
 - **Never put the access token into `src/` or any other frontend file.**
+- Reels are left out; the tiles show the latest photos and carousels.
 - The post list is cached on the Netlify CDN for 15 minutes and the images for 7 days, so a new post can take up to about 15 minutes to appear.
 - For local development, put `INSTAGRAM_ACCESS_TOKEN` into `.env` and run `npx netlify dev`.
 
