@@ -156,8 +156,7 @@ describe('InstagramFeedComponent', () => {
 
   it('should load only the first picture eagerly and describe each picture by its caption', fakeAsync(() => {
     const root = render(of([post('1', 'Neue Folge ist online. Jetzt reinhören #podcast'), post('2', '', 'VIDEO')]));
-    // Without the blurred backdrop of the reel, which is decoration
-    const images = Array.from(root.querySelectorAll('img:not([alt=""])'));
+    const images = Array.from(root.querySelectorAll('img'));
 
     expect(images.map(image => image.getAttribute('src'))).toEqual(['/.netlify/functions/instagram?image=1', '/.netlify/functions/instagram?image=2']);
     expect(images[0].getAttribute('fetchpriority')).toBe('high');
@@ -165,20 +164,6 @@ describe('InstagramFeedComponent', () => {
     expect(images[1].getAttribute('loading')).toBe('lazy');
     expect(images[0].getAttribute('alt')).toBe('Neue Folge ist online');
     expect(images[1].getAttribute('alt')).toBe('Instagram-Beitrag von Schnittstellenpass');
-    finish();
-  }));
-
-  it('should show a reel whole in front of a blurred copy instead of cropping it', fakeAsync(() => {
-    const root = render(of([post('1', 'Foto'), post('2', 'Clip', 'VIDEO')]));
-    const stage = root.querySelector('#kabine-stage')!;
-
-    expect(stage.querySelectorAll('img[src$="image=1"]').length).toBe(1);
-    const reel = Array.from(stage.querySelectorAll<HTMLImageElement>('img[src$="image=2"]'));
-    expect(reel.length).toBe(2);
-    expect(reel[0].getAttribute('alt')).toBe('');
-    expect(reel[0].classList).toContain('blur-2xl');
-    expect(reel[1].getAttribute('alt')).toBe('Clip');
-    expect(reel[1].classList).toContain('object-contain');
     finish();
   }));
 

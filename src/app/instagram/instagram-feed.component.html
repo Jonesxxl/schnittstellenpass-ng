@@ -67,35 +67,15 @@
         [attr.aria-label]="post.chip + ': ' + post.caption + ' – auf Instagram ansehen'"
         class="relative block min-h-[clamp(420px,48vw,600px)] min-w-0 flex-[1_1_380px] overflow-hidden bg-forest focus-visible:[outline-offset:-4px] focus-visible:[outline:2px_solid_#CFE3C4]">
         @for (slide of slides(); track slide.id; let i = $index) {
-          @if (slide.upright) {
-            <!-- Reel: the whole upright cover above the caption, in front of a blurred, darkened copy filling the stage -->
-            <div
-              [attr.aria-hidden]="i === active() ? null : 'true'"
-              class="absolute inset-0 [transition:opacity_.8s_ease]"
-              [class]="i === active() ? 'pointer-events-auto z-[1] opacity-100' : 'pointer-events-none opacity-0'">
-              <img [src]="slide.image" alt="" aria-hidden="true" [attr.loading]="i === 0 ? null : 'lazy'" decoding="async" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-2xl" />
-              <div class="absolute inset-x-0 bottom-[148px] top-12 flex justify-center px-6">
-                <img
-                  [src]="slide.image"
-                  [alt]="slide.short"
-                  [attr.loading]="i === 0 ? null : 'lazy'"
-                  [attr.fetchpriority]="i === 0 ? 'high' : null"
-                  decoding="async"
-                  class="h-full w-auto max-w-full rounded-md border-2 border-paper/20 object-contain shadow-[0_18px_40px_rgba(0,0,0,.45)] [transition:transform_6s_ease-out]"
-                  [class.motion-safe:scale-[1.03]]="i === active()" />
-              </div>
-            </div>
-          } @else {
-            <img
-              [src]="slide.image"
-              [alt]="slide.short"
-              [attr.loading]="i === 0 ? null : 'lazy'"
-              [attr.fetchpriority]="i === 0 ? 'high' : null"
-              decoding="async"
-              [attr.aria-hidden]="i === active() ? null : 'true'"
-              class="absolute inset-0 h-full w-full object-cover [transition:opacity_.8s_ease,transform_6s_ease-out] motion-reduce:[transition:opacity_.8s_ease]"
-              [class]="i === active() ? 'pointer-events-auto z-[1] opacity-100 motion-safe:scale-[1.06]' : 'pointer-events-none opacity-0'" />
-          }
+          <img
+            [src]="slide.image"
+            [alt]="slide.short"
+            [attr.loading]="i === 0 ? null : 'lazy'"
+            [attr.fetchpriority]="i === 0 ? 'high' : null"
+            decoding="async"
+            [attr.aria-hidden]="i === active() ? null : 'true'"
+            class="absolute inset-0 h-full w-full object-cover [transition:opacity_.8s_ease,transform_6s_ease-out] motion-reduce:[transition:opacity_.8s_ease]"
+            [class]="i === active() ? 'pointer-events-auto z-[1] opacity-100 motion-safe:scale-[1.06]' : 'pointer-events-none opacity-0'" />
         }
 
         <div class="absolute inset-x-4 top-4 z-[2] flex gap-1.5" aria-hidden="true">
