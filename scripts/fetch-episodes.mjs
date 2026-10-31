@@ -11,7 +11,8 @@
  *
  * Each episode gets the slug of its page under /folgen, from the list that
  * scripts/fetch-feed.mjs wrote just before (matched by title), so the start
- * page links to the episode pages. In turn the episode pages get the episode's
+ * page links to the episode pages and shows their teaser from the feed instead
+ * of Spotify's description, which runs paragraphs together. In turn the episode pages get the episode's
  * link on Spotify (open.spotify.com) in place of the Spotify for Creators link
  * from the feed, which is all the feed knows; pages without a match keep it.
  */
@@ -38,12 +39,12 @@ const pick = ({ id, name, description, release_date, duration_ms, external_urls,
 // Letters and digits only: Spotify and the feed differ in spaces and punctuation
 const normalize = title => title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
 
-/** Slug of the episode page; Spotify titles may still carry the episode code at the end */
-async function slugFinder() {
+/** Episode page of a Spotify episode; Spotify titles may still carry the episode code at the end */
+async function pageFinder() {
   const pages = JSON.parse(await readFile(feedIndex, 'utf8').catch(() => '[]'))
-    .map(page => ({ slug: page.slug, title: normalize(page.title) }))
-    .sort((a, b) => b.title.length - a.title.length);
-  return name => pages.find(page => normalize(name).startsWith(page.title))?.slug ?? null;
+    .map(page => ({ ...page, normalizedTitle: normalize(page.title) }))
+    .sort((a, b) => b.normalizedTitle.length - a.normalizedTitle.length);
+  return name => pages.find(page => normalize(name).startsWith(page.normalizedTitle)) ?? null;
 }
 
 /** All episodes of the show, newest first, as Spotify pages them */
@@ -108,8 +109,14 @@ async function main() {
     return;
   }
 
-  const slugOf = await slugFinder();
-  const episodes = items.slice(0, COUNT).map(item => ({ ...pick(item), slug: slugOf(item.name) }));
+  const pageOf = await pageFinder();
+  const slugOf = name => pageOf(name)?.slug ?? null;
+  // Spotify's plain-text description runs paragraphs together ("…KucukovicMit 17 …");
+  // an episode with a page gets the teaser from the feed, which keeps them apart
+  const episodes = items.slice(0, COUNT).map(item => {
+    const page = pageOf(item.name);
+    return { ...pick(item), slug: page?.slug ?? null, ...(page?.summary ? { description: page.summary } : {}) };
+  });
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, JSON.stringify({ items: episodes }));
   console.log(`Episodes: ${episodes.length} written to public/generated/episodes.json, ${episodes.filter(item => item.slug).length} linked to their page`);

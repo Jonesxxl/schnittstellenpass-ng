@@ -178,6 +178,15 @@ describe('HomeComponent', () => {
     expect(root.querySelector('#folgen [aria-busy] a')!.getAttribute('href')).toBe('/folgen/folge-1');
   });
 
+  it('should keep the description from the feed when the current episodes arrive', async () => {
+    const root = await render(of(latestSix), true, of([]), of([{ ...episodeNumber(1), slug: 'folge-1', description: 'Absatz eins. Absatz zwei.' }]));
+    const rows = Array.from(root.querySelectorAll('#folgen [aria-busy] > *')).map(row => row.textContent!);
+
+    expect(rows[0]).toContain('Absatz eins. Absatz zwei.');
+    // Episodes without a page keep Spotify's description
+    expect(rows[1]).toContain(latestSix[1].description);
+  });
+
   it('should show placeholder rows while the episodes are loading', async () => {
     const root = await render(new Subject<Episode[] | null>(), false);
 

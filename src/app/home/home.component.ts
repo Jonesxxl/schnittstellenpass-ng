@@ -75,9 +75,13 @@ export class HomeComponent {
     const live = this.liveEpisodes.value();
     const snapshot = this.episodeSnapshot.value();
     if (live) {
-      // Live episodes lack the page slug, which the build attached to the snapshot
-      const slugs = new Map(snapshot?.map(episode => [episode.id, episode.slug]));
-      return live.map(episode => ({ ...episode, slug: episode.slug ?? slugs.get(episode.id) ?? null }));
+      // Live episodes lack the page slug, which the build attached to the snapshot, and its
+      // description from the feed (Spotify's runs paragraphs together)
+      const built = new Map(snapshot?.map(episode => [episode.id, episode]));
+      return live.map(episode => {
+        const page = built.get(episode.id);
+        return page?.slug ? { ...episode, slug: page.slug, description: page.description } : { ...episode, slug: episode.slug ?? null };
+      });
     }
     if (snapshot) {
       return snapshot;
