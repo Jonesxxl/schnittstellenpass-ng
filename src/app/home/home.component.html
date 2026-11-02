@@ -124,11 +124,11 @@
                  button straight to Spotify; else the whole row opens Spotify -->
             @if (item.slug) {
               <div appReveal class="relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
-                <ng-container *ngTemplateOutlet="episodeRow; context: { $implicit: item, page: true }" />
+                <ng-container [ngTemplateOutlet]="episodeRow" [ngTemplateOutletContext]="{ $implicit: item, page: true }" />
               </div>
             } @else {
               <a appReveal [href]="item.spotifyUrl" target="_blank" rel="noopener noreferrer" class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b-2 border-ink px-2 py-[22px] hover:bg-pitch hover:text-ink sm:grid-cols-[minmax(0,72px)_minmax(0,1fr)_auto] sm:gap-5">
-                <ng-container *ngTemplateOutlet="episodeRow; context: { $implicit: item }" />
+                <ng-container [ngTemplateOutlet]="episodeRow" [ngTemplateOutletContext]="{ $implicit: item }" />
               </a>
             }
           } @empty {

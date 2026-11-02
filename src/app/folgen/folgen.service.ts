@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, of, shareReplay } from 'rxjs';
 
@@ -32,7 +32,7 @@ const SLUG = /^[a-z0-9-]{1,120}$/;
  * scripts/fetch-feed.mjs. While prerendering the files come from the build,
  * in the browser they are reused from the page (HTTP transfer cache).
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FolgenService {
   private readonly http = inject(HttpClient);
   private readonly basePath = '/generated/folgen';

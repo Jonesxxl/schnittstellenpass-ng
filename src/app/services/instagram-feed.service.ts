@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 
@@ -12,7 +12,7 @@ export interface InstagramPost {
   image: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class InstagramFeedService {
   private readonly http = inject(HttpClient);
 

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 
@@ -84,7 +84,7 @@ export const DEFAULT_SOCIAL: SocialContent = {
   headline: 'Aus der Kabine'
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ContentService {
   private readonly http = inject(HttpClient);
   private readonly contentBasePath = '/content';

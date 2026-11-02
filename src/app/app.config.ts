@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { provideAnchorScrolling } from './shared/anchor-scrolling';
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling()),
     provideAnchorScrolling(),
     providePageMeta(),
-    // Fetch, so prerendering can load the CMS files in public/content from the build
-    provideHttpClient(withFetch())
+    // Uses fetch (the default since v22), so prerendering can load the CMS files in public/content from the build
+    provideHttpClient()
   ]
 };
