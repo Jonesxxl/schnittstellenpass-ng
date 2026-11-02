@@ -1,5 +1,5 @@
 import { Component, DOCUMENT, DestroyRef, PLATFORM_ID, computed, effect, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ContentService, DEFAULT_ABOUT_INTRO, DEFAULT_EPISODES, DEFAULT_HOME_HERO, DEFAULT_LIVE, DEFAULT_SOCIAL } from '../services/content.service';
@@ -14,7 +14,7 @@ import { podcastStructuredData, setJsonLd } from '../shared/structured-data';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ImageSlotComponent, InstagramFeedComponent, RevealDirective, FactBoardComponent],
+  imports: [RouterLink, NgTemplateOutlet, ImageSlotComponent, InstagramFeedComponent, RevealDirective, FactBoardComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
@@ -75,7 +75,13 @@ export class HomeComponent {
     const live = this.liveEpisodes.value();
     const snapshot = this.episodeSnapshot.value();
     if (live) {
-      return live;
+      // Live episodes lack the page slug, which the build attached to the snapshot, and its
+      // description from the feed (Spotify's runs paragraphs together)
+      const built = new Map(snapshot?.map(episode => [episode.id, episode]));
+      return live.map(episode => {
+        const page = built.get(episode.id);
+        return page?.slug ? { ...episode, slug: page.slug, description: page.description } : { ...episode, slug: episode.slug ?? null };
+      });
     }
     if (snapshot) {
       return snapshot;

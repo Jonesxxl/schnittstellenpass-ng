@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixed podcast feed for the end-to-end tests (see e2e/build.mjs); the shape follows the Spotify for Creators feed -->
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Schnittstellenpass</title>
+    <item>
+      <title><![CDATA[Testgast Eins über Kabine und Kreisliga - Saison 4 Folge #9]]></title>
+      <link>https://open.spotify.com/episode/testfolge9</link>
+      <pubDate>Mon, 21 Sep 2026 06:00:00 GMT</pubDate>
+      <itunes:duration>00:55:03</itunes:duration>
+      <description><![CDATA[<p>Shownotes der Testfolge: <strong>Nachwuchs</strong>, Amateurfußball und alles dazwischen.</p><ul><li>Erster Punkt</li><li>Zweiter Punkt</li></ul><p><a href="https://example.com/mehr">Mehr zum Gast</a></p><p><br></p><p>„Fehler macht jeder. Wichtig ist, dass man aus Fehlern lernt.“</p>]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Zweiter Testgast: Vom Bolzplatz in die Bundesliga – Saison 4 Folge #8]]></title>
+      <link>https://open.spotify.com/episode/testfolge8</link>
+      <pubDate>Mon, 07 Sep 2026 06:00:00 GMT</pubDate>
+      <itunes:duration>3120</itunes:duration>
+      <description><![CDATA[<p>Die zweite Testfolge.</p><ul><li><p>Erstes Thema</p></li><li><ul><li>Verschachtelt eins</li><li>Verschachtelt zwei</li></ul></li><li>Thema mit Unterpunkt<ul><li>Echter Unterpunkt</li></ul></li></ul><li><ul><li>Außerhalb der Liste</li></ul></li><li><ul><li>Letzter Punkt</li></ul><p><br></p><p>Begriffe aus der Folge</p><p><strong>Silent Check</strong><br>Eine Überprüfung im Hintergrund.</p></li>]]></description>
+    </item>
+    <item>
+      <title>Ältere Folge mit Ümläuten &amp; Sonderzeichen - Folge #7</title>
+      <link>https://open.spotify.com/episode/testfolge7</link>
+      <pubDate>Mon, 24 Aug 2026 06:00:00 GMT</pubDate>
+      <itunes:duration>48:10</itunes:duration>
+      <itunes:summary>Nur eine Zusammenfassung, keine Beschreibung.</itunes:summary>
+    </item>
+    <item>
+      <title>Folge mit Skript in den Shownotes - Folge #1</title>
+      <link>https://open.spotify.com/episode/testfolge1</link>
+      <pubDate>Mon, 03 Aug 2026 06:00:00 GMT</pubDate>
+      <itunes:duration>30:00</itunes:duration>
+      <description><![CDATA[<p>Shownotes mit Code, der nie ausgeführt werden darf:</p><script>window.__shownotesScript = true;</script><p onclick="window.__shownotesClick = true">Absatz mit Klick-Handler</p><a href="javascript:window.__shownotesLink = true">Link mit Skript</a>]]></description>
+    </item>
+  </channel>
+</rss>

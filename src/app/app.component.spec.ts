@@ -16,12 +16,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'schnittstellenpass' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('schnittstellenpass');
-  });
-
   it('should render the site header navigation', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();

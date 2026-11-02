@@ -1,7 +1,7 @@
 /**
  * Latest Instagram posts for the "Aus der Kabine" section.
  *
- *   GET /.netlify/functions/instagram             -> { posts: [...] } (the latest 4)
+ *   GET /.netlify/functions/instagram             -> { posts: [...] } (the latest 4 photos and carousels)
  *   GET /.netlify/functions/instagram?image=<id>  -> image of one post
  *
  * Images are served through this function as well, so visitors never load
@@ -15,6 +15,9 @@ import { getCurrentToken } from '../lib/instagram-token.mts';
 
 const GRAPH_API = 'https://graph.instagram.com';
 const POST_COUNT = 4;
+// Reels are left out (their upright covers do not suit the stage), so the latest
+// posts are read in one batch large enough for several reels in a row
+const FETCH_COUNT = 30;
 const CAPTION_LENGTH = 200;
 const RASTER_IMAGE = /^image\/(jpeg|png|webp|gif|avif)\b/;
 
@@ -66,9 +69,8 @@ function graphRequest(path: string, token: string): Promise<Response> {
 }
 
 async function latestPosts(token: string): Promise<Response> {
-  // Ask for a few more in case a post has no picture (e.g. a reel without cover)
   const response = await graphRequest(
-    `/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=${POST_COUNT * 2}`,
+    `/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=${FETCH_COUNT}`,
     token
   );
   if (!response.ok) {
@@ -78,7 +80,8 @@ async function latestPosts(token: string): Promise<Response> {
 
   const { data = [] } = await response.json() as { data?: InstagramMedia[] };
   const posts = data
-    .filter(media => pictureUrl(media))
+    // Photos and carousels only: reels (media type VIDEO) are left out
+    .filter(media => media.media_type !== 'VIDEO' && pictureUrl(media))
     .slice(0, POST_COUNT)
     .map(media => ({
       id: media.id,

@@ -98,6 +98,8 @@
           @for (run of runs(); track run.id) {
             <div class="flex flex-col items-start gap-3 motion-safe:animate-capin">
               <span class="rounded-full border border-pitch px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[.1em] text-pitch">{{ post.chip }}</span>
+              <!-- Keeps chip and caption apart in the link's text, which its aria-label must contain -->
+              {{ ' ' }}
               <span class="line-clamp-3 font-display text-[clamp(30px,3.4vw,46px)] font-black uppercase leading-[.92]">{{ post.caption }}</span>
             </div>
           }

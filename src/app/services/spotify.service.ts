@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -7,9 +7,7 @@ import { SpotifyEpisode, SpotifyEpisodesResponse, Episode } from '../models/spot
 // Cover URLs as Spotify returns them; the id is passed to the proxy
 const SPOTIFY_IMAGE_URL = /^https:\/\/i\.scdn\.co\/image\/([0-9a-f]{16,64})$/;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class SpotifyService {
   private readonly http = inject(HttpClient);
 
@@ -75,6 +73,7 @@ export class SpotifyService {
       duration: this.formatDuration(spotifyEpisode.duration_ms),
       durationMs: spotifyEpisode.duration_ms,
       spotifyUrl: spotifyEpisode.external_urls.spotify,
+      slug: spotifyEpisode.slug ?? null,
       imageUrl: this.proxiedImageUrl(spotifyEpisode.images[0]?.url),
       audioPreviewUrl: spotifyEpisode.audio_preview_url
     };

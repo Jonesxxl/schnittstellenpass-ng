@@ -1,4 +1,5 @@
 import { Episode } from '../models/spotify.models';
+import { FeedEpisode } from '../folgen/folgen.service';
 import { LINKS } from './links';
 import { SITE_URL } from './page-meta';
 
@@ -58,8 +59,8 @@ export function podcastStructuredData({ description, hostImage, episodes }: Podc
       },
       ...episodes.map(episode => ({
         '@type': 'PodcastEpisode',
-        '@id': episode.spotifyUrl,
-        url: episode.spotifyUrl,
+        '@id': episode.slug ? episodePageUrl(episode.slug) : episode.spotifyUrl,
+        url: episode.slug ? episodePageUrl(episode.slug) : episode.spotifyUrl,
         name: episode.title,
         datePublished: episode.releaseDate,
         description: shorten(episode.description),
@@ -68,6 +69,40 @@ export function podcastStructuredData({ description, hostImage, episodes }: Podc
       }))
     ]
   };
+}
+
+/**
+ * Schema.org data of an episode page (/folgen/:slug), linked to the podcast
+ * described on the start page
+ */
+export function episodeStructuredData(episode: FeedEpisode): object {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'PodcastEpisode',
+        '@id': episodePageUrl(episode.slug),
+        url: episodePageUrl(episode.slug),
+        name: episode.title,
+        datePublished: episode.date,
+        description: shorten(episode.summary),
+        timeRequired: isoDuration(episode.durationSeconds * 1000),
+        sameAs: episode.listenUrl,
+        partOfSeries: { '@id': `${SITE_URL}/#podcast` }
+      },
+      {
+        '@type': 'PodcastSeries',
+        '@id': `${SITE_URL}/#podcast`,
+        name: 'Schnittstellenpass – Zwischen Profi und Amateur',
+        url: `${SITE_URL}/`,
+        webFeed: LINKS.rssFeed
+      }
+    ]
+  };
+}
+
+function episodePageUrl(slug: string): string {
+  return `${SITE_URL}/folgen/${slug}`;
 }
 
 /**

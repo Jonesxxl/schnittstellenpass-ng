@@ -1,8 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-impressum',
-  standalone: true,
   template: `
     <div class="bg-paper">
 
@@ -79,8 +78,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       </main>
 
     </div>
-  `,
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styles: []
+  `
 })
 export class ImpressumComponent {}

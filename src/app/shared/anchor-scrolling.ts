@@ -1,4 +1,4 @@
-import { ApplicationRef, EnvironmentProviders, NgZone, PLATFORM_ID, inject, provideEnvironmentInitializer } from '@angular/core';
+import { ApplicationRef, EnvironmentProviders, PLATFORM_ID, inject, provideEnvironmentInitializer } from '@angular/core';
 import { DOCUMENT, ViewportScroller, isPlatformBrowser } from '@angular/common';
 import { Router, Scroll } from '@angular/router';
 
@@ -19,7 +19,6 @@ export function provideAnchorScrolling(): EnvironmentProviders {
     }
     const scroller = inject(ViewportScroller);
     const appRef = inject(ApplicationRef);
-    const zone = inject(NgZone);
     const document = inject(DOCUMENT);
     let latestAnchorScroll = 0;
 
@@ -51,7 +50,7 @@ export function provideAnchorScrolling(): EnvironmentProviders {
       let userScrolled = false;
       const onUserScroll = () => userScrolled = true;
       const userEvents = ['wheel', 'touchstart', 'keydown'] as const;
-      zone.runOutsideAngular(() => userEvents.forEach(type => window.addEventListener(type, onUserScroll, { passive: true })));
+      userEvents.forEach(type => window.addEventListener(type, onUserScroll, { passive: true }));
 
       appRef.whenStable().then(() => {
         userEvents.forEach(type => window.removeEventListener(type, onUserScroll));

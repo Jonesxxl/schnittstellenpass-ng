@@ -22,8 +22,10 @@ Commit freely; push only when the user says so.
 - Use the Node version from `.nvmrc`; the Angular CLI refuses older ones. Shell state does not carry over between commands, so put that Node's `bin` directory on `PATH` in every command.
 - After a pull or branch switch that changed `package-lock.json`, run `npm ci` first. Stale `node_modules` show up as TypeScript errors about `@angular/core` exports.
 - Checks, as in CI (`.github/workflows/ci.yml`): `npx ng test --watch=false --browsers=ChromeHeadless`, then `npm run build`.
+- End-to-end tests (Playwright, `e2e/`, also in CI): `npm run e2e` builds with the test feed and runs them; `npx playwright test` reruns on the last build. Run them after changes to pages, routing, `netlify.toml` or the CMS. A change that breaks one fixes the site or updates the test; never loosen `allowErrors`/`allowRequests` to get green. CMS editor tests: `npm run e2e:cms`. Details in the README.
 - `ng serve` has no Netlify functions: Spotify and Instagram requests fail locally with JSON parse errors.
 - Pages are prerendered at build time (`src/app/app.routes.server.ts`), so components also run in Node: browser APIs (`window`, `matchMedia`, observers, timers) belong in `afterNextRender` or behind `isPlatformBrowser`. Data from the Netlify functions loads in the browser only; the prerendered HTML shows its loading state, except for the episodes written at build time by `scripts/fetch-episodes.mjs`.
+- Episode pages (`/folgen`, `/folgen/<slug>`) and `public/sitemap.xml` are generated from the podcast's RSS feed by `scripts/fetch-feed.mjs` before `ng build`; slugs come from the episode titles. A Netlify build stops if the feed cannot be read, so the last deploy stays online. With Spotify credentials, `scripts/fetch-episodes.mjs` then replaces each page's Spotify for Creators link from the feed with the episode's open.spotify.com link (matched by title).
 
 
 ## Secrets
