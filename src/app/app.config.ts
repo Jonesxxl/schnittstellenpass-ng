@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -9,7 +9,6 @@ import { providePageMeta } from './shared/page-meta';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection(),
     // Pages are prerendered at build time (app.routes.server.ts); the browser takes over their HTML.
     // Without incremental hydration (default since v22): it brings event replay, whose inline
     // scripts the CSP in src/index.html blocks. No @defer hydrate triggers are used.

@@ -64,6 +64,15 @@ test.describe('Startseite', () => {
     await expect(page.locator('#kabine-stage')).toHaveAttribute('href', INSTAGRAM_POSTS[2].permalink);
   });
 
+  test('schaltet die Instagram-Beiträge von selbst weiter', async ({ page }) => {
+    await page.goto('/');
+    const posts = page.getByRole('group', { name: 'Neueste Instagram-Beiträge' }).getByRole('button');
+    await expect(posts.nth(0)).toHaveAttribute('aria-pressed', 'true');
+    // Every 5 seconds, also without Zone.js: the timer updates a signal, which renders
+    await expect(posts.nth(1)).toHaveAttribute('aria-pressed', 'true', { timeout: 8000 });
+    await expect(page.locator('#kabine-stage')).toHaveAttribute('href', INSTAGRAM_POSTS[1].permalink);
+  });
+
   test.describe('wenn Instagram nicht erreichbar ist', () => {
     test.use({ allowErrors: /^502 .*functions\/instagram|Failed to fetch Instagram posts/ });
 
